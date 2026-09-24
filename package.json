@@ -1,6 +1,6 @@
 {
   "name": "playstation-controller-tester",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Test PS5 DualSense, PS4 DualShock 4, Xbox and any gamepad in the browser: drift, circularity, rumble, adaptive triggers, lightbar, touchpad, gyro, audio.",
   "private": true,
   "type": "module",

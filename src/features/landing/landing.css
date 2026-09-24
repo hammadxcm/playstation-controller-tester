@@ -6,6 +6,7 @@
   max-width: 1180px;
   margin: 0 auto;
   padding: 16px 16px 48px;
+  overflow-x: clip;
   display: grid;
   gap: 64px;
 }
@@ -340,6 +341,7 @@
 }
 .tile {
   position: relative;
+  overflow: hidden;
   display: grid;
   gap: 6px;
   justify-items: start;

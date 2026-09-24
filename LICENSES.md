@@ -3,8 +3,9 @@
 ## Controller artwork
 
 `src/features/model/artwork/dualsense.svg`, `dualsenseEdge.svg` and `dualshock4.svg` are the
-`design/*.svg` drawings from [daidr/dualsense-tester](https://github.com/daidr/dualsense-tester),
-used under the MIT License. The files are loaded as-is; colours and classes are applied at runtime.
+controller drawings from [daidr/dualsense-tester](https://github.com/daidr/dualsense-tester),
+used under the MIT License. The files are loaded as-is; colours, classes and the landing page's
+lighting and tilt are applied at runtime. No other artwork is bundled.
 
 MIT License
 
@@ -33,3 +34,11 @@ SOFTWARE.
 Report layouts follow the Linux `hid-playstation` driver (GPL-2.0, not copied), SDL's
 `SDL_hidapi_ps5.c` / `SDL_hidapi_ps4.c` (zlib, not copied), Nielk1's TriggerEffectGenerator (MIT, byte
 tables re-implemented) and daidr/dualsense-tester (MIT, factory-info command ids re-implemented).
+
+## Runtime dependencies
+
+- [motion](https://github.com/motiondivision/motion) (Motion for React), MIT License, © Motion Division
+- [react](https://github.com/facebook/react), MIT License, © Meta Platforms
+- [zustand](https://github.com/pmndrs/zustand), MIT License, © Paul Henschel
+- [html-to-image](https://github.com/bubkoo/html-to-image), MIT License, © bubkoo
+- Manrope and JetBrains Mono via @fontsource, SIL Open Font License 1.1

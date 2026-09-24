@@ -30,6 +30,8 @@ Dev builds (`pnpm dev`) include a mock harness that is tree-shaken out of produc
 /?mock=dualsense&pose=all
 /?mock=dualsense&hid=1&lb=ff0044&leds=P3&mic=pulse
 /?mock=xbox&theme=light&motion=reduce
+/?mock=none&theme=dark            # landing page
+/?mock=dualsense&hid=1&edge=1     # DualSense Edge mock
 ```
 
 `window.__ct` exposes `pose()`, `fx`, `hid`, `settle()` and `stats()`. Screenshots of every screen for every family, both themes and both motion modes should show no console errors.

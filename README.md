@@ -22,6 +22,10 @@ Test PS5 DualSense / DualSense Edge, PS4 DualShock 4, Xbox and any other gamepad
 
 ## What it does
 
+The landing page shows a live DualSense render with pointer tilt, an Add Device section for both ways in (press any button for the Gamepad API, pair over WebHID for Pro Mode), a showcase of DualSense, DualSense Edge and DualShock 4 with hover callouts, and a tile for every screen. It crossfades into the app the moment a controller appears.
+
+<p align="center"><img src="docs/landing-dark.png" alt="Landing page, dark theme" width="49%"> <img src="docs/landing-light.png" alt="Landing page, light theme" width="49%"></p>
+
 Every controller, every browser (Gamepad API):
 
 - Live controller drawing (accurate DualSense, Edge and DualShock 4 outlines; drawn Xbox and generic models) with pressed buttons, stick travel, trigger fill, lightbar, player LEDs, mic light, touch points and a "show values" overlay
@@ -34,31 +38,31 @@ Every controller, every browser (Gamepad API):
 
 Pro Mode (WebHID, desktop Chrome / Edge, USB or Bluetooth), laid out like a bench: devices on the left, the controller and its output table on the right.
 
-| | DualSense / Edge | DualShock 4 |
-|---|---|---|
-| Raw sticks, triggers, buttons, Edge Fn / paddles / profile | ✓ | ✓ (no Edge fields) |
-| Touchpad (two fingers, on the drawing) | ✓ | ✓ |
-| Gyro / accelerometer, factory calibration, 3D cube | ✓ | ✓ |
-| Battery, charging, USB / headset flags | ✓ | ✓ |
-| Rumble over HID (works on Bluetooth) | ✓ | ✓ |
-| Lightbar, rainbow effect | ✓ | ✓ + flash |
-| Player LEDs + brightness, mic LED | ✓ | – |
-| Adaptive triggers (feedback, weapon, vibration, bow, galloping, machine) with engaged read-back | ✓ | – |
-| Firmware / hardware version | ✓ | – |
-| Factory data (serial, PCBA id, MCU id, BT address, battery voltage, touchpad firmware) | ✓ | – |
-| Speaker / headphone tone and file playback, haptic channels, mic level meter (USB only) | ✓ | – |
-| Several controllers at once, side-by-side compare | ✓ | ✓ |
-| HID console: every report sent / received with bytes and errors | ✓ | ✓ |
+|                                                                                                 | DualSense / Edge | DualShock 4        |
+| ----------------------------------------------------------------------------------------------- | ---------------- | ------------------ |
+| Raw sticks, triggers, buttons, Edge Fn / paddles / profile                                      | ✓                | ✓ (no Edge fields) |
+| Touchpad (two fingers, on the drawing)                                                          | ✓                | ✓                  |
+| Gyro / accelerometer, factory calibration, 3D cube                                              | ✓                | ✓                  |
+| Battery, charging, USB / headset flags                                                          | ✓                | ✓                  |
+| Rumble over HID (works on Bluetooth)                                                            | ✓                | ✓                  |
+| Lightbar, rainbow effect                                                                        | ✓                | ✓ + flash          |
+| Player LEDs + brightness, mic LED                                                               | ✓                | –                  |
+| Adaptive triggers (feedback, weapon, vibration, bow, galloping, machine) with engaged read-back | ✓                | –                  |
+| Firmware / hardware version                                                                     | ✓                | –                  |
+| Factory data (serial, PCBA id, MCU id, BT address, battery voltage, touchpad firmware)          | ✓                | –                  |
+| Speaker / headphone tone and file playback, haptic channels, mic level meter (USB only)         | ✓                | –                  |
+| Several controllers at once, side-by-side compare                                               | ✓                | ✓                  |
+| HID console: every report sent / received with bytes and errors                                 | ✓                | ✓                  |
 
 ## Browser support
 
-| | Chrome / Edge desktop | Chrome Android | Firefox | Safari |
-|---|---|---|---|---|
-| Gamepad API | ✓ | ✓ | ✓ (no timestamps) | ✓ (no vendor ids) |
-| dual-rumble | ✓ | ✓ | partial | – |
-| trigger-rumble | ✓ Win / macOS, Linux BT | – | – | – |
-| Pro Mode (WebHID) | ✓ | – | – | – |
-| Controller audio | ✓ (USB) | – | – | – |
+|                   | Chrome / Edge desktop   | Chrome Android | Firefox           | Safari            |
+| ----------------- | ----------------------- | -------------- | ----------------- | ----------------- |
+| Gamepad API       | ✓                       | ✓              | ✓ (no timestamps) | ✓ (no vendor ids) |
+| dual-rumble       | ✓                       | ✓              | partial           | –                 |
+| trigger-rumble    | ✓ Win / macOS, Linux BT | –              | –                 | –                 |
+| Pro Mode (WebHID) | ✓                       | –              | –                 | –                 |
+| Controller audio  | ✓ (USB)                 | –              | –                 | –                 |
 
 Report-rate and latency figures are what the browser observes, not what the hardware sends. If Pro Mode finds nothing, close Steam, PS Remote Play, DS4Windows or reWASD: they take the HID reports first.
 
@@ -99,6 +103,9 @@ Headless UI checks use a mock harness that exists only in dev builds (`pnpm dev`
 /?mock=dualsense&hid=1&lb=ff0044&leds=P3&mic=pulse&trig=left:weapon   # Pro Mode with a mock controller
 /?mock=dualsense&hid=2                          # two mock controllers (DualSense + DualShock 4)
 /?mock=xbox&theme=light&motion=reduce           # theme and reduced-motion overrides
+/?mock=none&theme=dark                          # landing page (no fake pad) with the same overrides
+/?mock=dualsense&hid=1&edge=1                   # mock WebHID pad reports as a DualSense Edge
+/#pro   /#report                                # deep links straight into a screen (no pad needed)
 ```
 
 `window.__ct` exposes `pose()`, `fx`, `hid`, `settle()` and `stats()` for scripted screenshots.
