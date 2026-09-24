@@ -92,3 +92,15 @@ describe('viewTransition', () => {
     delete (document as unknown as { startViewTransition?: unknown }).startViewTransition
   })
 })
+
+describe('hashTab', () => {
+  it('maps a known hash to its tab and anything else to the fallback', async () => {
+    const { readTab, tabHash } = await import('./hashTab')
+    const ids = ['overview', 'pro'] as const
+    expect(readTab('#pro', ids, 'overview')).toBe('pro')
+    expect(readTab('pro', ids, 'overview')).toBe('pro')
+    expect(readTab('#nope', ids, 'overview')).toBe('overview')
+    expect(readTab('', ids, 'overview')).toBe('overview')
+    expect(tabHash('report')).toBe('#report')
+  })
+})

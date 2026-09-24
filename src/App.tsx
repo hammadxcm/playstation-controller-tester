@@ -1,8 +1,9 @@
-import { useEffect, useState, type ReactElement } from 'react'
+import { useEffect, type ReactElement } from 'react'
 import { identify } from '@/core/gamepad/identify'
 import { PROFILES } from '@/core/gamepad/profiles'
 import { Badge, Button, Card, Tabs } from '@/components/ui'
-import { usePadRegistry } from '@/state/hooks'
+import { useHashTab, usePadRegistry, useResolvedTheme } from '@/state/hooks'
+import { applyTheme } from '@/lib/theme'
 import { transition } from '@/lib/viewTransition'
 import { useStore } from '@/state/store'
 import { useActivePad } from '@/state/hooks'
@@ -28,6 +29,7 @@ const TABS = [
   { id: 'report', label: 'Report' },
 ] as const
 type Tab = (typeof TABS)[number]['id']
+const TAB_IDS = TABS.map((t) => t.id)
 
 const SCREENS: Record<Tab, () => ReactElement | null> = { overview: Overview, sticks: Sticks, triggers: Triggers, buttons: Buttons, haptics: Haptics, wizard: Wizard, pro: Pro, learn: Learn, report: Report }
 
@@ -57,14 +59,17 @@ export default function App() {
   const pads = useStore((s) => s.pads)
   const pad = useActivePad()
   const setActive = useStore((s) => s.setActive)
-  const theme = useStore((s) => s.settings.theme)
+  const theme = useResolvedTheme()
   const setSettings = useStore((s) => s.setSettings)
   const hid = useStore((s) => s.hid)
-  const [tab, setTab] = useState<Tab>('overview')
-  useEffect(() => { document.documentElement.dataset.theme = theme }, [theme])
+  const setEntered = useStore((s) => s.setEntered)
+  const [tab, setTab] = useHashTab<Tab>(TAB_IDS, 'overview')
+  useEffect(() => applyTheme(theme), [theme])
   const profile = pad ? identify(pad.id) : null
   const Screen = SCREENS[tab]
   const needsPad = tab !== 'pro' && tab !== 'report'
+  // Deep links into the device-free screens skip the landing.
+  useEffect(() => { if (!needsPad) setEntered(true) }, [needsPad, setEntered])
   const go = (next: Tab) => {
     if (next === tab) return
     const dir = TABS.findIndex((t) => t.id === next) > TABS.findIndex((t) => t.id === tab) ? 'fwd' : 'back'

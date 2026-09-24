@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import type { HidController } from '@/core/hid/controller'
 import { saveLayout, emptyLayout } from '@/core/gamepad/mapping'
-import { selectActivePad, useStore } from './store'
+import { selectActivePad, selectLanding, useStore } from './store'
 
 const fakeHid = (label: string): HidController => ({
   family: 'dualsense', label, transport: 'usb', device: {} as HIDDevice,
@@ -78,9 +78,18 @@ describe('store', () => {
     expect(useStore.getState().hidLog.length).toBe(100)
     s.clearHidLog()
     expect(useStore.getState().hidLog).toEqual([])
+    expect(useStore.getState().settings.theme).toBe('system')
     s.setSettings({ theme: 'light' })
     expect(useStore.getState().settings.theme).toBe('light')
     s.setReport({ at: 'now', padId: 'x', score: { score: 1, grade: 'F', breakdown: { driftMagnitude: 0, circularityErrorPct: 0, resolutionBits: 0, pollingHz: 0, chatterEvents: 0, stuckButtons: 0 } }, metrics: {} })
     expect(useStore.getState().report?.score.grade).toBe('F')
+  })
+  it('shows the landing until a pad, a HID device or the user enters the shell', () => {
+    expect(selectLanding({ pads: [], hids: [], entered: false })).toBe(true)
+    expect(selectLanding({ pads: [{ index: 0, id: 'x', mapping: 'standard' }], hids: [], entered: false })).toBe(false)
+    expect(selectLanding({ pads: [], hids: [{} as never], entered: false })).toBe(false)
+    useStore.getState().setEntered(true)
+    expect(selectLanding(useStore.getState())).toBe(false)
+    useStore.getState().setEntered(false)
   })
 })

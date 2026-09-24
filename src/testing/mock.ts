@@ -1,6 +1,6 @@
 /**
  * Headless test harness. Loaded only in dev builds (`pnpm dev`) with `?mock=<family>`; tree-shaken out of production.
- * Params: mock=dualsense|dualshock4|xbox|generic, pose=<name>, anim=1, hid=1, unmapped=1, theme=light,
+ * Params: mock=dualsense|dualshock4|xbox|generic|none (none: no fake pad, landing stays up), edge=1 (HID mock reports DualSense Edge), pose=<name>, anim=1, hid=1, unmapped=1, theme=light,
  *         lb=rrggbb, leds=P1..P5|mask:N, mic=off|on|pulse, flash=on,off, trig=left:feedback
  */
 import { POSES, type Pose } from './poses'
@@ -31,7 +31,7 @@ const gp = {
     reset: async () => undefined,
   },
 }
-navigator.getGamepads = () => [gp as unknown as Gamepad, null, null, null]
+if (family !== 'none') navigator.getGamepads = () => [gp as unknown as Gamepad, null, null, null]
 
 function setPose(p: Pose) {
   gp.axes = [...p.axes]

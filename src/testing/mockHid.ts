@@ -13,7 +13,7 @@ export interface MockHid extends HidController {
 }
 
 /** In-memory HidController that produces synthetic state and records every command. */
-export function createMockHid(family: string): MockHid {
+export function createMockHid(family: string, edge = false): MockHid {
   const ds4 = family === 'dualshock4'
   const listeners = new Set<(s: HidState) => void>()
   const out: Record<string, unknown> = {}
@@ -60,8 +60,8 @@ export function createMockHid(family: string): MockHid {
   }
   return {
     family: ds4 ? 'dualshock4' : 'dualsense',
-    label: ds4 ? 'DualShock 4 (mock)' : 'DualSense (mock)',
-    caps: ds4 ? DS4_CAPS : DS_CAPS,
+    label: ds4 ? 'DualShock 4 (mock)' : edge ? 'DualSense Edge (mock)' : 'DualSense (mock)',
+    caps: ds4 ? DS4_CAPS : edge ? { ...DS_CAPS, edge: true } : DS_CAPS,
     transport: 'usb',
     device: { opened: true, vendorId: 0x054c, productId: ds4 ? 0x09cc : 0x0ce6, productName: 'mock' } as unknown as HIDDevice,
     out,
@@ -100,7 +100,7 @@ export async function installMockHid(family: string, q: URLSearchParams): Promis
       configurable: true,
     })
   }
-  const mock = createMockHid(family)
+  const mock = createMockHid(family, q.has('edge'))
   useStore.getState().setHid(mock)
   if (q.get('hid') === '2') useStore.getState().addHid(createMockHid(family === 'dualsense' ? 'dualshock4' : 'dualsense'))
   useStore.getState().setActiveHid(0)

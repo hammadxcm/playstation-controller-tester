@@ -2,11 +2,11 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import type { HidController, HidState, MicLedMode } from '@/core/hid/controller'
 import { hex, type HidLogEntry } from '@/core/hid/log'
 import { PLAYER_LED } from '@/core/hid/dualsense/output'
-import { reopenGranted, requestController, webHidSupported } from '@/core/hid/registry'
+import { webHidSupported } from '@/core/hid/registry'
 import { Badge, Button, Card, Metric, Slider, Tabs, Toggle } from '@/components/ui'
 import { ControllerModel } from '@/features/model/ControllerModel'
 import { smooth, onRaf } from '@/lib/motion'
-import { useHidState, useSampled } from '@/state/hooks'
+import { useAddDevice, useHidState, useReopenGranted, useSampled } from '@/state/hooks'
 import { useStore } from '@/state/store'
 import { build, defaults, PARAMS, type Mode } from './triggerParams'
 import { Audio } from './Audio'
@@ -16,24 +16,13 @@ const logTo = () => useStore.getState().pushHidLog
 /** Run a controller command and route failures into the HID console instead of the void. */
 const run = (p: Promise<unknown>) => p.catch((e: unknown) => logTo()({ t: performance.now(), dir: 'error', note: e instanceof Error ? `${e.name}: ${e.message}` : String(e) }))
 
-async function addDevice(setErr: (s: string) => void) {
-  try {
-    const c = await requestController(logTo())
-    if (c) useStore.getState().addHid(c)
-    else setErr('No controller selected.')
-  } catch (e) {
-    setErr(e instanceof Error ? e.message : String(e))
-  }
-}
-
 function Connect() {
-  const [err, setErr] = useState('')
-  const [busy, setBusy] = useState(false)
-  useEffect(() => { void reopenGranted(logTo()).then((cs) => cs.forEach((c) => useStore.getState().addHid(c))) }, [])
+  const { busy, err, add } = useAddDevice()
+  useReopenGranted()
   return (
     <Card title="Pro Mode (WebHID)">
       <p className="muted">Talk to the controller directly for what the Gamepad API can't reach: adaptive triggers, lightbar, player LEDs, mic LED, touchpad, gyro and accelerometer, battery, firmware and factory data. DualSense, DualSense Edge and DualShock 4 over USB or Bluetooth in Chrome and Edge.</p>
-      <div className="row"><Button primary data-pulse="" disabled={busy} onClick={() => { setBusy(true); void addDevice(setErr).finally(() => setBusy(false)) }}>Add device</Button>{err && <span className="small" style={{ color: 'var(--bad)' }}>{err}</span>}</div>
+      <div className="row"><Button primary data-pulse="" disabled={busy} onClick={() => void add()}>Add device</Button>{err && <span className="small" style={{ color: 'var(--bad)' }}>{err}</span>}</div>
       <p className="small dim">If nothing shows up, close Steam, PS Remote Play, DS4Windows or reWASD: they grab the HID reports first. Bluetooth pads start in a reduced mode; the app switches them to full reports automatically.</p>
     </Card>
   )
@@ -55,7 +44,7 @@ function Devices() {
   const setActive = useStore((s) => s.setActiveHid)
   const removeHid = useStore((s) => s.removeHid)
   const states = useAllStates(hids)
-  const [err, setErr] = useState('')
+  const { err, add } = useAddDevice()
   useEffect(() => {
     const onDisconnect = (e: HIDConnectionEvent) => {
       const i = useStore.getState().hids.findIndex((h) => h.device === e.device)
@@ -65,7 +54,7 @@ function Devices() {
     return () => navigator.hid.removeEventListener('disconnect', onDisconnect)
   }, [removeHid])
   return (
-    <Card title="Devices" right={<Button primary small onClick={() => void addDevice(setErr)}>Add device</Button>}>
+    <Card title="Devices" right={<Button primary small onClick={() => void add()}>Add device</Button>}>
       <div className="stack">
         {hids.map((h, i) => {
           const s = states.get(h)

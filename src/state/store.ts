@@ -5,6 +5,7 @@ import { getLayout, type Layout } from '@/core/gamepad/mapping'
 import type { ScoreResult } from '@/core/analysis'
 import { EMPTY_OUTPUT, trackOutput, type HidOutput } from './hidOutput'
 import type { HidLogEntry } from '@/core/hid/log'
+import type { ThemeSetting } from '@/lib/theme'
 
 export interface PadInfo {
   index: number
@@ -22,7 +23,7 @@ export interface WizardReport {
 export interface Settings {
   deadzone: number
   trace: 'fade' | 'constant' | 'none'
-  theme: 'dark' | 'light'
+  theme: ThemeSetting
 }
 
 interface Store {
@@ -40,6 +41,8 @@ interface Store {
   hidLog: HidLogEntry[]
   report: WizardReport | null
   settings: Settings
+  /** user left the landing page for the shell without a device (Pro Mode, Report); session-only */
+  entered: boolean
   setPads(pads: PadInfo[]): void
   setActive(index: number): void
   refreshLayout(): void
@@ -53,6 +56,7 @@ interface Store {
   clearHidLog(): void
   setReport(r: WizardReport | null): void
   setSettings(s: Partial<Settings>): void
+  setEntered(v: boolean): void
 }
 
 export const useStore = create<Store>()(
@@ -68,7 +72,8 @@ export const useStore = create<Store>()(
       hidOut: EMPTY_OUTPUT,
       hidLog: [],
       report: null,
-      settings: { deadzone: 0.05, trace: 'fade', theme: 'dark' },
+      settings: { deadzone: 0.05, trace: 'fade', theme: 'system' },
+      entered: false,
       setPads(pads) {
         const cur = get().activeIndex
         const active = pads.find((p) => p.index === cur) ?? pads[0]
@@ -131,9 +136,12 @@ export const useStore = create<Store>()(
       clearHidLog: () => set({ hidLog: [] }),
       setReport: (report) => set({ report }),
       setSettings: (s) => set({ settings: { ...get().settings, ...s } }),
+      setEntered: (entered) => set({ entered }),
     }),
     { name: `ct${import.meta.env.BASE_URL}settings`, partialize: (s) => ({ settings: s.settings, report: s.report }) },
   ),
 )
 
 export const selectActivePad = (s: Pick<Store, 'pads' | 'activeIndex'>): PadInfo | null => s.pads.find((p) => p.index === s.activeIndex) ?? null
+/** Landing page is the front door until a Gamepad-API pad or WebHID device shows up, or the user enters the shell. */
+export const selectLanding = (s: Pick<Store, 'pads' | 'hids' | 'entered'>): boolean => s.pads.length === 0 && s.hids.length === 0 && !s.entered
