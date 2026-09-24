@@ -8,76 +8,15 @@
   padding: 16px 16px 48px;
   overflow-x: clip;
   display: grid;
+  gap: 24px;
+}
+.landing-main {
+  display: grid;
   gap: 64px;
 }
 :root[data-theme='light'] .landing {
   --hero-shadow: rgb(20 30 60 / 0.18);
   --blob-a: 0.35;
-}
-
-/* Ambient: transform-only gradient blobs, compositor-only, no blur filter on anything that moves. */
-.landing-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  contain: strict;
-  pointer-events: none;
-}
-.landing-bg i {
-  position: absolute;
-  border-radius: 50%;
-  opacity: var(--blob-a);
-  will-change: transform;
-  background: radial-gradient(
-    closest-side,
-    color-mix(in oklab, var(--accent) 28%, transparent),
-    transparent 70%
-  );
-}
-.landing-bg i:nth-child(1) {
-  width: 70vw;
-  height: 70vw;
-  left: -20vw;
-  top: -25vw;
-  animation: blob-a 32s ease-in-out infinite alternate;
-}
-.landing-bg i:nth-child(2) {
-  width: 55vw;
-  height: 55vw;
-  right: -15vw;
-  top: 10vh;
-  animation: blob-b 38s ease-in-out infinite alternate;
-  background: radial-gradient(
-    closest-side,
-    color-mix(in oklab, #7c5cff 26%, transparent),
-    transparent 70%
-  );
-}
-.landing-bg i:nth-child(3) {
-  width: 60vw;
-  height: 60vw;
-  left: 20vw;
-  bottom: -35vw;
-  animation: blob-c 26s ease-in-out infinite alternate;
-}
-@keyframes blob-a {
-  to {
-    transform: translate(12vw, 8vh) scale(1.12);
-  }
-}
-@keyframes blob-b {
-  to {
-    transform: translate(-10vw, 14vh) scale(0.92);
-  }
-}
-@keyframes blob-c {
-  to {
-    transform: translate(-14vw, -10vh) scale(1.08);
-  }
-}
-:root[data-motion='reduce'] .landing-bg i {
-  animation: none;
 }
 
 .landing-nav {
@@ -194,25 +133,6 @@
   gap: 10px;
   color: var(--fg-muted);
   font-size: 0.9rem;
-}
-.listen-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
-  animation: listen-pulse 1.8s var(--ease-out) infinite;
-}
-@keyframes listen-pulse {
-  0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
-  }
-  100% {
-    box-shadow: 0 0 0 14px transparent;
-  }
-}
-:root[data-motion='reduce'] .listen-dot {
-  animation: none;
 }
 .support-table {
   max-width: 640px;

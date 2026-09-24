@@ -53,7 +53,9 @@ export function applyCalibration(
     }
   }
   return {
-    gyroDps: gyro.map((v, a) => (cal.gyroNumer[a]! * (v - cal.gyroBias[a]!)) / cal.gyroDenom[a]!) as Vec3,
+    gyroDps: gyro.map(
+      (v, a) => (cal.gyroNumer[a]! * (v - cal.gyroBias[a]!)) / cal.gyroDenom[a]!,
+    ) as Vec3,
     accelG: accel.map((v, a) => (2 * (v - cal.accelBias[a]!)) / cal.accelRange[a]!) as Vec3,
   }
 }

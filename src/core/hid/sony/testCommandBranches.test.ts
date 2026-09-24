@@ -18,7 +18,12 @@ describe('testCommand branches', () => {
     ;(bare.collections[0] as unknown as { featureReports?: unknown }).featureReports = undefined
     await sendFeature({ device: bare.asHid(), transport: 'usb' }, 0x80, new Uint8Array([1]))
     expect(bare.featureSent[0]!.data.length).toBe(63)
-    ;(f.collections[0] as unknown as { featureReports: unknown[] }).featureReports = [{ reportId: 0x80, items: [{ reportCount: 20 }] }, { reportId: 0x99, items: [] }, { reportId: 0x98 }, { reportId: 0x97, items: [{}] }]
+    ;(f.collections[0] as unknown as { featureReports: unknown[] }).featureReports = [
+      { reportId: 0x80, items: [{ reportCount: 20 }] },
+      { reportId: 0x99, items: [] },
+      { reportId: 0x98 },
+      { reportId: 0x97, items: [{}] },
+    ]
     await sendFeature({ device: f.asHid(), transport: 'usb' }, 0x80, new Uint8Array([1]))
     expect(f.featureSent[0]!.data.length).toBe(20)
     await sendFeature({ device: f.asHid(), transport: 'usb' }, 0x99, new Uint8Array([1]))
@@ -38,8 +43,15 @@ describe('testCommand branches', () => {
   it('readFactoryInfo skips the unique id when the status byte is non-zero and hex-encodes binary parts', async () => {
     const f = new FakeHidDevice(0x054c, 0x0ce6, 'DS')
     f.featureSequence.set(0x81, [
-      page(1, 19, 2, []), page(1, 4, 2, [1, 2, 3, 4, 5, 6]), page(1, 9, 2, [1, 0, 0, 0, 0, 0, 0, 0, 0]), page(9, 2, 2, [1, 2, 3, 4, 5, 6]),
-      page(4, 3, 2, [0, 0, 0, 0]), page(5, 2, 2, []), page(5, 4, 2, []), page(1, 21, 2, [0xde, 0xad, 0]), page(1, 24, 2, [0, 0]),
+      page(1, 19, 2, []),
+      page(1, 4, 2, [1, 2, 3, 4, 5, 6]),
+      page(1, 9, 2, [1, 0, 0, 0, 0, 0, 0, 0, 0]),
+      page(9, 2, 2, [1, 2, 3, 4, 5, 6]),
+      page(4, 3, 2, [0, 0, 0, 0]),
+      page(5, 2, 2, []),
+      page(5, 4, 2, []),
+      page(1, 21, 2, [0xde, 0xad, 0]),
+      page(1, 24, 2, [0, 0]),
     ])
     const info = await readFactoryInfo({ device: f.asHid(), transport: 'usb' })
     expect(info.mcuUniqueId).toBeUndefined()

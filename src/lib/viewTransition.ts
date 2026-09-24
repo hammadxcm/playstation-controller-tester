@@ -1,7 +1,9 @@
 import { flushSync } from 'react-dom'
 import { reducedMotion } from './motion'
 
-type VTDocument = Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } }
+type VTDocument = Document & {
+  startViewTransition?: (cb: () => void) => { finished: Promise<void> }
+}
 
 /** Run a state update inside a same-document view transition when available. */
 export function transition(update: () => void, dir: 'fwd' | 'back' = 'fwd'): Promise<void> {

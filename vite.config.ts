@@ -25,7 +25,7 @@ export default defineConfig({
         'src/features/wizard/steps.ts',
         'src/features/pro/triggerParams.ts',
         'src/features/landing/support.ts',
-        'src/features/landing/demoFrame.ts',
+        'src/features/landing/demoFrame.ts', 'src/i18n/index.ts',
         'src/testing/**/*.ts',
       ],
       exclude: ['**/*.test.ts', 'src/state/hooks.ts', 'src/testing/mock.ts'],

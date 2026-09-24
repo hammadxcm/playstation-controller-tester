@@ -15,7 +15,11 @@ const page = (dev: number, act: number, status: number, payload: number[]) => {
 function fake() {
   const f = new FakeHidDevice(0x054c, 0x0ce6, 'DualSense')
   const log: HidLogEntry[] = []
-  return { f, log, t: { device: f.asHid(), transport: 'usb' as const, log: (e: HidLogEntry) => log.push(e) } }
+  return {
+    f,
+    log,
+    t: { device: f.asHid(), transport: 'usb' as const, log: (e: HidLogEntry) => log.push(e) },
+  }
 }
 
 describe('testCommand', () => {
@@ -71,7 +75,12 @@ describe('readFactoryInfo', () => {
       page(4, 3, 2, [0x2c, 0x10, 0, 0]),
       page(5, 2, 2, [1, 2, 3, 4, 5, 6, 7, 8]),
       page(5, 4, 2, [0, 0, 0, 1, 0, 0, 0, 2]),
-      page(1, 21, 2, Array.from('parts', (c) => c.charCodeAt(0))),
+      page(
+        1,
+        21,
+        2,
+        Array.from('parts', (c) => c.charCodeAt(0)),
+      ),
       page(1, 24, 2, [0xde, 0xad]),
     ])
     const info = await readFactoryInfo(t)

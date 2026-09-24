@@ -7,14 +7,34 @@ import { getGamepad, onFrames, onPads, snapshot } from './poller'
 import type { Frame } from './types'
 
 const pad = (over: Partial<Gamepad> & { actuator?: unknown } = {}) =>
-  ({ index: 0, id: 'X (STANDARD GAMEPAD Vendor: 054c Product: 0ce6)', mapping: 'standard', connected: true, timestamp: 5, axes: [0.1, 0.2, 0.3, 0.4], buttons: [{ pressed: true, value: 1, touched: true }], vibrationActuator: over.actuator, ...over }) as unknown as Gamepad
+  ({
+    index: 0,
+    id: 'X (STANDARD GAMEPAD Vendor: 054c Product: 0ce6)',
+    mapping: 'standard',
+    connected: true,
+    timestamp: 5,
+    axes: [0.1, 0.2, 0.3, 0.4],
+    buttons: [{ pressed: true, value: 1, touched: true }],
+    vibrationActuator: over.actuator,
+    ...over,
+  }) as unknown as Gamepad
 
 describe('haptics', () => {
   it('detects capabilities from effects or legacy type', () => {
     expect(hapticCaps(null)).toEqual({ dual: false, trigger: false })
-    expect(hapticCaps(pad({ actuator: { playEffect: () => 0, effects: ['dual-rumble', 'trigger-rumble'] } }))).toEqual({ dual: true, trigger: true })
-    expect(hapticCaps(pad({ actuator: { playEffect: () => 0, type: 'dual-rumble' } }))).toEqual({ dual: true, trigger: false })
-    expect(hapticCaps(pad({ actuator: { playEffect: () => 0, type: 'other' } }))).toEqual({ dual: false, trigger: false })
+    expect(
+      hapticCaps(
+        pad({ actuator: { playEffect: () => 0, effects: ['dual-rumble', 'trigger-rumble'] } }),
+      ),
+    ).toEqual({ dual: true, trigger: true })
+    expect(hapticCaps(pad({ actuator: { playEffect: () => 0, type: 'dual-rumble' } }))).toEqual({
+      dual: true,
+      trigger: false,
+    })
+    expect(hapticCaps(pad({ actuator: { playEffect: () => 0, type: 'other' } }))).toEqual({
+      dual: false,
+      trigger: false,
+    })
   })
   it('plays dual or trigger rumble and reports errors', async () => {
     const playEffect = vi.fn(async (..._args: unknown[]) => 'complete')
@@ -26,15 +46,39 @@ describe('haptics', () => {
     await rumble(gp, { duration: 100, rightTrigger: 0.5 })
     expect((playEffect.mock.calls[2]![1] as { leftTrigger: number }).leftTrigger).toBe(0)
     expect(await rumble(null, { duration: 1 })).toBe('unsupported')
-    const bad = pad({ actuator: { playEffect: async () => { throw new DOMException('x', 'NotSupportedError') }, effects: ['dual-rumble'] } })
+    const bad = pad({
+      actuator: {
+        playEffect: async () => {
+          throw new DOMException('x', 'NotSupportedError')
+        },
+        effects: ['dual-rumble'],
+      },
+    })
     expect(await rumble(bad, { duration: 1 })).toBe('NotSupportedError')
-    const bad2 = pad({ actuator: { playEffect: async () => { throw 'boom' }, effects: ['dual-rumble'] } })
+    const bad2 = pad({
+      actuator: {
+        playEffect: async () => {
+          throw 'boom'
+        },
+        effects: ['dual-rumble'],
+      },
+    })
     expect(await rumble(bad2, { duration: 1 })).toBe('error')
     const reset = vi.fn(async () => undefined)
     await stopRumble(pad({ actuator: { playEffect, reset, effects: ['dual-rumble'] } }))
     expect(reset).toHaveBeenCalled()
     await stopRumble(pad({ actuator: { playEffect, effects: [] } }))
-    await stopRumble(pad({ actuator: { playEffect, reset: async () => { throw new Error('x') }, effects: [] } }))
+    await stopRumble(
+      pad({
+        actuator: {
+          playEffect,
+          reset: async () => {
+            throw new Error('x')
+          },
+          effects: [],
+        },
+      }),
+    )
     await stopRumble(null)
   })
 })
@@ -47,7 +91,20 @@ describe('mapping', () => {
     layout.axes.lx = 1
     saveLayout('padA', layout)
     expect(getLayout('padA')?.buttons.south).toBe(3)
-    const f: Frame = { index: 0, id: 'padA', mapping: '', t: 0, hwT: 0, axes: [0, 0.7, 0, 0], buttons: [{ pressed: false, value: 0 }, { pressed: false, value: 0 }, { pressed: false, value: 0 }, { pressed: true, value: 1 }] }
+    const f: Frame = {
+      index: 0,
+      id: 'padA',
+      mapping: '',
+      t: 0,
+      hwT: 0,
+      axes: [0, 0.7, 0, 0],
+      buttons: [
+        { pressed: false, value: 0 },
+        { pressed: false, value: 0 },
+        { pressed: false, value: 0 },
+        { pressed: true, value: 1 },
+      ],
+    }
     const shaped = applyLayout(f, layout)
     expect(shaped.mapping).toBe('learned')
     expect(shaped.buttons[0]).toEqual({ pressed: true, value: 1 })
@@ -77,7 +134,10 @@ describe('poller', () => {
     const pads: (Gamepad | null)[] = [pad(), null]
     Object.defineProperty(navigator, 'getGamepads', { value: () => pads, configurable: true })
     const rafs: FrameRequestCallback[] = []
-    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { rafs.push(cb); return rafs.length })
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+      rafs.push(cb)
+      return rafs.length
+    })
     vi.stubGlobal('cancelAnimationFrame', vi.fn())
     expect(snapshot(pad({ timestamp: undefined }), 1).hwT).toBe(0)
     const s = snapshot(pad(), 7)

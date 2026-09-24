@@ -1,10 +1,42 @@
-.gauge { width: 170px; height: 170px; flex: none; }
-.gauge .g-body { fill: var(--bg-elev); stroke: var(--line); }
-.gauge .g-lever { fill: color-mix(in srgb, var(--accent) 35%, var(--bg-elev)); stroke: var(--accent); stroke-width: 1.5; }
-.gauge .g-pivot { fill: var(--fg-muted); }
-.gauge .g-track { fill: var(--bg-elev); stroke: var(--line); }
-.gauge .g-fill { fill: var(--accent); }
-.gauge .g-tick { stroke: var(--fg-dim); stroke-width: 2; transition: stroke var(--dur-fast) var(--ease); }
-.gauge .g-tick[data-lit='true'] { stroke: var(--accent); }
-.gauge .g-label { fill: var(--fg-muted); font-size: 9px; font-family: var(--mono); }
-.gauge .g-max { stroke: var(--ok); stroke-width: 2; stroke-dasharray: 3 3; }
+.gauge {
+  width: 170px;
+  height: 170px;
+  flex: none;
+}
+.gauge .g-body {
+  fill: var(--bg-elev);
+  stroke: var(--line);
+}
+.gauge .g-lever {
+  fill: color-mix(in srgb, var(--accent) 35%, var(--bg-elev));
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.gauge .g-pivot {
+  fill: var(--fg-muted);
+}
+.gauge .g-track {
+  fill: var(--bg-elev);
+  stroke: var(--line);
+}
+.gauge .g-fill {
+  fill: var(--accent);
+}
+.gauge .g-tick {
+  stroke: var(--fg-dim);
+  stroke-width: 2;
+  transition: stroke var(--dur-fast) var(--ease);
+}
+.gauge .g-tick[data-lit='true'] {
+  stroke: var(--accent);
+}
+.gauge .g-label {
+  fill: var(--fg-muted);
+  font-size: 9px;
+  font-family: var(--mono);
+}
+.gauge .g-max {
+  stroke: var(--ok);
+  stroke-width: 2;
+  stroke-dasharray: 3 3;
+}

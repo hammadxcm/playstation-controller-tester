@@ -1,77 +1,67 @@
 import { Button } from '@/components/ui'
+import { LangPicker, ThemeButton } from '@/components/Chrome'
+import { useT } from '@/i18n/useT'
+import type { Tab } from '@/features/screens'
 import { HeroArtwork } from './HeroArtwork'
-import { useResolvedTheme } from '@/state/hooks'
-import { useStore } from '@/state/store'
 import { AddDevice } from './AddDevice'
 import { Showcase } from './Showcase'
 import { FeatureTour } from './FeatureTour'
 import './landing.css'
 
-export type LandingTab =
-  'overview' | 'sticks' | 'triggers' | 'buttons' | 'haptics' | 'wizard' | 'pro' | 'learn' | 'report'
+export type LandingTab = Tab
 
 /** Front door: shown until a Gamepad-API pad or WebHID device is connected, or the user enters the shell. */
 export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
-  const theme = useResolvedTheme()
-  const setSettings = useStore((s) => s.setSettings)
+  const t = useT()
   return (
     <div className="landing">
-      <div className="landing-bg" aria-hidden>
-        <i />
-        <i />
-        <i />
-      </div>
-      <header className="landing-nav">
-        <span className="brand">Controller Tester</span>
+      <header className="landing-nav topbar">
+        <span className="brand">{t('app.title')}</span>
         <span className="spacer" />
-        <Button small onClick={() => onEnter('pro')}>
-          Pro Mode
-        </Button>
-        <Button small onClick={() => onEnter('report')}>
-          Report
-        </Button>
-        <Button
-          small
-          onClick={() => setSettings({ theme: theme === 'dark' ? 'light' : 'dark' })}
-          aria-label="Toggle theme"
-        >
-          {theme === 'dark' ? '☀︎' : '☾'}
-        </Button>
+        <nav className="row" aria-label={t('app.title')}>
+          <Button small onClick={() => onEnter('pro')}>
+            {t('nav.proMode')}
+          </Button>
+          <Button small onClick={() => onEnter('report')}>
+            {t('nav.report')}
+          </Button>
+          <LangPicker />
+          <ThemeButton />
+        </nav>
       </header>
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <p className="eyebrow">Free · in-browser · nothing uploaded</p>
-          <h1 id="hero-title" className="display">
-            Every button, stick and trigger. Tested in seconds.
-          </h1>
-          <p className="lead muted">
-            Drift, dead zones, circularity, polling rate, rumble and adaptive triggers for
-            DualSense, DualSense Edge, DualShock 4, Xbox and any gamepad. No install, no account.
-          </p>
-          <div className="row hero-cta">
-            <a className="btn btn-primary" href="#add-device">
-              Add a device
-            </a>
-            <Button onClick={() => onEnter('pro')}>Open Pro Mode</Button>
+      <main id="content" className="landing-main">
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="hero-copy">
+            <p className="eyebrow">{t('hero.eyebrow')}</p>
+            <h1 id="hero-title" className="display">
+              {t('hero.title')}
+            </h1>
+            <p className="lead muted">{t('hero.lead')}</p>
+            <div className="row hero-cta">
+              <a className="btn btn-primary" href="#add-device">
+                {t('hero.add')}
+              </a>
+              <Button onClick={() => onEnter('pro')}>{t('hero.pro')}</Button>
+            </div>
           </div>
-        </div>
-        <div className="hero-art">
-          <HeroArtwork />
-        </div>
-      </section>
-      <AddDevice />
-      <Showcase />
-      <FeatureTour onEnter={onEnter} />
+          <div className="hero-art">
+            <HeroArtwork />
+          </div>
+        </section>
+        <AddDevice />
+        <Showcase />
+        <FeatureTour onEnter={onEnter} />
+      </main>
       <footer className="landing-footer small dim">
-        <span>Everything runs in your browser; nothing is uploaded.</span>
+        <span>{t('footer.privacy')}</span>
         <a href="https://github.com/hammadxcm/playstation-controller-tester" rel="noopener">
-          GitHub
+          {t('footer.github')}
         </a>
         <a
           href="https://github.com/hammadxcm/playstation-controller-tester/blob/main/LICENSES.md"
           rel="noopener"
         >
-          Licences
+          {t('footer.licences')}
         </a>
       </footer>
     </div>

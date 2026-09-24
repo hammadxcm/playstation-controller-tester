@@ -5,7 +5,10 @@
  */
 
 export const audioSupported = (): boolean =>
-  typeof AudioContext !== 'undefined' && 'setSinkId' in AudioContext.prototype && typeof navigator !== 'undefined' && !!navigator.mediaDevices?.enumerateDevices
+  typeof AudioContext !== 'undefined' &&
+  'setSinkId' in AudioContext.prototype &&
+  typeof navigator !== 'undefined' &&
+  !!navigator.mediaDevices?.enumerateDevices
 
 const SONY = /dualsense|wireless controller|playstation/i
 
@@ -17,7 +20,10 @@ export interface AudioDevices {
 /** Sony-looking audio devices. Labels are empty until the page has microphone permission. */
 export function pickControllerDevices(all: MediaDeviceInfo[]): AudioDevices {
   const sony = all.filter((d) => SONY.test(d.label))
-  return { outputs: sony.filter((d) => d.kind === 'audiooutput'), inputs: sony.filter((d) => d.kind === 'audioinput') }
+  return {
+    outputs: sony.filter((d) => d.kind === 'audiooutput'),
+    inputs: sony.filter((d) => d.kind === 'audioinput'),
+  }
 }
 
 export async function findControllerAudio(): Promise<AudioDevices> {
@@ -33,7 +39,12 @@ export async function findControllerAudio(): Promise<AudioDevices> {
 
 /** Minimal surface of the Web Audio graph we build, so it can be faked in tests. */
 export interface GraphContext {
-  destination: { channelCount: number; maxChannelCount: number; channelCountMode: string; channelInterpretation: string }
+  destination: {
+    channelCount: number
+    maxChannelCount: number
+    channelCountMode: string
+    channelInterpretation: string
+  }
   createGain(): GainNode
   createChannelMerger(n: number): ChannelMergerNode
 }
@@ -128,7 +139,9 @@ export interface MicMeter {
 }
 
 export async function createMicMeter(deviceId: string): Promise<MicMeter> {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: { exact: deviceId }, echoCancellation: false, noiseSuppression: false } })
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: { deviceId: { exact: deviceId }, echoCancellation: false, noiseSuppression: false },
+  })
   const ctx = new AudioContext()
   const src = ctx.createMediaStreamSource(stream)
   const an = ctx.createAnalyser()
@@ -144,7 +157,10 @@ export async function createMicMeter(deviceId: string): Promise<MicMeter> {
   }
 }
 
-export function rms(an: { getFloatTimeDomainData(b: Float32Array): void }, buf: Float32Array): number {
+export function rms(
+  an: { getFloatTimeDomainData(b: Float32Array): void },
+  buf: Float32Array,
+): number {
   an.getFloatTimeDomainData(buf)
   let s = 0
   for (let i = 0; i < buf.length; i++) s += buf[i]! * buf[i]!

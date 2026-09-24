@@ -7,10 +7,17 @@ import * as fx from './dualsense/triggerEffects'
 import { encodeOutput as encodeDs4 } from './dualshock4/output'
 import { parseDualShock4 } from './dualshock4/input'
 
-const hex = (s: string) => new Uint8Array(s.trim().split(/\s+/).map((h) => parseInt(h, 16)))
+const hex = (s: string) =>
+  new Uint8Array(
+    s
+      .trim()
+      .split(/\s+/)
+      .map((h) => parseInt(h, 16)),
+  )
 
 // nondebug/dualsense sample: USB input report, all inputs neutral, report id stripped
-const NEUTRAL = hex(`7e 81 84 84 00 00 4b 08 00 00 00 ac 0a af 14 f2 ff 0a 00 f2 ff b8 ff ff 1d 9e 08 da 8f e8 ae 1b
+const NEUTRAL =
+  hex(`7e 81 84 84 00 00 4b 08 00 00 00 ac 0a af 14 f2 ff 0a 00 f2 ff b8 ff ff 1d 9e 08 da 8f e8 ae 1b
   fc 3e 00 26 f9 7f 87 0b bd 09 09 00 00 00 00 00 92 a0 e8 ae 29 08 00 b0 7e c8 76 f8 cc a2 2b`)
 
 describe('crc32', () => {

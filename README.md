@@ -22,7 +22,7 @@ Test PS5 DualSense / DualSense Edge, PS4 DualShock 4, Xbox and any other gamepad
 
 ## What it does
 
-The landing page shows a live DualSense render with pointer tilt, an Add Device section for both ways in (press any button for the Gamepad API, pair over WebHID for Pro Mode), a showcase of DualSense, DualSense Edge and DualShock 4 with hover callouts, and a tile for every screen. It crossfades into the app the moment a controller appears.
+The landing page shows a live DualSense render with pointer tilt, an Add Device section for both ways in (press any button for the Gamepad API, pair over WebHID for Pro Mode), a showcase of DualSense, DualSense Edge and DualShock 4 with hover callouts, and a tile for every screen. It crossfades into the app the moment a controller appears. The landing, app chrome and connect flow are available in nine languages (picker in the top bar; `auto` follows the browser).
 
 <p align="center"><img src="docs/landing-dark.png" alt="Landing page, dark theme" width="49%"> <img src="docs/landing-light.png" alt="Landing page, light theme" width="49%"></p>
 

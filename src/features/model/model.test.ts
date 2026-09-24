@@ -4,7 +4,18 @@ import { createRig } from './rig'
 import { ART_FILES } from './artwork/specs'
 import { build, defaults, PARAMS, type Mode } from '@/features/pro/triggerParams'
 
-const frame = (axes: number[], buttons: { pressed: boolean; value: number }[] = []): Frame => ({ index: 0, id: 'x', mapping: 'standard', t: 0, hwT: 0, axes, buttons: [...buttons, ...Array.from({ length: 18 - buttons.length }, () => ({ pressed: false, value: 0 }))] })
+const frame = (axes: number[], buttons: { pressed: boolean; value: number }[] = []): Frame => ({
+  index: 0,
+  id: 'x',
+  mapping: 'standard',
+  t: 0,
+  hwT: 0,
+  axes,
+  buttons: [
+    ...buttons,
+    ...Array.from({ length: 18 - buttons.length }, () => ({ pressed: false, value: 0 })),
+  ],
+})
 
 describe('rig branches', () => {
   it('handles frames with missing buttons and axes, and right-stick moves', () => {

@@ -6,7 +6,8 @@ import { STD_BUTTONS } from '@/core/gamepad/types'
 import { prepareArtwork } from './prepare'
 import { SPECS, type ArtworkKind } from './specs'
 
-const load = (k: ArtworkKind) => readFileSync(resolve('src/features/model/artwork', `${k}.svg`), 'utf8')
+const load = (k: ArtworkKind) =>
+  readFileSync(resolve('src/features/model/artwork', `${k}.svg`), 'utf8')
 
 describe('prepareArtwork', () => {
   for (const kind of Object.keys(SPECS) as ArtworkKind[]) {
@@ -33,14 +34,19 @@ describe('prepareArtwork', () => {
     expect(ds4.inner).toContain('fill-rule="nonzero"')
   })
   it('classifies plain Background shapes as ink and tolerates odd viewBoxes', () => {
-    const out = prepareArtwork('<svg><g id="Background"><path id="Frame"/></g></svg>', { ...SPECS.dualshock4, parts: { south: undefined }, sticks: { ls: { cap: 'x' }, rs: { cap: 'x' } } })
+    const out = prepareArtwork('<svg><g id="Background"><path id="Frame"/></g></svg>', {
+      ...SPECS.dualshock4,
+      parts: { south: undefined },
+      sticks: { ls: { cap: 'x' }, rs: { cap: 'x' } },
+    })
     expect(out.inner).toContain('class="m-ink"')
     expect(out.viewBox).toBe('0 0 100 100')
     const odd = prepareArtwork('<svg viewBox="0 0"><g id="Main"/></svg>', SPECS.dualshock4)
     expect(odd.width).toBe(100)
   })
   it('strips scripts, handlers and external references from untrusted markup', () => {
-    const evil = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 10 10"><script>alert(1)</script><g id="Main"><path id="p" onclick="x()" onload="y()"/><a href="https://evil"><path id="q"/></a><use href="https://evil/#x"/><image href="http://t"/><path id="r" xlink:href="#ok"/></g></svg>'
+    const evil =
+      '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 10 10"><script>alert(1)</script><g id="Main"><path id="p" onclick="x()" onload="y()"/><a href="https://evil"><path id="q"/></a><use href="https://evil/#x"/><image href="http://t"/><path id="r" xlink:href="#ok"/></g></svg>'
     const out = prepareArtwork(evil, SPECS.dualshock4)
     expect(out.inner).not.toContain('<script')
     expect(out.inner).not.toContain('onclick')
@@ -50,7 +56,11 @@ describe('prepareArtwork', () => {
     expect(out.inner).toContain('id="p"')
   })
   it('survives a missing element in the spec', () => {
-    const out = prepareArtwork('<svg viewBox="0 0 10 10"><g id="Main"><path id="a"/></g></svg>', { ...SPECS.dualshock4, parts: { south: ['nope'] }, sticks: { ls: { cap: 'nope' }, rs: { cap: 'nope' } } })
+    const out = prepareArtwork('<svg viewBox="0 0 10 10"><g id="Main"><path id="a"/></g></svg>', {
+      ...SPECS.dualshock4,
+      parts: { south: ['nope'] },
+      sticks: { ls: { cap: 'nope' }, rs: { cap: 'nope' } },
+    })
     expect(out.tagged).toEqual({})
     expect(out.inner).toContain('class="m-ink"')
   })

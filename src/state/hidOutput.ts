@@ -25,7 +25,11 @@ export const EMPTY_OUTPUT: HidOutput = {
 }
 
 /** Wrap a controller so every command is mirrored into `set` after the device accepted it. */
-export function trackOutput(hid: HidController, set: (patch: Partial<HidOutput>) => void, get: () => HidOutput): HidController {
+export function trackOutput(
+  hid: HidController,
+  set: (patch: Partial<HidOutput>) => void,
+  get: () => HidOutput,
+): HidController {
   return {
     family: hid.family,
     label: hid.label,
@@ -61,7 +65,12 @@ export function trackOutput(hid: HidController, set: (patch: Partial<HidOutput>)
       await hid.setTrigger(side, effect)
       set({ trigger: { ...get().trigger, [side]: effect[0] ?? 0x05 } })
     },
-    setAudio: hid.setAudio ? async (a) => { await hid.setAudio!(a); set({ audio: a }) } : undefined,
+    setAudio: hid.setAudio
+      ? async (a) => {
+          await hid.setAudio!(a)
+          set({ audio: a })
+        }
+      : undefined,
     info: () => hid.info(),
     factory: hid.factory ? () => hid.factory!() : undefined,
     close: () => hid.close(),

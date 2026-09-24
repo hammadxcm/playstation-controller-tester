@@ -6,7 +6,13 @@ import { useFrame, useSampled } from '@/state/hooks'
 import { TriggerGauge } from './TriggerGauge'
 import './triggers.css'
 
-interface T { value: number; max: number; min: number; pressed: boolean; seen: Set<number> }
+interface T {
+  value: number
+  max: number
+  min: number
+  pressed: boolean
+  seen: Set<number>
+}
 const init = (): T => ({ value: 0, max: 0, min: 1, pressed: false, seen: new Set() })
 
 function TriggerPanel({ label, t }: { label: string; t: React.RefObject<T> }) {
@@ -26,13 +32,24 @@ function TriggerPanel({ label, t }: { label: string; t: React.RefObject<T> }) {
         <TriggerGauge value={value} max={max} />
         <div className="metrics" style={{ flex: 1, alignContent: 'center' }}>
           <Metric label="Value" value={m.value.toFixed(3)} large />
-          <Metric label="Max seen" value={m.max.toFixed(3)} tone={m.max >= 0.99 ? 'good' : m.max > 0 ? 'ok' : undefined} />
+          <Metric
+            label="Max seen"
+            value={m.max.toFixed(3)}
+            tone={m.max >= 0.99 ? 'good' : m.max > 0 ? 'ok' : undefined}
+          />
           <Metric label="Min while pressed" value={m.min < 1 ? m.min.toFixed(3) : '–'} />
           <Metric label="Resolution" value={m.bits ? `${m.bits}-bit` : '–'} />
-          <Metric label="Digital" value={m.pressed ? 'pressed' : 'released'} tone={m.pressed ? 'good' : undefined} />
+          <Metric
+            label="Digital"
+            value={m.pressed ? 'pressed' : 'released'}
+            tone={m.pressed ? 'good' : undefined}
+          />
         </div>
       </div>
-      <p className="small muted">Pull slowly to the stop. A healthy trigger reads near 0 at rest and reaches 1.0 at full travel without jumps; the tick marks light as you pass them and the bar keeps your maximum.</p>
+      <p className="small muted">
+        Pull slowly to the stop. A healthy trigger reads near 0 at rest and reaches 1.0 at full
+        travel without jumps; the tick marks light as you pass them and the bar keeps your maximum.
+      </p>
     </Card>
   )
 }
@@ -41,7 +58,10 @@ export function Triggers() {
   const l = useRef(init())
   const r = useRef(init())
   useFrame((f) => {
-    for (const [ref, idx] of [[l, STD.l2], [r, STD.r2]] as const) {
+    for (const [ref, idx] of [
+      [l, STD.l2],
+      [r, STD.r2],
+    ] as const) {
       const b = f.buttons[idx]
       const t = ref.current
       t.value = b?.value ?? 0

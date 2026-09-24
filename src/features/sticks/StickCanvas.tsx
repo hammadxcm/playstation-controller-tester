@@ -2,7 +2,12 @@ import { useEffect, useRef } from 'react'
 import { onRaf } from '@/lib/motion'
 import type { StickTrace } from './trace'
 
-interface Colors { line: string; accent: string; ok: string; muted: string }
+interface Colors {
+  line: string
+  accent: string
+  ok: string
+  muted: string
+}
 
 function readColors(el: Element): Colors {
   const cs = getComputedStyle(el)
@@ -11,13 +16,23 @@ function readColors(el: Element): Colors {
 }
 
 /** Draws the stick trace on the shared frame loop; reads from the ref, never re-renders. Colours are cached per theme. */
-export function StickCanvas({ trace, deadzone, mode }: { trace: React.RefObject<StickTrace>; deadzone: number; mode: 'fade' | 'constant' | 'none' }) {
+export function StickCanvas({
+  trace,
+  deadzone,
+  mode,
+}: {
+  trace: React.RefObject<StickTrace>
+  deadzone: number
+  mode: 'fade' | 'constant' | 'none'
+}) {
   const ref = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
     const c = ref.current!
     const ctx = c.getContext('2d')!
     let colors = readColors(c)
-    const mo = new MutationObserver(() => { colors = readColors(c) })
+    const mo = new MutationObserver(() => {
+      colors = readColors(c)
+    })
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
     const app = c.closest('.app')
     if (app) mo.observe(app, { attributes: true, attributeFilter: ['data-family'] })
@@ -33,11 +48,22 @@ export function StickCanvas({ trace, deadzone, mode }: { trace: React.RefObject<
       ctx.clearRect(0, 0, size, size)
       ctx.lineWidth = 1
       ctx.strokeStyle = colors.line
-      ctx.beginPath(); ctx.moveTo(s, 0); ctx.lineTo(s, size); ctx.moveTo(0, s); ctx.lineTo(size, s); ctx.stroke()
-      ctx.beginPath(); ctx.arc(s, s, r, 0, Math.PI * 2); ctx.stroke()
-      ctx.beginPath(); ctx.arc(s, s, r * 0.5, 0, Math.PI * 2); ctx.stroke()
+      ctx.beginPath()
+      ctx.moveTo(s, 0)
+      ctx.lineTo(s, size)
+      ctx.moveTo(0, s)
+      ctx.lineTo(size, s)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(s, s, r, 0, Math.PI * 2)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(s, s, r * 0.5, 0, Math.PI * 2)
+      ctx.stroke()
       ctx.strokeStyle = colors.ok
-      ctx.beginPath(); ctx.arc(s, s, r * deadzone, 0, Math.PI * 2); ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(s, s, r * deadzone, 0, Math.PI * 2)
+      ctx.stroke()
       const t = trace.current
       // coverage ring: each touched 5° bin lights up
       const bins = t.bins
@@ -47,7 +73,9 @@ export function StickCanvas({ trace, deadzone, mode }: { trace: React.RefObject<
       for (let i = 0; i < bins.length; i++) {
         if (!bins[i]) continue
         const a0 = (i / bins.length) * Math.PI * 2 - Math.PI
-        ctx.beginPath(); ctx.arc(s, s, r + 4 * dpr, a0, a0 + (Math.PI * 2) / bins.length + 0.01); ctx.stroke()
+        ctx.beginPath()
+        ctx.arc(s, s, r + 4 * dpr, a0, a0 + (Math.PI * 2) / bins.length + 0.01)
+        ctx.stroke()
       }
       ctx.globalAlpha = 1
       const pts = t.points
@@ -79,11 +107,19 @@ export function StickCanvas({ trace, deadzone, mode }: { trace: React.RefObject<
         haloSize = dpr
       }
       if (mag > deadzone && halo) {
-        ctx.save(); ctx.translate(cx, cy); ctx.globalAlpha = 0.35; ctx.fillStyle = halo
-        ctx.beginPath(); ctx.arc(0, 0, 16 * dpr, 0, Math.PI * 2); ctx.fill(); ctx.restore()
+        ctx.save()
+        ctx.translate(cx, cy)
+        ctx.globalAlpha = 0.35
+        ctx.fillStyle = halo
+        ctx.beginPath()
+        ctx.arc(0, 0, 16 * dpr, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.restore()
       }
       ctx.fillStyle = mag > deadzone ? colors.accent : colors.muted
-      ctx.beginPath(); ctx.arc(cx, cy, 5 * dpr, 0, Math.PI * 2); ctx.fill()
+      ctx.beginPath()
+      ctx.arc(cx, cy, 5 * dpr, 0, Math.PI * 2)
+      ctx.fill()
     }
     const off = onRaf(draw)
     return () => {

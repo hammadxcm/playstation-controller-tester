@@ -5,6 +5,7 @@ import { onRaf, reducedMotion } from '@/lib/motion'
 import { ArtworkModel } from '@/features/model/ArtworkModel'
 import type { FrameSource } from '@/features/model/useControllerRig'
 import { DEMO_STILL, demoFrame } from './demoFrame'
+import { useT } from '@/i18n/useT'
 
 // ponytail: module constants so the rig's effect keeps one subscription; a per-render closure would resubscribe every frame
 const demo: FrameSource = (cb) => {
@@ -22,6 +23,7 @@ const still: FrameSource = (cb) => {
  * depth is layered around it rather than per part; the rig still animates caps, triggers and lit buttons.
  */
 export function HeroArtwork() {
+  const t = useT()
   // App override (`?motion=reduce`) or the OS setting: no tilt, no glare drift, frozen demo pose.
   const reduce = useReducedMotion() || reducedMotion()
   const stage = useRef<HTMLDivElement>(null)
@@ -61,7 +63,7 @@ export function HeroArtwork() {
           aria-hidden
           style={{ x: off ?? shadowX, y: off ?? shadowY }}
         />
-        <ArtworkModel kind="dualsense" hero source={reduce ? still : demo} />
+        <ArtworkModel kind="dualsense" hero source={reduce ? still : demo} label={t('hero.art')} />
         <m.div
           className="hero-glare"
           aria-hidden

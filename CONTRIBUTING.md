@@ -48,6 +48,10 @@ For anything touching `src/core/hid`, test on a real controller over USB and Blu
 - `motion` is the one animation dependency: spring-based pointer and scroll motion values, `AnimatePresence` exit transitions and a `reducedMotion="user"` switch that plain CSS/WAAPI cannot express without bespoke code. Import from `motion/react` and `motion/react-m` only, inside the `LazyMotion` boundary in `main.tsx`; never import `framer-motion` or the full `motion` component (it is 34 kB against ~20 kB for `m` + `domAnimation`).
 - Prettier formats, oxlint lints; both run in CI.
 
+## Adding a language
+
+Copy `src/i18n/en.ts` to `src/i18n/<code>.ts`, translate the values (keep the `{placeholders}`), register it in `src/i18n/dicts.ts` and add the code to `LANGS` plus its native name in `LANG_NAMES` in `src/i18n/index.ts`. A test checks every dictionary has exactly the English key set. Only the landing, app chrome and connect flow are translated; the tool screens stay English.
+
 ## Adding a controller family
 
 1. Driver under `src/core/hid/<family>/` implementing `HidController`, built on `SonyDevice` if it is a Sony pad.

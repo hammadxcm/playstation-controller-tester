@@ -9,12 +9,33 @@ import { useControllerRig } from './useControllerRig'
 import { ArtworkModel } from './ArtworkModel'
 import './model.css'
 
-const BODIES: Record<Family, () => React.JSX.Element> = { dualsense: DualSense, dualshock4: DualShock4, xbox: Xbox, generic: Generic }
+const BODIES: Record<Family, () => React.JSX.Element> = {
+  dualsense: DualSense,
+  dualshock4: DualShock4,
+  xbox: Xbox,
+  generic: Generic,
+}
 
 /** Sony families use the accurate line-art drawings; others use the generated parts model. */
-export function ControllerModel({ family, compact, edge, showValues }: { family: Family; compact?: boolean; edge?: boolean; showValues?: boolean }) {
+export function ControllerModel({
+  family,
+  compact,
+  edge,
+  showValues,
+}: {
+  family: Family
+  compact?: boolean
+  edge?: boolean
+  showValues?: boolean
+}) {
   if (family === 'dualsense' || family === 'dualshock4') {
-    return <ArtworkModel kind={family === 'dualshock4' ? 'dualshock4' : edge ? 'dualsenseEdge' : 'dualsense'} compact={compact} showValues={showValues} />
+    return (
+      <ArtworkModel
+        kind={family === 'dualshock4' ? 'dualshock4' : edge ? 'dualsenseEdge' : 'dualsense'}
+        compact={compact}
+        showValues={showValues}
+      />
+    )
   }
   return <PartsModel family={family} compact={compact} />
 }
@@ -33,7 +54,14 @@ export function PartsModel({ family, compact }: { family: Family; compact?: bool
         <Defs />
         <Body />
       </svg>
-      <svg ref={parts} key={family} className="model-parts" viewBox="0 0 400 260" role="img" aria-label={`${PROFILES[family].label} controller, live`}>
+      <svg
+        ref={parts}
+        key={family}
+        className="model-parts"
+        viewBox="0 0 400 260"
+        role="img"
+        aria-label={`${PROFILES[family].label} controller, live`}
+      >
         <Parts g={g} />
       </svg>
     </div>

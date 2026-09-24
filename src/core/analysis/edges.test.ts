@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { ButtonTracker, circularity, deadzone, drift, pollingRate, resolutionBits, score } from './index'
+import {
+  ButtonTracker,
+  circularity,
+  deadzone,
+  drift,
+  pollingRate,
+  resolutionBits,
+  score,
+} from './index'
 
 describe('analysis edge cases', () => {
   it('drift verdict tiers', () => {
@@ -7,7 +15,11 @@ describe('analysis edge cases', () => {
     expect(drift([]).samples).toBe(0)
   })
   it('circularity verdict tiers and incomplete-range gate', () => {
-    const ring = (r: number) => Array.from({ length: 360 }, (_, i) => ({ x: r * Math.cos((i / 180) * Math.PI), y: r * Math.sin((i / 180) * Math.PI) }))
+    const ring = (r: number) =>
+      Array.from({ length: 360 }, (_, i) => ({
+        x: r * Math.cos((i / 180) * Math.PI),
+        y: r * Math.sin((i / 180) * Math.PI),
+      }))
     expect(circularity(ring(0.85)).verdict).toBe('ok')
     expect(circularity(ring(0.6)).verdict).toBe('bad')
     expect(circularity(ring(0.85).slice(0, 90)).incompleteRange).toBe(false)
@@ -15,10 +27,22 @@ describe('analysis edge cases', () => {
   it('deadzone: axis snapping, centre skipping, no samples', () => {
     const snap = Array.from({ length: 40 }, (_, i) => ({ x: i % 2 ? 0.1 : 0, y: i % 2 ? 0 : 0.1 }))
     expect(deadzone(snap).axisSnapping).toBe(true)
-    expect(deadzone([{ x: 0, y: 0 }, { x: 0.2, y: 0 }]).centerSkip).toBeCloseTo(0.2)
+    expect(
+      deadzone([
+        { x: 0, y: 0 },
+        { x: 0.2, y: 0 },
+      ]).centerSkip,
+    ).toBeCloseTo(0.2)
     expect(deadzone([]).inner).toBe(0)
-    expect(deadzone([{ x: 0.5, y: 0.5 }, { x: 0.9, y: 0.9 }]).centerSkip).toBe(0)
-    expect(deadzone(Array.from({ length: 30 }, () => ({ x: 0.1, y: 0.1 }))).axisSnapping).toBe(false)
+    expect(
+      deadzone([
+        { x: 0.5, y: 0.5 },
+        { x: 0.9, y: 0.9 },
+      ]).centerSkip,
+    ).toBe(0)
+    expect(deadzone(Array.from({ length: 30 }, () => ({ x: 0.1, y: 0.1 }))).axisSnapping).toBe(
+      false,
+    )
     expect(resolutionBits([0, 1e-12]).bits).toBe(0)
   })
   it('pollingRate ignores gaps and needs five samples', () => {
@@ -30,7 +54,14 @@ describe('analysis edge cases', () => {
     expect(resolutionBits([0.5, 0.5, 0.5]).bits).toBe(0)
   })
   it('score grade tiers', () => {
-    const base = { driftMagnitude: 0, circularityErrorPct: 0, resolutionBits: 12, pollingHz: 250, chatterEvents: 0, stuckButtons: 0 }
+    const base = {
+      driftMagnitude: 0,
+      circularityErrorPct: 0,
+      resolutionBits: 12,
+      pollingHz: 250,
+      chatterEvents: 0,
+      stuckButtons: 0,
+    }
     expect(score({ ...base, driftMagnitude: 0.03 }).grade).toBe('B')
     expect(score({ ...base, driftMagnitude: 0.06, circularityErrorPct: 10 }).grade).toBe('C')
     expect(score({ ...base, driftMagnitude: 0.08, pollingHz: 30 }).grade).toBe('D')

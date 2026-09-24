@@ -8,12 +8,22 @@ export interface StickTrace {
   filled: number
 }
 
-export const newTrace = (): StickTrace => ({ points: [], cur: { x: 0, y: 0 }, bins: new Uint8Array(BINS), filled: 0 })
+export const newTrace = (): StickTrace => ({
+  points: [],
+  cur: { x: 0, y: 0 },
+  bins: new Uint8Array(BINS),
+  filled: 0,
+})
 
 const MAX_FADE = 240
 const MAX_CONST = 6000
 
-export function pushTrace(t: StickTrace, x: number, y: number, mode: 'fade' | 'constant' | 'none'): void {
+export function pushTrace(
+  t: StickTrace,
+  x: number,
+  y: number,
+  mode: 'fade' | 'constant' | 'none',
+): void {
   t.cur = { x, y }
   if (Math.hypot(x, y) >= 0.5) {
     const i = Math.floor(((Math.atan2(y, x) + Math.PI) / (2 * Math.PI)) * BINS) % BINS

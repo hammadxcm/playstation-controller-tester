@@ -2,7 +2,15 @@
  * DualSense adaptive-trigger effect encoders (11 bytes: mode + 10 params).
  * Ported from Nielk1's TriggerEffectGenerator (MIT), revision 6.
  */
-export const MODE = { off: 0x05, feedback: 0x21, weapon: 0x25, vibration: 0x26, bow: 0x22, galloping: 0x23, machine: 0x27 } as const
+export const MODE = {
+  off: 0x05,
+  feedback: 0x21,
+  weapon: 0x25,
+  vibration: 0x26,
+  bow: 0x22,
+  galloping: 0x23,
+  machine: 0x27,
+} as const
 export type TriggerMode = keyof typeof MODE
 
 const clampInt = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, Math.round(v)))
@@ -41,7 +49,10 @@ function zones(mode: number, strengths: readonly number[], freqByte?: number): U
 export function feedback(position: number, strength: number): Uint8Array {
   const p = clampInt(position, 0, 9)
   const s = clampInt(strength, 0, 8)
-  return zones(MODE.feedback, Array.from({ length: 10 }, (_, i) => (i >= p ? s : 0)))
+  return zones(
+    MODE.feedback,
+    Array.from({ length: 10 }, (_, i) => (i >= p ? s : 0)),
+  )
 }
 
 /** Per-zone strengths, 10 entries of 0–8. */
@@ -69,7 +80,11 @@ export function vibration(position: number, amplitude: number, frequency: number
   const a = clampInt(amplitude, 0, 8)
   const f = clampInt(frequency, 0, 255)
   if (!a || !f) return off()
-  return zones(MODE.vibration, Array.from({ length: 10 }, (_, i) => (i >= p ? a : 0)), f)
+  return zones(
+    MODE.vibration,
+    Array.from({ length: 10 }, (_, i) => (i >= p ? a : 0)),
+    f,
+  )
 }
 
 /** Bow: tension between start/end with a snap-back `snapForce`. */
@@ -90,7 +105,13 @@ export function bow(start: number, end: number, strength: number, snapForce: num
 }
 
 /** Galloping pulse pattern; only noticeable at low frequency. */
-export function galloping(start: number, end: number, firstFoot: number, secondFoot: number, frequency: number): Uint8Array {
+export function galloping(
+  start: number,
+  end: number,
+  firstFoot: number,
+  secondFoot: number,
+  frequency: number,
+): Uint8Array {
   const s0 = clampInt(start, 0, 8)
   const s1 = clampInt(end, s0 + 1, 9)
   const f1 = clampInt(firstFoot, 0, 6)
@@ -107,7 +128,14 @@ export function galloping(start: number, end: number, firstFoot: number, secondF
 }
 
 /** Machine: alternates between two amplitudes at `frequency`, switching every `period` (×0.1 s). */
-export function machine(start: number, end: number, amplitudeA: number, amplitudeB: number, frequency: number, period: number): Uint8Array {
+export function machine(
+  start: number,
+  end: number,
+  amplitudeA: number,
+  amplitudeB: number,
+  frequency: number,
+  period: number,
+): Uint8Array {
   const s0 = clampInt(start, 0, 8)
   const s1 = clampInt(end, s0 + 1, 9)
   const a = clampInt(amplitudeA, 0, 7)

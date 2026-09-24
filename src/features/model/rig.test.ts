@@ -3,8 +3,14 @@ import type { Frame } from '@/core/gamepad/types'
 import { createRig } from './rig'
 
 const frame = (over: Partial<Frame> = {}): Frame => ({
-  index: 0, id: 'x', mapping: 'standard', t: 0, hwT: 0, axes: [0, 0, 0, 0],
-  buttons: Array.from({ length: 18 }, () => ({ pressed: false, value: 0 })), ...over,
+  index: 0,
+  id: 'x',
+  mapping: 'standard',
+  t: 0,
+  hwT: 0,
+  axes: [0, 0, 0, 0],
+  buttons: Array.from({ length: 18 }, () => ({ pressed: false, value: 0 })),
+  ...over,
 })
 
 describe('rig', () => {
@@ -19,7 +25,10 @@ describe('rig', () => {
     rig.diff(frame())
     const b = frame().buttons.map((x) => ({ ...x }))
     b[0] = { pressed: true, value: 1 }
-    expect(rig.diff(frame({ buttons: b }))).toEqual([{ kind: 'on', part: 'south', on: true }, { kind: 'edge', part: 'south' }])
+    expect(rig.diff(frame({ buttons: b }))).toEqual([
+      { kind: 'on', part: 'south', on: true },
+      { kind: 'edge', part: 'south' },
+    ])
     expect(rig.diff(frame({ buttons: b }))).toEqual([])
     expect(rig.diff(frame())).toEqual([{ kind: 'on', part: 'south', on: false }])
   })

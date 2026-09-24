@@ -10,8 +10,16 @@ import { PID } from '../../gamepad/identify'
 import { readFactoryInfo } from '../sony/factory'
 
 const CAPS: HidCaps = {
-  touchpad: true, motion: true, battery: true, rumble: true, lightbar: true,
-  lightbarFlash: false, playerLeds: true, micLed: true, adaptiveTriggers: true, edge: false,
+  touchpad: true,
+  motion: true,
+  battery: true,
+  rumble: true,
+  lightbar: true,
+  lightbarFlash: false,
+  playerLeds: true,
+  micLed: true,
+  adaptiveTriggers: true,
+  edge: false,
 }
 
 export class DualSenseDevice extends SonyDevice implements HidController {
@@ -19,8 +27,10 @@ export class DualSenseDevice extends SonyDevice implements HidController {
   readonly caps: HidCaps
   readonly label: string
   protected readonly ids: SonyIds = {
-    inputUsb: REPORT.inputUsb, inputBt: REPORT.inputBt,
-    outputUsb: REPORT.outputUsb, outputBt: REPORT.outputBt,
+    inputUsb: REPORT.inputUsb,
+    inputBt: REPORT.inputBt,
+    outputUsb: REPORT.outputUsb,
+    outputBt: REPORT.outputBt,
     calibration: [REPORT.featCalibration],
   }
   protected readonly btPayloadOffset = 1
@@ -41,7 +51,8 @@ export class DualSenseDevice extends SonyDevice implements HidController {
       if (d.byteLength < 1 + SIZE.state) return null
       return parseDualSense(d, this.btPayloadOffset, this.cal, t, reportId)
     }
-    if (reportId === REPORT.inputUsb && d.byteLength >= SIZE.state) return parseDualSense(d, 0, this.cal, t, reportId)
+    if (reportId === REPORT.inputUsb && d.byteLength >= SIZE.state)
+      return parseDualSense(d, 0, this.cal, t, reportId)
     return null // BT reduced mode: 9-byte report, ignored until promoted
   }
 
@@ -66,7 +77,10 @@ export class DualSenseDevice extends SonyDevice implements HidController {
       info.firmware = `0x${fw.toString(16).padStart(8, '0')}`
       info.updateVersion = `${upd >> 8}.${upd & 0xff}`
       this.out.vibrationV2 = upd >= 0x0215
-      this.note('info', `firmware ${info.firmware} update ${info.updateVersion} vibrationV2=${this.out.vibrationV2}`)
+      this.note(
+        'info',
+        `firmware ${info.firmware} update ${info.updateVersion} vibrationV2=${this.out.vibrationV2}`,
+      )
     } catch (e) {
       info.firmware = 'unavailable'
       this.note('error', `feature 0x20 failed: ${(e as Error).message}`)
@@ -90,7 +104,13 @@ export class DualSenseDevice extends SonyDevice implements HidController {
     return p
   }
   protected offPayload(): Uint8Array {
-    return encodeOutput({ ...emptyOutput(), rumble: { strong: 0, weak: 0 }, trigger: { left: fx.off(), right: fx.off() }, releaseLeds: true, vibrationV2: this.out.vibrationV2 })
+    return encodeOutput({
+      ...emptyOutput(),
+      rumble: { strong: 0, weak: 0 },
+      trigger: { left: fx.off(), right: fx.off() },
+      releaseLeds: true,
+      vibrationV2: this.out.vibrationV2,
+    })
   }
   protected frameUsb(payload: Uint8Array): Uint8Array<ArrayBuffer> {
     const b = new Uint8Array(SIZE.outputUsb)
@@ -136,6 +156,10 @@ export class DualSenseDevice extends SonyDevice implements HidController {
     return this.cachedInfo ?? this.readInfo()
   }
   async factory(): Promise<Record<string, string | number | undefined>> {
-    return readFactoryInfo({ device: this.device, transport: this.transport, log: this.log }) as Promise<Record<string, string | number | undefined>>
+    return readFactoryInfo({
+      device: this.device,
+      transport: this.transport,
+      log: this.log,
+    }) as Promise<Record<string, string | number | undefined>>
   }
 }

@@ -1,11 +1,13 @@
 import { useMemo } from 'react'
 import { Button } from '@/components/ui'
+import { useT } from '@/i18n/useT'
 import { useAddDevice } from '@/state/hooks'
 import { detectSupport, ENGINE_LABEL, phaseFor } from './support'
 import { ParallaxGlow } from './ParallaxGlow'
 
 /** Both ways in: the Gamepad API (press any button) and WebHID pairing (Chrome/Edge desktop). */
 export function AddDevice() {
+  const t = useT()
   const support = useMemo(
     () =>
       detectSupport(
@@ -16,6 +18,7 @@ export function AddDevice() {
   )
   const { busy, err, add } = useAddDevice()
   const phase = phaseFor(support, busy, err)
+  const engine = support.engine === 'other' ? t('add.thisBrowser') : ENGINE_LABEL[support.engine]
   return (
     <section
       className="landing-section add-device"
@@ -24,89 +27,82 @@ export function AddDevice() {
     >
       <ParallaxGlow />
       <h2 id="add-device-title" className="display">
-        Add a device
+        {t('add.title')}
       </h2>
       <div className="add-grid">
         <article className="card add-card" data-phase={phase}>
           <div className="add-head">
-            <span className="add-step">1</span>
-            <h3>Press any button</h3>
+            <span className="add-step" aria-hidden>
+              1
+            </span>
+            <h3>{t('add.step1')}</h3>
           </div>
-          <p className="muted">
-            Plug in over USB or pair over Bluetooth, then press any button. Browsers only reveal a
-            gamepad after its first input. Works with DualSense, DualShock 4, Xbox and generic pads.
-          </p>
+          <p className="muted">{t('add.step1Body')}</p>
           {phase === 'unsupported' ? (
-            <p className="small" style={{ color: 'var(--bad)' }}>
-              {ENGINE_LABEL[support.engine]} has no Gamepad API. Try Chrome, Edge, Firefox or
-              Safari.
-            </p>
+            <p className="small bad">{t('add.noGamepad', { engine })}</p>
           ) : (
             <div className="listen" aria-live="polite">
-              <span className="listen-dot" />
-              Listening for a controller…
+              <span className="listen-dot" aria-hidden />
+              {t('add.listening')}
             </div>
           )}
         </article>
         <article className="card add-card" data-phase={support.webhid ? phase : 'unsupported'}>
           <div className="add-head">
-            <span className="add-step">2</span>
-            <h3>Pair for Pro Mode</h3>
+            <span className="add-step" aria-hidden>
+              2
+            </span>
+            <h3>{t('add.step2')}</h3>
           </div>
-          <p className="muted">
-            WebHID talks to the controller directly: adaptive triggers, lightbar, player LEDs, mic
-            LED, touchpad, gyro, battery and firmware. DualSense, DualSense Edge and DualShock 4.
-          </p>
+          <p className="muted">{t('add.step2Body')}</p>
           {support.webhid ? (
             <div className="row">
               <Button primary data-pulse="" disabled={busy} onClick={() => void add()}>
-                {busy ? 'Waiting for the picker…' : 'Pair over USB or Bluetooth'}
+                {busy ? t('add.pairing') : t('add.pair')}
               </Button>
               {err && (
-                <span className="small" style={{ color: 'var(--bad)' }}>
+                <span className="small bad" role="alert">
                   {err}
                 </span>
               )}
             </div>
           ) : (
-            <p className="small dim">
-              Not available in {ENGINE_LABEL[support.engine]}. Pro Mode needs Chrome or Edge on
-              desktop.
-            </p>
+            <p className="small dim">{t('add.noWebHid', { engine })}</p>
           )}
         </article>
       </div>
       <table className="table support-table">
+        <caption className="visually-hidden">{t('add.table.feature')}</caption>
         <thead>
           <tr>
-            <th></th>
-            <th>Chrome / Edge</th>
-            <th>Firefox</th>
-            <th>Safari</th>
+            <th scope="col">{t('add.table.feature')}</th>
+            <th scope="col">Chrome / Edge</th>
+            <th scope="col">Firefox</th>
+            <th scope="col">Safari</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Buttons, sticks, triggers</td>
+            <th scope="row">{t('add.table.buttons')}</th>
             <td>✓</td>
             <td>✓</td>
             <td>✓</td>
           </tr>
           <tr>
-            <td>Rumble</td>
+            <th scope="row">{t('add.table.rumble')}</th>
             <td>✓</td>
-            <td>partial</td>
+            <td>{t('add.table.partial')}</td>
             <td>–</td>
           </tr>
           <tr>
-            <td>Trigger rumble (Xbox)</td>
-            <td>✓ Win/mac</td>
+            <th scope="row">{t('add.table.triggerRumble')}</th>
+            <td>✓ {t('add.table.winmac')}</td>
             <td>–</td>
             <td>–</td>
           </tr>
           <tr>
-            <td>Pro Mode (PS4/PS5 via WebHID)</td>
-            <td>✓ desktop</td>
+            <th scope="row">{t('add.table.pro')}</th>
+            <td>✓ {t('add.table.desktop')}</td>
             <td>–</td>
             <td>–</td>
           </tr>

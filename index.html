@@ -5,13 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#0a0c11" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob:; connect-src 'self' ws://localhost:* wss://localhost:*; object-src 'none'; base-uri 'self'; form-action 'none'" />
-    <meta name="description" content="Test PS5 DualSense, PS4 DualShock 4, Xbox and any gamepad in your browser: buttons, stick drift, circularity, rumble, adaptive triggers, lightbar, touchpad, gyro." />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob:; connect-src 'self' ws://localhost:* wss://localhost:*; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta
+      name="description"
+      content="Test PS5 DualSense, PS4 DualShock 4, Xbox and any gamepad in your browser: buttons, stick drift, circularity, rumble, adaptive triggers, lightbar, touchpad, gyro."
+    />
     <title>Controller Tester</title>
+    <link rel="canonical" href="https://hammadxcm.github.io/playstation-controller-tester/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Controller Tester" />
+    <meta property="og:title" content="Controller Tester: test any gamepad in your browser" />
+    <meta
+      property="og:description"
+      content="DualSense, DualSense Edge, DualShock 4, Xbox and any gamepad: buttons, stick drift, circularity, rumble, adaptive triggers, lightbar, touchpad, gyro. Free, in-browser, nothing uploaded."
+    />
+    <meta property="og:url" content="https://hammadxcm.github.io/playstation-controller-tester/" />
+    <meta
+      property="og:image"
+      content="https://hammadxcm.github.io/playstation-controller-tester/og.png"
+    />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="800" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Controller Tester: test any gamepad in your browser" />
+    <meta
+      name="twitter:description"
+      content="DualSense, DualSense Edge, DualShock 4, Xbox and any gamepad. Free, in-browser, nothing uploaded."
+    />
+    <meta
+      name="twitter:image"
+      content="https://hammadxcm.github.io/playstation-controller-tester/og.png"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Controller Tester",
+        "url": "https://hammadxcm.github.io/playstation-controller-tester/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a browser with the Gamepad API; WebHID for Pro Mode",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "inLanguage": ["en", "es", "pt", "fr", "de", "ru", "ja", "zh", "ko"],
+        "license": "https://github.com/hammadxcm/playstation-controller-tester/blob/main/LICENSE"
+      }
+    </script>
     <script src="/theme.js"></script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript
+      >Controller Tester needs JavaScript: it reads your gamepad through the browser's Gamepad API
+      and never uploads anything.</noscript
+    >
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

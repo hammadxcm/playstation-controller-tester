@@ -1,10 +1,12 @@
 /** Single source of truth for motion preference, shared rAF loop, tiny perf collector. DOM-only module. */
-const params = typeof location !== 'undefined' ? new URLSearchParams(location.search) : new URLSearchParams()
+const params =
+  typeof location !== 'undefined' ? new URLSearchParams(location.search) : new URLSearchParams()
 const mq = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null
 let reduce = params.get('motion') === 'reduce' || (params.get('motion') !== 'full' && !!mq?.matches)
 
 function applyMotion() {
-  if (typeof document !== 'undefined') document.documentElement.dataset.motion = reduce ? 'reduce' : 'full'
+  if (typeof document !== 'undefined')
+    document.documentElement.dataset.motion = reduce ? 'reduce' : 'full'
 }
 applyMotion()
 mq?.addEventListener('change', (e) => {
@@ -16,13 +18,18 @@ mq?.addEventListener('change', (e) => {
 export const reducedMotion = (): boolean => reduce
 
 /** el.animate that respects reduced motion (returns null instead of animating). */
-export function animate(el: Element, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions): Animation | null {
+export function animate(
+  el: Element,
+  keyframes: Keyframe[] | PropertyIndexedKeyframes,
+  options: KeyframeAnimationOptions,
+): Animation | null {
   if (reduce) return null
   return el.animate(keyframes, options)
 }
 
 /** Exponential smoothing step. k=1 means no smoothing. */
-export const smooth = (cur: number, target: number, k: number): number => (reduce ? target : cur + (target - cur) * k)
+export const smooth = (cur: number, target: number, k: number): number =>
+  reduce ? target : cur + (target - cur) * k
 
 const rafCbs = new Set<(t: number) => void>()
 let raf = 0
@@ -56,7 +63,11 @@ export const perf = {
     const out: Record<string, unknown> = Object.fromEntries(counters)
     for (const [name, arr] of samples) {
       const s = [...arr].sort((a, b) => a - b)
-      out[name] = { n: s.length, p50: s[Math.floor(s.length * 0.5)]!, p95: s[Math.floor(s.length * 0.95)]! }
+      out[name] = {
+        n: s.length,
+        p50: s[Math.floor(s.length * 0.5)]!,
+        p95: s[Math.floor(s.length * 0.95)]!,
+      }
     }
     return out
   },

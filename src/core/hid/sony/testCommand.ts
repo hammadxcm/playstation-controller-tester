@@ -4,8 +4,16 @@ import type { HidLogger } from '../log'
 /** Sony's factory "test command" protocol: write [deviceId, actionId] to feature 0x80, poll feature 0x81. */
 export const DeviceId = { SYSTEM: 1, POWER: 2, ANALOG_DATA: 4, TOUCH: 5, BLUETOOTH: 9 } as const
 export const ActionId = {
-  READ_BDADR: 2, BATTERY: 3, READ_PCBAID: 4, SOLOMON_UID: 2, SOLOMON_VERSION: 4,
-  GET_MCU_UNIQUE_ID: 9, READ_PCBAID_FULL: 17, READ_SERIAL_NUMBER: 19, READ_ASSEMBLE_PARTS_INFO: 21, READ_BATTERY_BARCODE: 24,
+  READ_BDADR: 2,
+  BATTERY: 3,
+  READ_PCBAID: 4,
+  SOLOMON_UID: 2,
+  SOLOMON_VERSION: 4,
+  GET_MCU_UNIQUE_ID: 9,
+  READ_PCBAID_FULL: 17,
+  READ_SERIAL_NUMBER: 19,
+  READ_ASSEMBLE_PARTS_INFO: 21,
+  READ_BATTERY_BARCODE: 24,
 } as const
 const STATUS = { IDLE: 0, RUNNING: 1, COMPLETE: 2, COMPLETE_2: 3, TIMEOUT: 255 } as const
 const PAGE = 56
@@ -18,7 +26,10 @@ export interface CommandTarget {
 }
 
 function featureLength(device: HIDDevice, id: number, fallback: number): number {
-  for (const c of device.collections) for (const r of c.featureReports ?? []) if (r.reportId === id) return (r.items ?? []).reduce((s, i) => s + (i.reportCount ?? 0), 0) || fallback
+  for (const c of device.collections)
+    for (const r of c.featureReports ?? [])
+      if (r.reportId === id)
+        return (r.items ?? []).reduce((s, i) => s + (i.reportCount ?? 0), 0) || fallback
   return fallback
 }
 
@@ -27,7 +38,8 @@ export async function sendFeature(t: CommandTarget, id: number, data: Uint8Array
   const len = featureLength(t.device, id, t.transport === 'bt' ? 77 : 63)
   const body = new Uint8Array(len)
   body.set(data.subarray(0, len))
-  if (t.transport === 'bt' && len >= 8) writeCrcLE(body, len - 4, sonyCrc(SEED.feature, id, body.subarray(0, len - 4)))
+  if (t.transport === 'bt' && len >= 8)
+    writeCrcLE(body, len - 4, sonyCrc(SEED.feature, id, body.subarray(0, len - 4)))
   await t.device.sendFeatureReport(id, body)
   t.log?.({ t: performance.now(), dir: 'feature-out', reportId: id, bytes: body })
 }
@@ -41,12 +53,23 @@ function locked<T>(fn: () => Promise<T>): Promise<T> {
 }
 
 /** Run one command and collect `resultLength` bytes across 56-byte pages. Returns null on failure/timeout. */
-export function testCommand(t: CommandTarget, deviceId: number, actionId: number, resultLength: number, sleepMs = 10): Promise<Uint8Array | null> {
+export function testCommand(
+  t: CommandTarget,
+  deviceId: number,
+  actionId: number,
+  resultLength: number,
+  sleepMs = 10,
+): Promise<Uint8Array | null> {
   return locked(async () => {
     try {
       await sendFeature(t, 0x80, new Uint8Array([deviceId, actionId]))
     } catch (e) {
-      t.log?.({ t: performance.now(), dir: 'error', reportId: 0x80, note: `command ${deviceId}/${actionId}: ${(e as Error).message}` })
+      t.log?.({
+        t: performance.now(),
+        dir: 'error',
+        reportId: 0x80,
+        note: `command ${deviceId}/${actionId}: ${(e as Error).message}`,
+      })
       return null
     }
     const out = new Uint8Array(resultLength)
@@ -66,12 +89,21 @@ export function testCommand(t: CommandTarget, deviceId: number, actionId: number
       if (echo && (status === STATUS.COMPLETE || status === STATUS.COMPLETE_2)) {
         const remaining = resultLength - PAGE * page
         const n = status === STATUS.COMPLETE ? Math.min(remaining, PAGE) : PAGE
-        const src = new Uint8Array(r.buffer, r.byteOffset + 4 + off, Math.max(0, Math.min(n, r.byteLength - 4 - off)))
+        const src = new Uint8Array(
+          r.buffer,
+          r.byteOffset + 4 + off,
+          Math.max(0, Math.min(n, r.byteLength - 4 - off)),
+        )
         out.set(src.subarray(0, Math.max(0, remaining)), PAGE * page)
         page++
         if (status === STATUS.COMPLETE) {
           // Factory replies carry serial numbers and the Bluetooth address; log the shape, never the bytes.
-          t.log?.({ t: performance.now(), dir: 'feature-in', reportId: 0x81, note: `command ${deviceId}/${actionId}: ${out.length} bytes (payload redacted, device identifiers)` })
+          t.log?.({
+            t: performance.now(),
+            dir: 'feature-in',
+            reportId: 0x81,
+            note: `command ${deviceId}/${actionId}: ${out.length} bytes (payload redacted, device identifiers)`,
+          })
           return out
         }
         continue
@@ -79,7 +111,12 @@ export function testCommand(t: CommandTarget, deviceId: number, actionId: number
       if (echo && status === STATUS.TIMEOUT) break
       await new Promise((res) => setTimeout(res, sleepMs))
     }
-    t.log?.({ t: performance.now(), dir: 'error', reportId: 0x81, note: `command ${deviceId}/${actionId} timed out` })
+    t.log?.({
+      t: performance.now(),
+      dir: 'error',
+      reportId: 0x81,
+      note: `command ${deviceId}/${actionId} timed out`,
+    })
     return null
   })
 }

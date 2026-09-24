@@ -12,11 +12,25 @@ export interface DualSenseOutput {
   vibrationV2: boolean
   /** hand LED control back to the firmware (used when disconnecting) */
   releaseLeds?: boolean
-  audio: { path: keyof typeof AUDIO_PATH; headphoneVolume: number; speakerVolume: number; micVolume: number } | null
+  audio: {
+    path: keyof typeof AUDIO_PATH
+    headphoneVolume: number
+    speakerVolume: number
+    micVolume: number
+  } | null
 }
 
 export function emptyOutput(): DualSenseOutput {
-  return { rumble: null, lightbar: null, playerLeds: null, micLed: null, trigger: { left: null, right: null }, lightbarSetup: false, vibrationV2: false, audio: null }
+  return {
+    rumble: null,
+    lightbar: null,
+    playerLeds: null,
+    micLed: null,
+    trigger: { left: null, right: null },
+    lightbarSetup: false,
+    vibrationV2: false,
+    audio: null,
+  }
 }
 
 /** Encode the 47-byte common payload, setting each valid-flag bit only for fields present. */
@@ -24,44 +38,45 @@ export function encodeOutput(o: DualSenseOutput): Uint8Array {
   const p = new Uint8Array(SIZE.outputPayload)
   if (o.rumble) {
     p[0] = p[0]! | (FLAG0.haptics | (o.vibrationV2 ? 0 : FLAG0.compatVibration))
-    if (o.vibrationV2) p[38] = p[38]! | (FLAG2.compatVibration2)
+    if (o.vibrationV2) p[38] = p[38]! | FLAG2.compatVibration2
     p[2] = Math.round(Math.max(0, Math.min(1, o.rumble.weak)) * 255)
     p[3] = Math.round(Math.max(0, Math.min(1, o.rumble.strong)) * 255)
   }
   if (o.trigger.right) {
-    p[0] = p[0]! | (FLAG0.rightTrigger)
+    p[0] = p[0]! | FLAG0.rightTrigger
     p.set(o.trigger.right.subarray(0, 11), 10)
   }
   if (o.trigger.left) {
-    p[0] = p[0]! | (FLAG0.leftTrigger)
+    p[0] = p[0]! | FLAG0.leftTrigger
     p.set(o.trigger.left.subarray(0, 11), 21)
   }
   if (o.micLed !== null) {
-    p[1] = p[1]! | (FLAG1.micLed)
+    p[1] = p[1]! | FLAG1.micLed
     p[8] = o.micLed
   }
   if (o.lightbar) {
-    p[1] = p[1]! | (FLAG1.lightbar)
+    p[1] = p[1]! | FLAG1.lightbar
     p[44] = o.lightbar[0]
     p[45] = o.lightbar[1]
     p[46] = o.lightbar[2]
   }
   if (o.playerLeds) {
-    p[1] = p[1]! | (FLAG1.playerLeds)
-    p[38] = p[38]! | (FLAG2.ledBrightness)
+    p[1] = p[1]! | FLAG1.playerLeds
+    p[38] = p[38]! | FLAG2.ledBrightness
     p[42] = o.playerLeds.brightness
     p[43] = o.playerLeds.mask & 0x1f
   }
-  if (o.releaseLeds) p[1] = p[1]! | (FLAG1.releaseLeds)
+  if (o.releaseLeds) p[1] = p[1]! | FLAG1.releaseLeds
   if (o.audio) {
-    p[0] = p[0]! | (FLAG0.headphoneVolume | FLAG0.speakerVolume | FLAG0.micVolume | FLAG0.audioControl)
+    p[0] =
+      p[0]! | (FLAG0.headphoneVolume | FLAG0.speakerVolume | FLAG0.micVolume | FLAG0.audioControl)
     p[4] = Math.round(Math.max(0, Math.min(1, o.audio.headphoneVolume)) * 0x7f)
     p[5] = Math.round(Math.max(0, Math.min(1, o.audio.speakerVolume)) * 0x7f)
     p[6] = Math.round(Math.max(0, Math.min(1, o.audio.micVolume)) * 0x7f)
     p[7] = AUDIO_PATH[o.audio.path] << 4
   }
   if (o.lightbarSetup) {
-    p[38] = p[38]! | (FLAG2.lightbarSetup)
+    p[38] = p[38]! | FLAG2.lightbarSetup
     p[41] = 0x02
   }
   return p

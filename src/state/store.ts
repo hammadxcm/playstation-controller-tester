@@ -6,6 +6,7 @@ import type { ScoreResult } from '@/core/analysis'
 import { EMPTY_OUTPUT, trackOutput, type HidOutput } from './hidOutput'
 import type { HidLogEntry } from '@/core/hid/log'
 import type { ThemeSetting } from '@/lib/theme'
+import type { LangSetting } from '@/i18n'
 
 export interface PadInfo {
   index: number
@@ -24,6 +25,7 @@ export interface Settings {
   deadzone: number
   trace: 'fade' | 'constant' | 'none'
   theme: ThemeSetting
+  lang: LangSetting
 }
 
 interface Store {
@@ -72,12 +74,16 @@ export const useStore = create<Store>()(
       hidOut: EMPTY_OUTPUT,
       hidLog: [],
       report: null,
-      settings: { deadzone: 0.05, trace: 'fade', theme: 'system' },
+      settings: { deadzone: 0.05, trace: 'fade', theme: 'system', lang: 'auto' },
       entered: false,
       setPads(pads) {
         const cur = get().activeIndex
         const active = pads.find((p) => p.index === cur) ?? pads[0]
-        set({ pads, activeIndex: active?.index ?? null, layout: active ? getLayout(active.id) : undefined })
+        set({
+          pads,
+          activeIndex: active?.index ?? null,
+          layout: active ? getLayout(active.id) : undefined,
+        })
       },
       setActive(index) {
         const pad = get().pads.find((p) => p.index === index)
@@ -106,7 +112,13 @@ export const useStore = create<Store>()(
           },
           () => get().hidOuts[index] ?? EMPTY_OUTPUT,
         )
-        set({ hids: [...get().hids, wrapped], hidOuts: [...get().hidOuts, EMPTY_OUTPUT], activeHid: index, hid: wrapped, hidOut: EMPTY_OUTPUT })
+        set({
+          hids: [...get().hids, wrapped],
+          hidOuts: [...get().hidOuts, EMPTY_OUTPUT],
+          activeHid: index,
+          hid: wrapped,
+          hidOut: EMPTY_OUTPUT,
+        })
       },
       removeHid(i) {
         const hids = get().hids.filter((_, k) => k !== i)
@@ -138,10 +150,15 @@ export const useStore = create<Store>()(
       setSettings: (s) => set({ settings: { ...get().settings, ...s } }),
       setEntered: (entered) => set({ entered }),
     }),
-    { name: `ct${import.meta.env.BASE_URL}settings`, partialize: (s) => ({ settings: s.settings, report: s.report }) },
+    {
+      name: `ct${import.meta.env.BASE_URL}settings`,
+      partialize: (s) => ({ settings: s.settings, report: s.report }),
+    },
   ),
 )
 
-export const selectActivePad = (s: Pick<Store, 'pads' | 'activeIndex'>): PadInfo | null => s.pads.find((p) => p.index === s.activeIndex) ?? null
+export const selectActivePad = (s: Pick<Store, 'pads' | 'activeIndex'>): PadInfo | null =>
+  s.pads.find((p) => p.index === s.activeIndex) ?? null
 /** Landing page is the front door until a Gamepad-API pad or WebHID device shows up, or the user enters the shell. */
-export const selectLanding = (s: Pick<Store, 'pads' | 'hids' | 'entered'>): boolean => s.pads.length === 0 && s.hids.length === 0 && !s.entered
+export const selectLanding = (s: Pick<Store, 'pads' | 'hids' | 'entered'>): boolean =>
+  s.pads.length === 0 && s.hids.length === 0 && !s.entered

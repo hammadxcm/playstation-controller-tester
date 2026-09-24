@@ -27,9 +27,18 @@ export function createRig() {
       })
       const l2 = f.buttons[STD.l2]?.value ?? 0
       const r2 = f.buttons[STD.r2]?.value ?? 0
-      if (Math.abs(l2 - trig[0]!) > EPS || first) { trig[0] = l2; out.push({ kind: 'var', part: 'l2', value: l2 }) }
-      if (Math.abs(r2 - trig[1]!) > EPS || first) { trig[1] = r2; out.push({ kind: 'var', part: 'r2', value: r2 }) }
-      for (const [part, ax] of [['ls', 0], ['rs', 2]] as const) {
+      if (Math.abs(l2 - trig[0]!) > EPS || first) {
+        trig[0] = l2
+        out.push({ kind: 'var', part: 'l2', value: l2 })
+      }
+      if (Math.abs(r2 - trig[1]!) > EPS || first) {
+        trig[1] = r2
+        out.push({ kind: 'var', part: 'r2', value: r2 })
+      }
+      for (const [part, ax] of [
+        ['ls', 0],
+        ['rs', 2],
+      ] as const) {
         const x = f.axes[ax] ?? 0
         const y = f.axes[ax + 1] ?? 0
         if (Math.abs(x - axes[ax]!) > EPS || Math.abs(y - axes[ax + 1]!) > EPS || first) {

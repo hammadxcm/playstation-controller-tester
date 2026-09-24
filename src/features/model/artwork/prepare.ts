@@ -20,7 +20,8 @@ function classify(el: Element, spec: ArtworkSpec, group: string | null): string 
     if (style.includes('fill:#f00')) return 'm-icon-fill'
     return 'm-icon'
   }
-  if (group === 'Background') return id.startsWith('Active') || id === 'Touchpad' ? 'm-active' : 'm-ink'
+  if (group === 'Background')
+    return id.startsWith('Active') || id === 'Touchpad' ? 'm-active' : 'm-ink'
   if (group === 'Cover') return id === 'Active_PS' ? 'm-active' : 'm-cap'
   if (id === 'TPPattern' || id.endsWith('Pattern')) return 'm-ink-soft'
   return 'm-ink'
@@ -34,18 +35,29 @@ export function prepareArtwork(svgText: string, spec: ArtworkSpec): PreparedArtw
   const [, , w, h] = viewBox.split(/\s+/).map(Number)
   for (const id of spec.remove) doc.getElementById(id)?.remove()
   // Drawings are bundled and reviewed, but never trust markup you hand to innerHTML.
-  doc.querySelectorAll('script, foreignObject, iframe, object, embed, use, image, a').forEach((el) => el.remove())
+  doc
+    .querySelectorAll('script, foreignObject, iframe, object, embed, use, image, a')
+    .forEach((el) => el.remove())
   doc.querySelectorAll('*').forEach((el) => {
     for (const attr of Array.from(el.attributes)) {
       const name = attr.name.toLowerCase()
-      if (name.startsWith('on') || ((name === 'href' || name === 'xlink:href') && !attr.value.startsWith('#'))) el.removeAttribute(attr.name)
+      if (
+        name.startsWith('on') ||
+        ((name === 'href' || name === 'xlink:href') && !attr.value.startsWith('#'))
+      )
+        el.removeAttribute(attr.name)
     }
   })
 
   const walk = (el: Element, group: string | null) => {
     for (const child of Array.from(el.children)) {
       const tag = child.tagName.toLowerCase()
-      const nextGroup = tag === 'g' && (['Background', 'Main', 'Cover', 'Top', 'Back'].includes(child.id) || child.id.endsWith('-icon')) ? child.id : group
+      const nextGroup =
+        tag === 'g' &&
+        (['Background', 'Main', 'Cover', 'Top', 'Back'].includes(child.id) ||
+          child.id.endsWith('-icon'))
+          ? child.id
+          : group
       if (tag !== 'g') {
         const cls = classify(child, spec, group)
         const style = child.getAttribute('style') ?? ''
@@ -70,7 +82,10 @@ export function prepareArtwork(svgText: string, spec: ArtworkSpec): PreparedArtw
   }
   for (const [part, ids] of Object.entries(spec.parts)) for (const id of ids ?? []) tag(id, part)
   for (const [name, ids] of Object.entries(spec.extra)) for (const id of ids) tag(id, `x:${name}`)
-  for (const [stick, s] of Object.entries(spec.sticks) as ['ls' | 'rs', ArtworkSpec['sticks']['ls']][]) {
+  for (const [stick, s] of Object.entries(spec.sticks) as [
+    'ls' | 'rs',
+    ArtworkSpec['sticks']['ls'],
+  ][]) {
     const cap = doc.getElementById(s.cap)
     if (!cap) continue
     let wrap: Element | null = s.wrap ? doc.getElementById(s.wrap) : null

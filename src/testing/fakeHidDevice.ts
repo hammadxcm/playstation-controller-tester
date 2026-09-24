@@ -1,4 +1,12 @@
-const toBytes = (data: BufferSource): Uint8Array => (data instanceof ArrayBuffer ? new Uint8Array(data.slice(0)) : new Uint8Array((data as Uint8Array).buffer.slice((data as Uint8Array).byteOffset, (data as Uint8Array).byteOffset + data.byteLength) as ArrayBuffer))
+const toBytes = (data: BufferSource): Uint8Array =>
+  data instanceof ArrayBuffer
+    ? new Uint8Array(data.slice(0))
+    : new Uint8Array(
+        (data as Uint8Array).buffer.slice(
+          (data as Uint8Array).byteOffset,
+          (data as Uint8Array).byteOffset + data.byteLength,
+        ) as ArrayBuffer,
+      )
 
 /** Minimal HIDDevice stand-in for unit tests: records sends, serves canned feature reports, injects input reports. */
 export class FakeHidDevice extends EventTarget {
@@ -27,8 +35,15 @@ export class FakeHidDevice extends EventTarget {
         usage: 0x05,
         type: 0,
         children: [],
-        inputReports: [{ reportId: 1, items: [{ reportSize: 8, reportCount: bits / 8 }] } as unknown as HIDReportInfo],
-        outputReports: (opts.outputIds ?? [0x02]).map((reportId) => ({ reportId, items: [] }) as unknown as HIDReportInfo),
+        inputReports: [
+          {
+            reportId: 1,
+            items: [{ reportSize: 8, reportCount: bits / 8 }],
+          } as unknown as HIDReportInfo,
+        ],
+        outputReports: (opts.outputIds ?? [0x02]).map(
+          (reportId) => ({ reportId, items: [] }) as unknown as HIDReportInfo,
+        ),
         featureReports: [],
       } as unknown as HIDCollectionInfo,
     ]
@@ -58,7 +73,11 @@ export class FakeHidDevice extends EventTarget {
   }
   /** Simulate an incoming input report (bytes exclude the report id, like WebHID). */
   input(reportId: number, bytes: Uint8Array) {
-    const e = Object.assign(new Event('inputreport'), { reportId, data: new DataView(bytes.buffer as ArrayBuffer, bytes.byteOffset, bytes.byteLength), device: this })
+    const e = Object.assign(new Event('inputreport'), {
+      reportId,
+      data: new DataView(bytes.buffer as ArrayBuffer, bytes.byteOffset, bytes.byteLength),
+      device: this,
+    })
     this.dispatchEvent(e)
   }
   asHid(): HIDDevice {

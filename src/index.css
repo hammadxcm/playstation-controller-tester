@@ -220,11 +220,190 @@ html[data-dir='back']::view-transition-new(screen) {
 }
 
 .app {
+  position: relative;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 16px 16px 40px;
   display: grid;
   gap: 16px;
+  overflow-x: clip;
+}
+/* ponytail: the tab pill is max-content; the nav landmark must not let it widen the grid column */
+.app > nav {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Ambient backdrop (landing + shell): transform-only gradient blobs, compositor-only, no blur filter on anything that moves. */
+.ambient {
+  --blob-a: 0.5;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  contain: strict;
+  pointer-events: none;
+}
+:root[data-theme='light'] .ambient {
+  --blob-a: 0.35;
+}
+.ambient i {
+  position: absolute;
+  border-radius: 50%;
+  opacity: var(--blob-a);
+  will-change: transform;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--accent) 28%, transparent),
+    transparent 70%
+  );
+}
+.ambient i:nth-child(1) {
+  width: 70vw;
+  height: 70vw;
+  left: -20vw;
+  top: -25vw;
+  animation: blob-a 32s ease-in-out infinite alternate;
+}
+.ambient i:nth-child(2) {
+  width: 55vw;
+  height: 55vw;
+  right: -15vw;
+  top: 10vh;
+  animation: blob-b 38s ease-in-out infinite alternate;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, #7c5cff 26%, transparent),
+    transparent 70%
+  );
+}
+.ambient i:nth-child(3) {
+  width: 60vw;
+  height: 60vw;
+  left: 20vw;
+  bottom: -35vw;
+  animation: blob-c 26s ease-in-out infinite alternate;
+}
+@keyframes blob-a {
+  to {
+    transform: translate(12vw, 8vh) scale(1.12);
+  }
+}
+@keyframes blob-b {
+  to {
+    transform: translate(-10vw, 14vh) scale(0.92);
+  }
+}
+@keyframes blob-c {
+  to {
+    transform: translate(-14vw, -10vh) scale(1.08);
+  }
+}
+:root[data-motion='reduce'] .ambient i {
+  animation: none;
+  will-change: auto;
+}
+
+/* Floating glass top bar shared by landing and shell (PS5's translucent nav) */
+.topbar {
+  position: sticky;
+  top: 8px;
+  z-index: 5;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.18);
+}
+.topbar .brand {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1.05rem;
+  margin: 0 4px;
+}
+.select-sm {
+  padding: 5px 8px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+.screen-loading {
+  min-height: 240px;
+  border-radius: var(--radius);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  animation: soft-pulse 1.2s ease-in-out infinite;
+}
+:root[data-motion='reduce'] .screen-loading {
+  animation: none;
+}
+.bad {
+  color: var(--bad);
+}
+
+.listen-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  animation: listen-pulse 1.8s var(--ease-out) infinite;
+}
+@keyframes listen-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 14px transparent;
+  }
+}
+:root[data-motion='reduce'] .listen-dot {
+  animation: none;
+}
+.listen-dot.big {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 6px;
+}
+
+/* Accessibility helpers */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -48px;
+  z-index: 50;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  text-decoration: none;
+  transition: top var(--dur-fast) var(--ease);
+}
+.skip-link:focus-visible {
+  top: 12px;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+@media (prefers-contrast: more) {
+  :root {
+    --line: color-mix(in srgb, var(--fg) 45%, transparent);
+    --fg-muted: var(--fg);
+  }
+}
+@media (forced-colors: active) {
+  .ambient,
+  .tile-halo,
+  .section-glow {
+    display: none;
+  }
 }
 .header {
   display: flex;

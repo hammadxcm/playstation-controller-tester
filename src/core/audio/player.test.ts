@@ -2,29 +2,64 @@
 import { describe, expect, it, vi } from 'vitest'
 import { audioSupported, createMicMeter, createPlayer, findControllerAudio } from './usbAudio'
 
-class Param { value = 1; setValueAtTime = vi.fn(); exponentialRampToValueAtTime = vi.fn() }
-class Node { gain = new Param(); frequency = new Param(); buffer: unknown = null; fftSize = 0; connect = vi.fn(() => this); start = vi.fn(); stop = vi.fn(); getFloatTimeDomainData = (b: Float32Array) => b.fill(0.25) }
+class Param {
+  value = 1
+  setValueAtTime = vi.fn()
+  exponentialRampToValueAtTime = vi.fn()
+}
+class Node {
+  gain = new Param()
+  frequency = new Param()
+  buffer: unknown = null
+  fftSize = 0
+  connect = vi.fn(() => this)
+  start = vi.fn()
+  stop = vi.fn()
+  getFloatTimeDomainData = (b: Float32Array) => b.fill(0.25)
+}
 class FakeAudioContext {
   static instances: FakeAudioContext[] = []
   currentTime = 0
-  destination = { maxChannelCount: 4, channelCount: 2, channelCountMode: 'max', channelInterpretation: 'speakers' }
+  destination = {
+    maxChannelCount: 4,
+    channelCount: 2,
+    channelCountMode: 'max',
+    channelInterpretation: 'speakers',
+  }
   sinkId = ''
   closed = false
   sources: Node[] = []
-  constructor() { FakeAudioContext.instances.push(this) }
-  setSinkId = vi.fn(async (id: string) => { this.sinkId = id })
+  constructor() {
+    FakeAudioContext.instances.push(this)
+  }
+  setSinkId = vi.fn(async (id: string) => {
+    this.sinkId = id
+  })
   createGain = () => new Node()
   createChannelMerger = () => new Node()
-  createOscillator = () => { const n = new Node(); this.sources.push(n); return n }
-  createBufferSource = () => { const n = new Node(); this.sources.push(n); return n }
+  createOscillator = () => {
+    const n = new Node()
+    this.sources.push(n)
+    return n
+  }
+  createBufferSource = () => {
+    const n = new Node()
+    this.sources.push(n)
+    return n
+  }
   createMediaStreamSource = () => new Node()
   createAnalyser = () => new Node()
   decodeAudioData = vi.fn(async () => ({ duration: 1 }))
-  close = vi.fn(async () => { this.closed = true })
+  close = vi.fn(async () => {
+    this.closed = true
+  })
 }
 
 const install = () => {
-  Object.defineProperty(FakeAudioContext.prototype, "setSinkId", { value: async () => undefined, configurable: true })
+  Object.defineProperty(FakeAudioContext.prototype, 'setSinkId', {
+    value: async () => undefined,
+    configurable: true,
+  })
   vi.stubGlobal('AudioContext', FakeAudioContext)
   const tracks = [{ stop: vi.fn() }]
   const devices = [
@@ -33,8 +68,13 @@ const install = () => {
   ]
   let labelled = false
   const md = {
-    enumerateDevices: vi.fn(async () => devices.map((d) => ({ ...d, label: labelled ? 'DualSense Wireless Controller' : '' }))),
-    getUserMedia: vi.fn(async () => { labelled = true; return { getTracks: () => tracks } }),
+    enumerateDevices: vi.fn(async () =>
+      devices.map((d) => ({ ...d, label: labelled ? 'DualSense Wireless Controller' : '' })),
+    ),
+    getUserMedia: vi.fn(async () => {
+      labelled = true
+      return { getTracks: () => tracks }
+    }),
   }
   Object.defineProperty(navigator, 'mediaDevices', { value: md, configurable: true })
   return { md, tracks }
@@ -43,7 +83,10 @@ const install = () => {
 describe('usbAudio runtime', () => {
   it('reports support from AudioContext.setSinkId and mediaDevices', () => {
     install()
-    Object.defineProperty(AudioContext.prototype, 'setSinkId', { value: async () => undefined, configurable: true })
+    Object.defineProperty(AudioContext.prototype, 'setSinkId', {
+      value: async () => undefined,
+      configurable: true,
+    })
     expect(audioSupported()).toBe(true)
   })
   it('asks for permission once to reveal device labels', async () => {
@@ -68,7 +111,9 @@ describe('usbAudio runtime', () => {
     await p.file(new ArrayBuffer(8))
     expect(ctx.sources[0]!.stop).toHaveBeenCalled()
     expect(ctx.decodeAudioData).toHaveBeenCalled()
-    ctx.sources[1]!.stop = vi.fn(() => { throw new Error('already stopped') })
+    ctx.sources[1]!.stop = vi.fn(() => {
+      throw new Error('already stopped')
+    })
     p.stop()
     p.stop()
     await p.close()

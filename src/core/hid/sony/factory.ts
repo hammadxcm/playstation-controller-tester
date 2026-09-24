@@ -18,7 +18,12 @@ const trimZeros = (u: Uint8Array) => {
   return u.subarray(0, n)
 }
 const hexBE = (u: Uint8Array) => Array.from(u, (b) => b.toString(16).padStart(2, '0')).join('')
-const ascii = (u: Uint8Array) => Array.from(u).filter((b) => b >= 0x20 && b < 0x7f).map((b) => String.fromCharCode(b)).join('').trim()
+const ascii = (u: Uint8Array) =>
+  Array.from(u)
+    .filter((b) => b >= 0x20 && b < 0x7f)
+    .map((b) => String.fromCharCode(b))
+    .join('')
+    .trim()
 
 /** Read the factory data a DualSense exposes over the test-command channel. Missing fields mean the command failed. */
 export async function readFactoryInfo(t: CommandTarget): Promise<FactoryInfo> {
@@ -30,7 +35,10 @@ export async function readFactoryInfo(t: CommandTarget): Promise<FactoryInfo> {
   const uid = await testCommand(t, DeviceId.SYSTEM, ActionId.GET_MCU_UNIQUE_ID, 9)
   if (uid && uid[0] === 0) info.mcuUniqueId = hexBE(uid.subarray(1).slice().reverse())
   const mac = await testCommand(t, DeviceId.BLUETOOTH, ActionId.READ_BDADR, 6)
-  if (mac) info.btAddress = Array.from(Uint8Array.from(mac).reverse(), (b) => b.toString(16).padStart(2, '0')).join(':')
+  if (mac)
+    info.btAddress = Array.from(Uint8Array.from(mac).reverse(), (b) =>
+      b.toString(16).padStart(2, '0'),
+    ).join(':')
   const bat = await testCommand(t, DeviceId.ANALOG_DATA, ActionId.BATTERY, 4)
   if (bat) info.batteryMv = bat[0]! | (bat[1]! << 8)
   const tpId = await testCommand(t, DeviceId.TOUCH, ActionId.SOLOMON_UID, 8)

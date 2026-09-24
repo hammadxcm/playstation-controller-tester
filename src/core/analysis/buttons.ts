@@ -16,7 +16,13 @@ export class ButtonTracker {
   private upAt: number[] = []
 
   feed(i: number, pressed: boolean, t: number): void {
-    const s = (this.stats[i] ??= { presses: 0, chatter: 0, longestHoldMs: 0, stuck: false, down: false })
+    const s = (this.stats[i] ??= {
+      presses: 0,
+      chatter: 0,
+      longestHoldMs: 0,
+      stuck: false,
+      down: false,
+    })
     if (pressed && !s.down) {
       s.presses++
       if (t - (this.upAt[i] ?? -Infinity) < CHATTER_MS) s.chatter++

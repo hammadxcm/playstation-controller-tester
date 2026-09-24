@@ -18,7 +18,12 @@ describe('motion', () => {
   })
   it('follows the media query and animates otherwise', async () => {
     let listener: ((e: { matches: boolean }) => void) | null = null
-    vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener: (_: string, cb: (e: { matches: boolean }) => void) => { listener = cb } }))
+    vi.stubGlobal('matchMedia', () => ({
+      matches: false,
+      addEventListener: (_: string, cb: (e: { matches: boolean }) => void) => {
+        listener = cb
+      },
+    }))
     const m = await import('./motion')
     expect(m.reducedMotion()).toBe(false)
     expect(m.smooth(0, 1, 0.5)).toBe(0.5)
@@ -32,7 +37,12 @@ describe('motion', () => {
   it('media changes are ignored when the URL pins motion', async () => {
     history.replaceState(null, '', '/?motion=full')
     let listener: ((e: { matches: boolean }) => void) | null = null
-    vi.stubGlobal('matchMedia', () => ({ matches: true, addEventListener: (_: string, cb: (e: { matches: boolean }) => void) => { listener = cb } }))
+    vi.stubGlobal('matchMedia', () => ({
+      matches: true,
+      addEventListener: (_: string, cb: (e: { matches: boolean }) => void) => {
+        listener = cb
+      },
+    }))
     const m = await import('./motion')
     expect(m.reducedMotion()).toBe(false)
     listener!({ matches: true })
@@ -40,7 +50,10 @@ describe('motion', () => {
   })
   it('runs one shared frame loop and collects perf stats', async () => {
     const rafs: FrameRequestCallback[] = []
-    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { rafs.push(cb); return rafs.length })
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+      rafs.push(cb)
+      return rafs.length
+    })
     const m = await import('./motion')
     const calls: number[] = []
     const off = m.onRaf((t) => calls.push(t))
@@ -77,11 +90,17 @@ describe('viewTransition', () => {
     const fn2 = vi.fn()
     await vt.transition(fn2, 'back')
     expect(fn2).toHaveBeenCalled()
-    expect((document as unknown as { startViewTransition: ReturnType<typeof vi.fn> }).startViewTransition).not.toHaveBeenCalled()
+    expect(
+      (document as unknown as { startViewTransition: ReturnType<typeof vi.fn> })
+        .startViewTransition,
+    ).not.toHaveBeenCalled()
     delete (document as unknown as { startViewTransition?: unknown }).startViewTransition
   })
   it('uses startViewTransition when available and swallows its rejection', async () => {
-    const svt = vi.fn((cb: () => void) => { cb(); return { finished: Promise.reject(new Error('skipped')) } })
+    const svt = vi.fn((cb: () => void) => {
+      cb()
+      return { finished: Promise.reject(new Error('skipped')) }
+    })
     ;(document as unknown as { startViewTransition: unknown }).startViewTransition = svt
     const { transition } = await import('./viewTransition')
     const fn = vi.fn()

@@ -41,12 +41,14 @@ export function ArtworkModel({
   showValues,
   source,
   hero,
+  label,
 }: {
   kind: ArtworkKind
   compact?: boolean
   showValues?: boolean
   source?: FrameSource
   hero?: boolean
+  label?: string
 }) {
   const spec = SPECS[kind]
   const wrapper = useRef<HTMLDivElement>(null)
@@ -170,7 +172,7 @@ export function ArtworkModel({
           className="model-art"
           viewBox={vb}
           role="img"
-          aria-label={`${kind} controller, ${source ? 'demo' : 'live'}`}
+          aria-label={label ?? `${kind} controller, ${source ? 'demo' : 'live'}`}
           dangerouslySetInnerHTML={{ __html: prepared.inner }}
         />
       ) : (

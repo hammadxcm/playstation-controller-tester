@@ -3,7 +3,19 @@ import type { StdButton } from '@/core/gamepad/types'
 
 type Part = StdButton
 
-export function Stick({ c: [x, y], r, part, click, label }: { c: XY; r: number; part: 'ls' | 'rs'; click: Part; label: string }) {
+export function Stick({
+  c: [x, y],
+  r,
+  part,
+  click,
+  label,
+}: {
+  c: XY
+  r: number
+  part: 'ls' | 'rs'
+  click: Part
+  label: string
+}) {
   return (
     <g data-part={part}>
       <circle cx={x} cy={y} r={r} fill="url(#m-well)" stroke="#0a0b0f" strokeWidth={1.5} />
@@ -11,8 +23,18 @@ export function Stick({ c: [x, y], r, part, click, label }: { c: XY; r: number; 
       <circle cx={x} cy={y} r={10} fill="#111319" />
       <g data-part={click} data-sub="cap">
         <circle className="m-halo" cx={x} cy={y} r={r + 4} fill="url(#m-halo)" />
-        <circle className="m-cap" cx={x} cy={y} r={16} fill="url(#m-cap)" stroke="#07080b" strokeWidth={1} />
-        <text className="m-label m-glyph" x={x} y={y + 1}>{label}</text>
+        <circle
+          className="m-cap"
+          cx={x}
+          cy={y}
+          r={16}
+          fill="url(#m-cap)"
+          stroke="#07080b"
+          strokeWidth={1}
+        />
+        <text className="m-label m-glyph" x={x} y={y + 1}>
+          {label}
+        </text>
       </g>
       <ellipse data-sub="hi" cx={x - 5} cy={y - 6} rx={6} ry={4} fill="#fff" opacity={0.14} />
     </g>
@@ -30,12 +52,24 @@ export function FaceButton({ g, k }: { g: ControllerGeometry['face']; k: FaceKey
       <circle cx={x} cy={y} r={g.r + 1.2} fill="#07080b" />
       <circle className="m-cap" cx={x} cy={y} r={g.r} fill="url(#m-btn)" />
       <circle className="m-ripple" cx={x} cy={y} r={g.r} fill="var(--accent)" />
-      <text className="m-label m-glyph" x={x} y={y + 0.5} style={{ fill: g.color[k], fontSize: 10 }}>{g.glyph[k]}</text>
+      <text
+        className="m-label m-glyph"
+        x={x}
+        y={y + 0.5}
+        style={{ fill: g.color[k], fontSize: 10 }}
+      >
+        {g.glyph[k]}
+      </text>
     </g>
   )
 }
 
-const DIRS: [Part, number, number][] = [['up', 0, -1], ['down', 0, 1], ['left', -1, 0], ['right', 1, 0]]
+const DIRS: [Part, number, number][] = [
+  ['up', 0, -1],
+  ['down', 0, 1],
+  ['left', -1, 0],
+  ['right', 1, 0],
+]
 
 export function DPad({ g }: { g: ControllerGeometry['dpad'] }) {
   const [cx, cy] = g.c
@@ -51,9 +85,34 @@ export function DPad({ g }: { g: ControllerGeometry['dpad'] }) {
         const y = cy + dy * 15 - h / 2
         return (
           <g key={part} data-part={part} data-dir={part}>
-            <rect className="m-halo" x={x - 4} y={y - 4} width={w + 8} height={h + 8} rx={6} fill="url(#m-halo)" />
-            <rect className="m-cap m-arm" x={x} y={y} width={w} height={h} rx={3} fill={dish ? 'url(#m-btn)' : 'url(#m-plate)'} stroke="#07080b" strokeWidth={0.8} />
-            <text className="m-label m-glyph" x={cx + dx * 15} y={cy + dy * 15 + 0.5} style={{ fontSize: 8 }}>{part === 'up' ? '▲' : part === 'down' ? '▼' : part === 'left' ? '◀' : '▶'}</text>
+            <rect
+              className="m-halo"
+              x={x - 4}
+              y={y - 4}
+              width={w + 8}
+              height={h + 8}
+              rx={6}
+              fill="url(#m-halo)"
+            />
+            <rect
+              className="m-cap m-arm"
+              x={x}
+              y={y}
+              width={w}
+              height={h}
+              rx={3}
+              fill={dish ? 'url(#m-btn)' : 'url(#m-plate)'}
+              stroke="#07080b"
+              strokeWidth={0.8}
+            />
+            <text
+              className="m-label m-glyph"
+              x={cx + dx * 15}
+              y={cy + dy * 15 + 0.5}
+              style={{ fontSize: 8 }}
+            >
+              {part === 'up' ? '▲' : part === 'down' ? '▼' : part === 'left' ? '◀' : '▶'}
+            </text>
           </g>
         )
       })}
@@ -61,37 +120,142 @@ export function DPad({ g }: { g: ControllerGeometry['dpad'] }) {
   )
 }
 
-export function Trigger({ part, r: [x, y, w, h], label, impulse }: { part: 'l2' | 'r2'; r: Rect; label: string; impulse: boolean }) {
+export function Trigger({
+  part,
+  r: [x, y, w, h],
+  label,
+  impulse,
+}: {
+  part: 'l2' | 'r2'
+  r: Rect
+  label: string
+  impulse: boolean
+}) {
   return (
     <g data-part={part} className="m-trigger" style={{ ['--v' as string]: 0 }}>
-      <rect className="m-tbody" x={x} y={y} width={w} height={h} rx={5} fill="url(#m-shell-dark)" stroke="#07080b" strokeWidth={0.8} />
+      <rect
+        className="m-tbody"
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={5}
+        fill="url(#m-shell-dark)"
+        stroke="#07080b"
+        strokeWidth={0.8}
+      />
       <rect className="m-tfill" x={x} y={y} width={w} height={h} rx={5} fill="var(--accent)" />
-      {impulse && <rect className="m-impulse" x={x - 2} y={y - 2} width={w + 4} height={h + 4} rx={7} />}
-      <text className="m-label" x={x + w / 2} y={y + h / 2 + 0.5}>{label}</text>
+      {impulse && (
+        <rect className="m-impulse" x={x - 2} y={y - 2} width={w + 4} height={h + 4} rx={7} />
+      )}
+      <text className="m-label" x={x + w / 2} y={y + h / 2 + 0.5}>
+        {label}
+      </text>
     </g>
   )
 }
 
-export function Bumper({ part, r: [x, y, w, h], label }: { part: 'l1' | 'r1'; r: Rect; label: string }) {
+export function Bumper({
+  part,
+  r: [x, y, w, h],
+  label,
+}: {
+  part: 'l1' | 'r1'
+  r: Rect
+  label: string
+}) {
   return (
     <g data-part={part}>
-      <rect className="m-halo" x={x - 3} y={y - 3} width={w + 6} height={h + 6} rx={7} fill="url(#m-halo)" />
-      <rect className="m-cap" x={x} y={y} width={w} height={h} rx={5} fill="url(#m-shell-dark)" stroke="#07080b" strokeWidth={0.8} />
-      <text className="m-label m-glyph" x={x + w / 2} y={y + h / 2 + 0.5}>{label}</text>
+      <rect
+        className="m-halo"
+        x={x - 3}
+        y={y - 3}
+        width={w + 6}
+        height={h + 6}
+        rx={7}
+        fill="url(#m-halo)"
+      />
+      <rect
+        className="m-cap"
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={5}
+        fill="url(#m-shell-dark)"
+        stroke="#07080b"
+        strokeWidth={0.8}
+      />
+      <text className="m-label m-glyph" x={x + w / 2} y={y + h / 2 + 0.5}>
+        {label}
+      </text>
     </g>
   )
 }
 
-export function SmallButton({ part, c: [x, y], shape, label }: { part: Part; c: XY; shape: 'pill' | 'circle' | 'bar'; label?: string }) {
+export function SmallButton({
+  part,
+  c: [x, y],
+  shape,
+  label,
+}: {
+  part: Part
+  c: XY
+  shape: 'pill' | 'circle' | 'bar'
+  label?: string
+}) {
   const body =
-    shape === 'circle' ? <circle className="m-cap" cx={x} cy={y} r={10} fill="url(#m-btn)" stroke="#07080b" />
-    : shape === 'bar' ? <rect className="m-cap" x={x - 9} y={y - 3.5} width={18} height={7} rx={3.5} fill="url(#m-btn)" stroke="#07080b" />
-    : <rect className="m-cap" x={x - 4} y={y - 9} width={8} height={18} rx={4} fill="url(#m-btn)" stroke="#07080b" />
+    shape === 'circle' ? (
+      <circle className="m-cap" cx={x} cy={y} r={10} fill="url(#m-btn)" stroke="#07080b" />
+    ) : shape === 'bar' ? (
+      <rect
+        className="m-cap"
+        x={x - 9}
+        y={y - 3.5}
+        width={18}
+        height={7}
+        rx={3.5}
+        fill="url(#m-btn)"
+        stroke="#07080b"
+      />
+    ) : (
+      <rect
+        className="m-cap"
+        x={x - 4}
+        y={y - 9}
+        width={8}
+        height={18}
+        rx={4}
+        fill="url(#m-btn)"
+        stroke="#07080b"
+      />
+    )
   return (
     <g data-part={part}>
-      {shape === 'circle' ? <circle className="m-halo" cx={x} cy={y} r={18} fill="url(#m-halo)" /> : <rect className="m-halo" x={x - 14} y={y - 14} width={28} height={28} rx={8} fill="url(#m-halo)" />}
+      {shape === 'circle' ? (
+        <circle className="m-halo" cx={x} cy={y} r={18} fill="url(#m-halo)" />
+      ) : (
+        <rect
+          className="m-halo"
+          x={x - 14}
+          y={y - 14}
+          width={28}
+          height={28}
+          rx={8}
+          fill="url(#m-halo)"
+        />
+      )}
       {body}
-      {label && <text className="m-label" x={x} y={shape === 'circle' ? y + 0.5 : y + 16} style={{ fontSize: shape === 'circle' ? 7 : 6.5 }}>{label}</text>}
+      {label && (
+        <text
+          className="m-label"
+          x={x}
+          y={shape === 'circle' ? y + 0.5 : y + 16}
+          style={{ fontSize: shape === 'circle' ? 7 : 6.5 }}
+        >
+          {label}
+        </text>
+      )}
     </g>
   )
 }
@@ -99,9 +263,36 @@ export function SmallButton({ part, c: [x, y], shape, label }: { part: Part; c: 
 export function Touchpad({ r: [x, y, w, h] }: { r: Rect }) {
   return (
     <g data-part="touchpad">
-      <rect className="m-halo" x={x - 4} y={y - 4} width={w + 8} height={h + 8} rx={12} fill="url(#m-halo)" />
-      <rect className="m-cap" x={x} y={y} width={w} height={h} rx={9} fill="url(#m-pad)" stroke="#07080b" strokeWidth={1} />
-      <rect x={x + 3} y={y + 3} width={w - 6} height={h - 6} rx={7} fill="none" stroke="#fff" strokeOpacity={0.05} />
+      <rect
+        className="m-halo"
+        x={x - 4}
+        y={y - 4}
+        width={w + 8}
+        height={h + 8}
+        rx={12}
+        fill="url(#m-halo)"
+      />
+      <rect
+        className="m-cap"
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={9}
+        fill="url(#m-pad)"
+        stroke="#07080b"
+        strokeWidth={1}
+      />
+      <rect
+        x={x + 3}
+        y={y + 3}
+        width={w - 6}
+        height={h - 6}
+        rx={7}
+        fill="none"
+        stroke="#fff"
+        strokeOpacity={0.05}
+      />
     </g>
   )
 }
@@ -119,8 +310,20 @@ export function Lightbar({ lb }: { lb: NonNullable<ControllerGeometry['lightbar'
     <g className="m-lightbar">
       <path className="m-lb-glow" d={lb.left} strokeWidth={9} fill="none" strokeLinecap="round" />
       <path className="m-lb-glow" d={lb.right} strokeWidth={9} fill="none" strokeLinecap="round" />
-      <path className="m-lb m-lb-stroke" d={lb.left} strokeWidth={3} fill="none" strokeLinecap="round" />
-      <path className="m-lb m-lb-stroke" d={lb.right} strokeWidth={3} fill="none" strokeLinecap="round" />
+      <path
+        className="m-lb m-lb-stroke"
+        d={lb.left}
+        strokeWidth={3}
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        className="m-lb m-lb-stroke"
+        d={lb.right}
+        strokeWidth={3}
+        fill="none"
+        strokeLinecap="round"
+      />
     </g>
   )
 }
@@ -145,8 +348,24 @@ export function MicLed({ c: [x, y] }: { c: XY }) {
 export function GripHeat({ g }: { g: ControllerGeometry['grips'] }) {
   return (
     <>
-      <ellipse className="m-heat" data-heat="l" cx={g.left[0]} cy={g.left[1]} rx={30} ry={42} fill="url(#m-heat)" />
-      <ellipse className="m-heat" data-heat="r" cx={g.right[0]} cy={g.right[1]} rx={30} ry={42} fill="url(#m-heat)" />
+      <ellipse
+        className="m-heat"
+        data-heat="l"
+        cx={g.left[0]}
+        cy={g.left[1]}
+        rx={30}
+        ry={42}
+        fill="url(#m-heat)"
+      />
+      <ellipse
+        className="m-heat"
+        data-heat="r"
+        cx={g.right[0]}
+        cy={g.right[1]}
+        rx={30}
+        ry={42}
+        fill="url(#m-heat)"
+      />
     </>
   )
 }
@@ -165,11 +384,20 @@ export function Parts({ g }: { g: ControllerGeometry }) {
       {g.leds && <PlayerLeds leds={g.leds} />}
       {g.mic && <MicLed c={g.mic} />}
       <DPad g={g.dpad} />
-      {(['north', 'south', 'east', 'west'] as FaceKey[]).map((k) => <FaceButton key={k} g={g.face} k={k} />)}
+      {(['north', 'south', 'east', 'west'] as FaceKey[]).map((k) => (
+        <FaceButton key={k} g={g.face} k={k} />
+      ))}
       <SmallButton part="select" c={g.select} shape="pill" label={g.labels.select} />
       <SmallButton part="start" c={g.start} shape="pill" label={g.labels.start} />
       <SmallButton part="home" c={g.home} shape="circle" label={g.labels.home} />
-      {g.aux && <SmallButton part="touchpad" c={g.aux} shape="bar" label={g.touchpad ? undefined : g.labels.aux} />}
+      {g.aux && (
+        <SmallButton
+          part="touchpad"
+          c={g.aux}
+          shape="bar"
+          label={g.touchpad ? undefined : g.labels.aux}
+        />
+      )}
       <Stick c={g.ls} r={g.stickR} part="ls" click="l3" label="L3" />
       <Stick c={g.rs} r={g.stickR} part="rs" click="r3" label="R3" />
     </>

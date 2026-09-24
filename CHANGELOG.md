@@ -12,6 +12,9 @@ All notable changes to this project are documented here. The format follows [Kee
 - Theme follows the OS by default (`system`), with a pre-paint script so light-theme visitors never see a dark flash, and a `theme-color` meta for browser chrome.
 - `#pro` and `#report` deep links open those screens directly; the current tab is mirrored into the URL hash.
 - Mock harness: `mock=none` keeps the landing up with the other params, `edge=1` makes the mock WebHID pad report as a DualSense Edge.
+- Nine languages (English, Spanish, Portuguese, French, German, Russian, Japanese, Chinese, Korean) for the landing page, app chrome, empty states and the connect flow, with a picker that persists and an `auto` mode that follows the browser; `<html lang>`, the title and the description follow along.
+- SEO and sharing: Open Graph and Twitter cards with a preview image, canonical URL, JSON-LD `WebApplication` data, a web manifest, `robots.txt` and a sitemap.
+- Accessibility: skip link, landmark `nav`/`main`, labelled language and theme controls, header cells in the support table, high-contrast and forced-colors fallbacks.
 - `motion` (Motion for React) as the one animation dependency, loaded through `LazyMotion` with the small feature set and `reducedMotion="user"`; `?motion=reduce` reaches it too.
 
 ### Changed

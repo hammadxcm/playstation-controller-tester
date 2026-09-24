@@ -21,7 +21,10 @@ export function inputReportBits(device: HIDDevice): number {
   for (const c of device.collections) {
     if (c.usagePage !== GAMEPAD.usagePage || c.usage !== GAMEPAD.usage) continue
     for (const r of c.inputReports ?? []) {
-      const bits = (r.items ?? []).reduce((s, i) => s + (i.reportSize ?? 0) * (i.reportCount ?? 0), 0)
+      const bits = (r.items ?? []).reduce(
+        (s, i) => s + (i.reportSize ?? 0) * (i.reportCount ?? 0),
+        0,
+      )
       if (bits > max) max = bits
     }
   }
@@ -37,7 +40,8 @@ export function detectByBits(device: HIDDevice): Transport {
 
 export function detectByIds(device: HIDDevice, ids: SonyIds): Transport {
   const out = new Set<number>()
-  for (const c of device.collections) for (const r of c.outputReports ?? []) if (r.reportId !== undefined) out.add(r.reportId)
+  for (const c of device.collections)
+    for (const r of c.outputReports ?? []) if (r.reportId !== undefined) out.add(r.reportId)
   if (out.has(ids.outputUsb) && !out.has(ids.outputBt)) return 'usb'
   if (out.has(ids.outputBt) && !out.has(ids.outputUsb)) return 'bt'
   return 'unknown'
@@ -88,7 +92,10 @@ export abstract class SonyDevice {
     if (!this.device.opened) await this.device.open()
     this.transport = detectByBits(this.device)
     if (this.transport === 'unknown') this.transport = detectByIds(this.device, this.ids)
-    this.note('info', `open: ${this.device.productName} transport=${this.transport} inputBits=${inputReportBits(this.device)}`)
+    this.note(
+      'info',
+      `open: ${this.device.productName} transport=${this.transport} inputBits=${inputReportBits(this.device)}`,
+    )
     this.device.addEventListener('inputreport', this.onReport)
     await this.readCalibration()
     // USB is safe to talk to immediately; BT (or an inconclusive descriptor) must see a full report first.
@@ -101,7 +108,10 @@ export abstract class SonyDevice {
   private waitForFullReport(): Promise<void> {
     return new Promise<void>((resolve) => {
       const t = setTimeout(() => {
-        this.note('error', `no full input report within ${BT_FIRST_REPORT_TIMEOUT_MS} ms; still in reduced Bluetooth mode? Try re-pairing or USB.`)
+        this.note(
+          'error',
+          `no full input report within ${BT_FIRST_REPORT_TIMEOUT_MS} ms; still in reduced Bluetooth mode? Try re-pairing or USB.`,
+        )
         this.confirm = null
         resolve()
       }, BT_FIRST_REPORT_TIMEOUT_MS)
@@ -125,7 +135,12 @@ export abstract class SonyDevice {
     for (const id of this.ids.calibration) {
       try {
         const d = await this.device.receiveFeatureReport(id)
-        this.log({ t: performance.now(), dir: 'feature-in', reportId: id, bytes: new Uint8Array(d.buffer, d.byteOffset, d.byteLength) })
+        this.log({
+          t: performance.now(),
+          dir: 'feature-in',
+          reportId: id,
+          bytes: new Uint8Array(d.buffer, d.byteOffset, d.byteLength),
+        })
         this.onCalibration(id, d)
         this.promoted = true
         return
@@ -137,7 +152,12 @@ export abstract class SonyDevice {
 
   protected async feature(id: number): Promise<DataView> {
     const d = await this.device.receiveFeatureReport(id)
-    this.log({ t: performance.now(), dir: 'feature-in', reportId: id, bytes: new Uint8Array(d.buffer, d.byteOffset, d.byteLength) })
+    this.log({
+      t: performance.now(),
+      dir: 'feature-in',
+      reportId: id,
+      bytes: new Uint8Array(d.buffer, d.byteOffset, d.byteLength),
+    })
     return d
   }
 
@@ -186,9 +206,22 @@ export abstract class SonyDevice {
     }
     try {
       await this.device.sendReport(id, body)
-      this.log({ t: t0, dir: 'out', reportId: id, bytes: body, note: what, ms: performance.now() - t0 })
+      this.log({
+        t: t0,
+        dir: 'out',
+        reportId: id,
+        bytes: body,
+        note: what,
+        ms: performance.now() - t0,
+      })
     } catch (e) {
-      this.log({ t: t0, dir: 'error', reportId: id, bytes: body, note: `${what}: ${(e as Error).message}` })
+      this.log({
+        t: t0,
+        dir: 'error',
+        reportId: id,
+        bytes: body,
+        note: `${what}: ${(e as Error).message}`,
+      })
       throw e
     }
   }
@@ -224,7 +257,8 @@ export abstract class SonyDevice {
     } finally {
       this.inFlight = false
     }
-    if (this.transport === 'bt' && !this.keepalive) this.keepalive = setInterval(() => void this.keepaliveTick(), BT_KEEPALIVE_MS)
+    if (this.transport === 'bt' && !this.keepalive)
+      this.keepalive = setInterval(() => void this.keepaliveTick(), BT_KEEPALIVE_MS)
   }
 
   private async keepaliveTick(): Promise<void> {
@@ -243,7 +277,8 @@ export abstract class SonyDevice {
     this.listeners.clear()
     const off = this.transport !== 'unknown' ? this.offPayload() : null
     if (off && this.device.opened) await this.sendPayload(off, 'off').catch(() => undefined)
-    if (this.device.opened) await this.device.close().catch((e: Error) => this.note('error', `close: ${e.message}`))
+    if (this.device.opened)
+      await this.device.close().catch((e: Error) => this.note('error', `close: ${e.message}`))
     this.note('info', 'closed')
   }
 }

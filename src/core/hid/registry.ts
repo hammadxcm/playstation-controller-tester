@@ -4,12 +4,17 @@ import { DualSenseDevice } from './dualsense/device'
 import { DualShock4Device } from './dualshock4/device'
 import type { HidLogger } from './log'
 
-const DRIVERS: { pids: number[]; create: (d: HIDDevice, log?: HidLogger) => HidController & { open(): Promise<void> } }[] = [
+const DRIVERS: {
+  pids: number[]
+  create: (d: HIDDevice, log?: HidLogger) => HidController & { open(): Promise<void> }
+}[] = [
   { pids: [PID.dualsense, PID.dualsenseEdge], create: (d, log) => new DualSenseDevice(d, log) },
   { pids: [PID.ds4v1, PID.ds4v2, PID.ds4dongle], create: (d, log) => new DualShock4Device(d, log) },
 ]
 
-export const FILTERS: HIDDeviceFilter[] = DRIVERS.flatMap((dr) => dr.pids.map((productId) => ({ vendorId: SONY, productId })))
+export const FILTERS: HIDDeviceFilter[] = DRIVERS.flatMap((dr) =>
+  dr.pids.map((productId) => ({ vendorId: SONY, productId })),
+)
 
 export const webHidSupported = (): boolean => typeof navigator !== 'undefined' && 'hid' in navigator
 
@@ -18,7 +23,10 @@ function driverFor(dev: HIDDevice) {
   return DRIVERS.find((dr) => dr.pids.includes(dev.productId)) ?? null
 }
 
-export async function openController(dev: HIDDevice, log?: HidLogger): Promise<HidController | null> {
+export async function openController(
+  dev: HIDDevice,
+  log?: HidLogger,
+): Promise<HidController | null> {
   const dr = driverFor(dev)
   if (!dr) return null
   const c = dr.create(dev, log)

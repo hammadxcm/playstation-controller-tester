@@ -12,4 +12,8 @@ export interface HidLogEntry {
 export type HidLogger = (entry: HidLogEntry) => void
 
 export const hex = (u: ArrayLike<number> | undefined, max = 80): string =>
-  u ? Array.from(u.length > max ? Array.prototype.slice.call(u, 0, max) : u, (b: number) => b.toString(16).padStart(2, '0')).join(' ') + (u.length > max ? ' …' : '') : ''
+  u
+    ? Array.from(u.length > max ? Array.prototype.slice.call(u, 0, max) : u, (b: number) =>
+        b.toString(16).padStart(2, '0'),
+      ).join(' ') + (u.length > max ? ' …' : '')
+    : ''

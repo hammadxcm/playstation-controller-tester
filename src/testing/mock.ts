@@ -26,7 +26,10 @@ const gp = {
   axes: [0, 0, 0, 0] as number[],
   buttons: Array.from({ length: 18 }, () => ({ pressed: false, touched: false, value: 0 })),
   vibrationActuator: {
-    effects: family === 'xbox' || family === 'dualsense' ? ['dual-rumble', 'trigger-rumble'] : ['dual-rumble'],
+    effects:
+      family === 'xbox' || family === 'dualsense'
+        ? ['dual-rumble', 'trigger-rumble']
+        : ['dual-rumble'],
     playEffect: async () => 'complete',
     reset: async () => undefined,
   },
@@ -50,8 +53,19 @@ if (q.has('anim')) {
     const t = (performance.now() - t0) / 1000
     const r = 0.98 + (Math.round(t * 50) % 3) * 0.004
     setPose({
-      axes: [Math.round(Math.cos(t * 2) * r * 127) / 127, Math.round(Math.sin(t * 2) * r * 127) / 127, Math.sin(t) * 0.5 + 0.03, Math.cos(t * 1.3) * 0.5],
-      buttons: { 0: Math.floor(t * 2) % 2 === 0 ? 1 : 0, 12: Math.floor(t) % 3 === 0 ? 1 : 0, 7: (Math.sin(t) + 1) / 2, 6: 0.3, 4: 1 },
+      axes: [
+        Math.round(Math.cos(t * 2) * r * 127) / 127,
+        Math.round(Math.sin(t * 2) * r * 127) / 127,
+        Math.sin(t) * 0.5 + 0.03,
+        Math.cos(t * 1.3) * 0.5,
+      ],
+      buttons: {
+        0: Math.floor(t * 2) % 2 === 0 ? 1 : 0,
+        12: Math.floor(t) % 3 === 0 ? 1 : 0,
+        7: (Math.sin(t) + 1) / 2,
+        6: 0.3,
+        4: 1,
+      },
     })
   }, 4)
 }

@@ -8,8 +8,16 @@ import { encodeOutput, type DualShock4Output } from './output'
 import { PID } from '../../gamepad/identify'
 
 const CAPS: HidCaps = {
-  touchpad: true, motion: true, battery: true, rumble: true, lightbar: true,
-  lightbarFlash: true, playerLeds: false, micLed: false, adaptiveTriggers: false, edge: false,
+  touchpad: true,
+  motion: true,
+  battery: true,
+  rumble: true,
+  lightbar: true,
+  lightbarFlash: true,
+  playerLeds: false,
+  micLed: false,
+  adaptiveTriggers: false,
+  edge: false,
 }
 
 export class DualShock4Device extends SonyDevice implements HidController {
@@ -17,8 +25,10 @@ export class DualShock4Device extends SonyDevice implements HidController {
   readonly caps = CAPS
   readonly label: string
   protected readonly ids: SonyIds = {
-    inputUsb: REPORT.inputUsb, inputBt: REPORT.inputBt,
-    outputUsb: REPORT.outputUsb, outputBt: REPORT.outputBt,
+    inputUsb: REPORT.inputUsb,
+    inputBt: REPORT.inputBt,
+    outputUsb: REPORT.outputUsb,
+    outputBt: REPORT.outputBt,
     calibration: [REPORT.featCalibrationBt, REPORT.featCalibrationUsb],
   }
   protected readonly btPayloadOffset = 2
@@ -27,7 +37,12 @@ export class DualShock4Device extends SonyDevice implements HidController {
 
   constructor(device: HIDDevice, log?: HidLogger) {
     super(device, log)
-    this.label = device.productId === PID.ds4v1 ? 'DualShock 4 (v1)' : device.productId === PID.ds4dongle ? 'DualShock 4 (USB adapter)' : 'DualShock 4'
+    this.label =
+      device.productId === PID.ds4v1
+        ? 'DualShock 4 (v1)'
+        : device.productId === PID.ds4dongle
+          ? 'DualShock 4 (USB adapter)'
+          : 'DualShock 4'
   }
 
   protected parse(d: DataView, reportId: number, t: number): HidState | null {
@@ -35,13 +50,15 @@ export class DualShock4Device extends SonyDevice implements HidController {
       if (d.byteLength < 2 + SIZE.state || !(d.getUint8(0) & 0x80)) return null
       return parseDualShock4(d, this.btPayloadOffset, this.cal, t, reportId)
     }
-    if (reportId === REPORT.inputUsb && d.byteLength >= SIZE.state) return parseDualShock4(d, 0, this.cal, t, reportId)
+    if (reportId === REPORT.inputUsb && d.byteLength >= SIZE.state)
+      return parseDualShock4(d, 0, this.cal, t, reportId)
     return null
   }
 
   protected onCalibration(id: number, d: DataView): void {
     const off = d.getUint8(0) === id ? 1 : 0
-    if (d.byteLength - off >= 34) this.cal = parseCalibration(d, off, id === REPORT.featCalibrationBt)
+    if (d.byteLength - off >= 34)
+      this.cal = parseCalibration(d, off, id === REPORT.featCalibrationBt)
   }
 
   protected encode(): Uint8Array {

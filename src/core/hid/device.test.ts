@@ -20,7 +20,10 @@ const calReport = () => {
   b[0] = 0x05
   const dv = new DataView(b.buffer)
   // gyro plus/minus ±1000 around 0 bias, speed 2000+2000, accel ±8192
-  const vals = [0, 0, 0, 1000, -1000, 1000, -1000, 1000, -1000, 2000, 2000, 8192, -8192, 8192, -8192, 8192, -8192]
+  const vals = [
+    0, 0, 0, 1000, -1000, 1000, -1000, 1000, -1000, 2000, 2000, 8192, -8192, 8192, -8192, 8192,
+    -8192,
+  ]
   vals.forEach((v, i) => dv.setInt16(1 + i * 2, v, true))
   return b
 }
@@ -38,7 +41,7 @@ const bt31 = () => {
 }
 const validBtCrc = (id: number, body: Uint8Array) => {
   const stored = body[73]! | (body[74]! << 8) | (body[75]! << 16) | ((body[76]! << 24) >>> 0)
-  return (stored >>> 0) === sonyCrc(SEED.output, id, body.subarray(0, 73))
+  return stored >>> 0 === sonyCrc(SEED.output, id, body.subarray(0, 73))
 }
 
 function ds(opts: { inputBits?: number; outputIds?: number[] } = {}, pid: number = PID.dualsense) {
@@ -59,9 +62,15 @@ describe('transport detection', () => {
   })
   it('falls back to output report ids', () => {
     const ids = { inputUsb: 1, inputBt: 0x31, outputUsb: 2, outputBt: 0x31, calibration: [] }
-    expect(detectByIds(new FakeHidDevice(1, 1, 'x', { outputIds: [0x31, 0x32] }).asHid(), ids)).toBe('bt')
-    expect(detectByIds(new FakeHidDevice(1, 1, 'x', { outputIds: [0x02] }).asHid(), ids)).toBe('usb')
-    expect(detectByIds(new FakeHidDevice(1, 1, 'x', { outputIds: [] }).asHid(), ids)).toBe('unknown')
+    expect(
+      detectByIds(new FakeHidDevice(1, 1, 'x', { outputIds: [0x31, 0x32] }).asHid(), ids),
+    ).toBe('bt')
+    expect(detectByIds(new FakeHidDevice(1, 1, 'x', { outputIds: [0x02] }).asHid(), ids)).toBe(
+      'usb',
+    )
+    expect(detectByIds(new FakeHidDevice(1, 1, 'x', { outputIds: [] }).asHid(), ids)).toBe(
+      'unknown',
+    )
   })
 })
 
@@ -115,7 +124,11 @@ describe('DualSense over USB', () => {
     const { fake, dev } = ds()
     await dev.open()
     fake.sendDelayMs = 5
-    const all = Promise.all([dev.setLightbar([1, 0, 0]), dev.setLightbar([2, 0, 0]), dev.setLightbar([3, 0, 0])])
+    const all = Promise.all([
+      dev.setLightbar([1, 0, 0]),
+      dev.setLightbar([2, 0, 0]),
+      dev.setLightbar([3, 0, 0]),
+    ])
     await all
     const user = fake.sent.slice(1)
     expect(user.length).toBeLessThanOrEqual(2)
@@ -210,7 +223,10 @@ describe('DualSense over Bluetooth', () => {
 
 describe('DualShock 4', () => {
   it('frames Bluetooth output with 0xC0 and a valid CRC, no sequence nibble', async () => {
-    const fake = new FakeHidDevice(SONY, PID.ds4v2, 'Wireless Controller', { inputBits: 616, outputIds: [0x11] })
+    const fake = new FakeHidDevice(SONY, PID.ds4v2, 'Wireless Controller', {
+      inputBits: 616,
+      outputIds: [0x11],
+    })
     fake.features.set(0x05, calReport())
     const dev = new DualShock4Device(fake.asHid())
     const opening = dev.open()

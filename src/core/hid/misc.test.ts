@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { noop } from './controller'
 import { hex } from './log'
-import { FILTERS, openController, reopenGranted, requestController, webHidSupported } from './registry'
+import {
+  FILTERS,
+  openController,
+  reopenGranted,
+  requestController,
+  webHidSupported,
+} from './registry'
 import { FakeHidDevice } from '@/testing/fakeHidDevice'
 import { PID, SONY } from '../gamepad/identify'
 import { emptyOutput, encodeOutput } from './dualsense/output'
@@ -28,15 +34,23 @@ describe('misc', () => {
     expect((await openController(ds.asHid()))?.family).toBe('dualsense')
     expect((await openController(ds4.asHid()))?.family).toBe('dualshock4')
     const broken = new FakeHidDevice(SONY, PID.dualsense, 'Broken')
-    broken.open = async () => { throw new Error('busy') }
+    broken.open = async () => {
+      throw new Error('busy')
+    }
     const log: string[] = []
-    Object.defineProperty(navigator, 'hid', { value: { getDevices: async () => [broken, ds], requestDevice: async () => [ds4] }, configurable: true })
+    Object.defineProperty(navigator, 'hid', {
+      value: { getDevices: async () => [broken, ds], requestDevice: async () => [ds4] },
+      configurable: true,
+    })
     expect(webHidSupported()).toBe(true)
     const reopened = await reopenGranted((e) => log.push(e.note ?? ''))
     expect(reopened.length).toBe(1)
     expect(log[0]).toContain('busy')
     expect((await requestController())?.family).toBe('dualshock4')
-    Object.defineProperty(navigator, 'hid', { value: { requestDevice: async () => [] }, configurable: true })
+    Object.defineProperty(navigator, 'hid', {
+      value: { requestDevice: async () => [] },
+      configurable: true,
+    })
     expect(await requestController()).toBeNull()
   })
   it('encodes v2 vibration and release flag directly', () => {
@@ -82,7 +96,9 @@ describe('misc', () => {
   it('calibration handles grouped layout and zero ranges', () => {
     const b = new Uint8Array(41)
     const dv = new DataView(b.buffer)
-    ;[0, 0, 0, 500, 500, 500, -500, -500, -500, 1000, 1000, 0, 0, 0, 0, 0, 0].forEach((v, i) => dv.setInt16(1 + i * 2, v, true))
+    ;[0, 0, 0, 500, 500, 500, -500, -500, -500, 1000, 1000, 0, 0, 0, 0, 0, 0].forEach((v, i) =>
+      dv.setInt16(1 + i * 2, v, true),
+    )
     const cal = parseCalibration(dv, 1, true)
     expect(cal.gyroDenom[0]).toBe(1000)
     expect(cal.accelRange[0]).toBe(32767)

@@ -6,83 +6,57 @@ import { ArtworkModel } from '@/features/model/ArtworkModel'
 import type { ArtworkKind } from '@/features/model/artwork/specs'
 import type { FrameSource } from '@/features/model/useControllerRig'
 import { reducedMotion } from '@/lib/motion'
+import { useT } from '@/i18n/useT'
 import { poseFrame } from './demoFrame'
 import { ParallaxGlow } from './ParallaxGlow'
 
 interface Callout {
-  label: string
   x: number
   y: number
 }
 interface Item {
   kind: ArtworkKind
-  name: string
-  tagline: string
   /** standard buttons held while the card is hovered or focused */
   lit: readonly StdButton[]
   /** HID-only parts (paddles, Fn keys, mute) lit the same way */
   extra: readonly string[]
   sticks?: readonly number[]
+  /** positions in % of the drawing; labels come from i18n `showcase.<kind>.callouts` */
   callouts: readonly Callout[]
-  facts: readonly string[]
 }
 
 const ITEMS: readonly Item[] = [
   {
     kind: 'dualsense',
-    name: 'DualSense',
-    tagline: 'PS5 wireless controller',
     lit: ['l2', 'r2', 'touchpad'],
     extra: ['mute'],
     sticks: [0.35, -0.2, -0.3, 0.25],
     callouts: [
-      { label: 'Adaptive triggers', x: 22, y: 6 },
-      { label: 'Touchpad + lightbar', x: 50, y: 33 },
-      { label: 'Mic mute', x: 50, y: 67 },
-    ],
-    facts: [
-      'Adaptive trigger effects',
-      'Lightbar + player LEDs',
-      'Haptic rumble',
-      'Gyro, accel, battery',
+      { x: 22, y: 6 },
+      { x: 50, y: 33 },
+      { x: 50, y: 67 },
     ],
   },
   {
     kind: 'dualsenseEdge',
-    name: 'DualSense Edge',
-    tagline: 'PS5 pro controller',
     lit: ['l2', 'r2'],
     extra: ['paddleL', 'paddleR', 'fnL', 'fnR'],
     sticks: [-0.3, 0.3, 0.3, -0.3],
     callouts: [
-      { label: 'Back paddles', x: 50, y: 92 },
-      { label: 'Fn keys', x: 50, y: 66 },
-      { label: 'Stick modules', x: 28, y: 52 },
-    ],
-    facts: [
-      'Everything DualSense does',
-      'Back paddles + Fn keys',
-      'Trigger stops',
-      'Swappable stick modules',
+      { x: 50, y: 92 },
+      { x: 50, y: 66 },
+      { x: 28, y: 52 },
     ],
   },
   {
     kind: 'dualshock4',
-    name: 'DualShock 4',
-    tagline: 'PS4 wireless controller',
     lit: ['touchpad', 'south'],
     extra: [],
     sticks: [0.3, 0.3, -0.3, -0.3],
     callouts: [
-      { label: 'Lightbar', x: 50, y: 10 },
-      { label: 'Touchpad', x: 50, y: 30 },
-      { label: 'Share / Options', x: 22, y: 26 },
-    ],
-    facts: [
-      'Lightbar colour + flash',
-      'Touchpad, gyro, accel',
-      'Rumble',
-      'USB, Bluetooth or dongle',
+      { x: 50, y: 10 },
+      { x: 50, y: 30 },
+      { x: 22, y: 26 },
     ],
   },
 ]
@@ -111,6 +85,10 @@ const hover = {
 }
 
 function ShowcaseCard({ item }: { item: Item }) {
+  const t = useT()
+  const name = t(`showcase.${item.kind}.name`)
+  const facts = t.list(`showcase.${item.kind}.facts`)
+  const labels = t.list(`showcase.${item.kind}.callouts`)
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '200px' })
   const [hot, setHot] = useState(false)
@@ -135,7 +113,7 @@ function ShowcaseCard({ item }: { item: Item }) {
       onPointerLeave={() => setHot(false)}
       onFocus={() => setHot(true)}
       onBlur={() => setHot(false)}
-      aria-label={`${item.name}: ${item.facts.join(', ')}`}
+      aria-label={`${name}: ${facts.join(', ')}`}
     >
       <div className="show-art">
         {inView ? (
@@ -143,18 +121,18 @@ function ShowcaseCard({ item }: { item: Item }) {
         ) : (
           <div className="model model-loading" />
         )}
-        {item.callouts.map((c) => (
-          <span key={c.label} className="callout" style={{ left: `${c.x}%`, top: `${c.y}%` }}>
+        {item.callouts.map((c, i) => (
+          <span key={i} className="callout" style={{ left: `${c.x}%`, top: `${c.y}%` }}>
             <i />
-            {c.label}
+            {labels[i]}
           </span>
         ))}
       </div>
       <div className="show-copy">
-        <h3>{item.name}</h3>
-        <p className="small dim">{item.tagline}</p>
+        <h3>{name}</h3>
+        <p className="small dim">{t(`showcase.${item.kind}.tagline`)}</p>
         <ul className="show-facts small muted">
-          {item.facts.map((f) => (
+          {facts.map((f) => (
             <li key={f}>{f}</li>
           ))}
         </ul>
@@ -171,17 +149,15 @@ const itemV = {
 
 /** The three Sony pads with their artwork, callouts lit on hover; chunks load only as the section scrolls near. */
 export function Showcase() {
+  const t = useT()
   const reduce = reducedMotion()
   return (
     <section className="landing-section showcase" aria-labelledby="showcase-title">
       <ParallaxGlow />
       <h2 id="showcase-title" className="display">
-        Built for PlayStation controllers
+        {t('showcase.title')}
       </h2>
-      <p className="muted lead">
-        Accurate drawings of each pad light up as you press. Hover a card to see what Pro Mode can
-        reach.
-      </p>
+      <p className="muted lead">{t('showcase.lead')}</p>
       <m.div
         className="show-grid"
         variants={list}

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { ButtonTracker, circularity, deadzone, drift, pollingRate, resolutionBits, score } from './index'
+import {
+  ButtonTracker,
+  circularity,
+  deadzone,
+  drift,
+  pollingRate,
+  resolutionBits,
+  score,
+} from './index'
 
 const circle = (r: number, n = 360) =>
   Array.from({ length: n }, (_, i) => {
@@ -46,7 +54,11 @@ describe('resolutionBits', () => {
 
 describe('deadzone', () => {
   it('reports the smallest non-zero magnitude', () => {
-    const s = [{ x: 0, y: 0 }, { x: 0.12, y: 0 }, { x: 0.3, y: 0 }]
+    const s = [
+      { x: 0, y: 0 },
+      { x: 0.12, y: 0 },
+      { x: 0.3, y: 0 },
+    ]
     expect(deadzone(s).inner).toBeCloseTo(0.12)
   })
 })
@@ -77,7 +89,25 @@ describe('ButtonTracker', () => {
 
 describe('score', () => {
   it('grades a perfect pad A and a broken pad F', () => {
-    expect(score({ driftMagnitude: 0, circularityErrorPct: 0, resolutionBits: 12, pollingHz: 250, chatterEvents: 0, stuckButtons: 0 })).toMatchObject({ score: 100, grade: 'A' })
-    expect(score({ driftMagnitude: 0.2, circularityErrorPct: 40, resolutionBits: 4, pollingHz: 30, chatterEvents: 9, stuckButtons: 1 }).grade).toBe('F')
+    expect(
+      score({
+        driftMagnitude: 0,
+        circularityErrorPct: 0,
+        resolutionBits: 12,
+        pollingHz: 250,
+        chatterEvents: 0,
+        stuckButtons: 0,
+      }),
+    ).toMatchObject({ score: 100, grade: 'A' })
+    expect(
+      score({
+        driftMagnitude: 0.2,
+        circularityErrorPct: 40,
+        resolutionBits: 4,
+        pollingHz: 30,
+        chatterEvents: 9,
+        stuckButtons: 1,
+      }).grade,
+    ).toBe('F')
   })
 })

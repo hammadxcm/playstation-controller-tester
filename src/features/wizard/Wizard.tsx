@@ -23,7 +23,9 @@ export function Wizard() {
 
   const ring = useRef<ProgressRingHandle>(null)
   const scoreEl = useRef<HTMLSpanElement>(null)
-  useFrame((f) => { if (phase === 'running') step?.feed(f) })
+  useFrame((f) => {
+    if (phase === 'running') step?.feed(f)
+  })
 
   const start = () => {
     setSteps(buildSteps())
@@ -46,7 +48,12 @@ export function Wizard() {
     setRows(next)
     if (i + 1 >= steps.length) {
       const sc = score(metrics.current)
-      setReport({ at: new Date().toISOString(), padId: pad?.id ?? '', score: sc, metrics: Object.fromEntries(next.map((r) => [r.label, r.value])) })
+      setReport({
+        at: new Date().toISOString(),
+        padId: pad?.id ?? '',
+        score: sc,
+        metrics: Object.fromEntries(next.map((r) => [r.label, r.value])),
+      })
       setPhase('done')
     } else {
       setI(i + 1)
@@ -55,7 +62,9 @@ export function Wizard() {
     }
   }
   const advanceRef = useRef(advance)
-  useEffect(() => { advanceRef.current = advance })
+  useEffect(() => {
+    advanceRef.current = advance
+  })
   useEffect(() => {
     if (phase !== 'running' || !step) return
     const id = setInterval(() => {
@@ -70,7 +79,10 @@ export function Wizard() {
     if (phase !== 'done' || !report || !scoreEl.current) return
     const el = scoreEl.current
     const target = report.score.score
-    if (reducedMotion()) { el.textContent = String(target); return }
+    if (reducedMotion()) {
+      el.textContent = String(target)
+      return
+    }
     const t0 = performance.now()
     let raf = 0
     const tick = () => {
@@ -88,20 +100,39 @@ export function Wizard() {
       <Card title="Health check">
         {phase === 'idle' && (
           <>
-            <p className="muted">Six guided steps, about two minutes: drift, circularity for both sticks, resolution, report rate and a button sweep. The result is a 0–100 score you can export from the Report tab.</p>
-            <div><Button primary onClick={start}>Start</Button></div>
+            <p className="muted">
+              Six guided steps, about two minutes: drift, circularity for both sticks, resolution,
+              report rate and a button sweep. The result is a 0–100 score you can export from the
+              Report tab.
+            </p>
+            <div>
+              <Button primary onClick={start}>
+                Start
+              </Button>
+            </div>
           </>
         )}
         {phase === 'running' && step && (
           <div key={step.id} className="stack enter">
             <div className="row" style={{ gap: 14 }}>
-              <ProgressRing ref={ring} size={56} stroke={6}><span className="small mono">{i + 1}/{steps.length}</span></ProgressRing>
-              <div className="stack" style={{ gap: 2 }}><Badge tone="accent">Step {i + 1} of {steps.length}</Badge><h2>{step.title}</h2></div>
+              <ProgressRing ref={ring} size={56} stroke={6}>
+                <span className="small mono">
+                  {i + 1}/{steps.length}
+                </span>
+              </ProgressRing>
+              <div className="stack" style={{ gap: 2 }}>
+                <Badge tone="accent">
+                  Step {i + 1} of {steps.length}
+                </Badge>
+                <h2>{step.title}</h2>
+              </div>
             </div>
             <p>{step.instructions}</p>
             <div className="row">
               <Button onClick={() => advance()}>Done, next</Button>
-              <Button small onClick={() => advance(true)}>Skip</Button>
+              <Button small onClick={() => advance(true)}>
+                Skip
+              </Button>
               <span className="dim small">auto-advances at {Math.round(step.maxMs / 1000)} s</span>
             </div>
           </div>
@@ -109,19 +140,37 @@ export function Wizard() {
         {phase === 'done' && report && (
           <>
             <div className="row" style={{ alignItems: 'baseline', gap: 16 }}>
-              <span ref={scoreEl} className="score" style={{ color: `var(--${report.score.grade === 'A' || report.score.grade === 'B' ? 'good' : report.score.grade === 'C' ? 'ok' : 'bad'})` }}>0</span>
+              <span
+                ref={scoreEl}
+                className="score"
+                style={{
+                  color: `var(--${report.score.grade === 'A' || report.score.grade === 'B' ? 'good' : report.score.grade === 'C' ? 'ok' : 'bad'})`,
+                }}
+              >
+                0
+              </span>
               <span className="score dim pop">{report.score.grade}</span>
             </div>
-            <div className="row"><Button primary onClick={start}>Run again</Button></div>
+            <div className="row">
+              <Button primary onClick={start}>
+                Run again
+              </Button>
+            </div>
           </>
         )}
       </Card>
       <Card title="Results">
-        {rows.length === 0 ? <p className="muted">Results appear here as each step completes.</p> : (
+        {rows.length === 0 ? (
+          <p className="muted">Results appear here as each step completes.</p>
+        ) : (
           <table className="table">
             <tbody>
               {rows.map((r, k) => (
-                <tr key={k} className="enter" style={{ ['--i' as string]: k % 6 }}><td>{r.label}</td><td className="mono">{r.value}</td><td>{r.tone && <Badge tone={r.tone}>{r.tone}</Badge>}</td></tr>
+                <tr key={k} className="enter" style={{ ['--i' as string]: k % 6 }}>
+                  <td>{r.label}</td>
+                  <td className="mono">{r.value}</td>
+                  <td>{r.tone && <Badge tone={r.tone}>{r.tone}</Badge>}</td>
+                </tr>
               ))}
             </tbody>
           </table>

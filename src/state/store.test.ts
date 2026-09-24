@@ -5,10 +5,33 @@ import { saveLayout, emptyLayout } from '@/core/gamepad/mapping'
 import { selectActivePad, selectLanding, useStore } from './store'
 
 const fakeHid = (label: string): HidController => ({
-  family: 'dualsense', label, transport: 'usb', device: {} as HIDDevice,
-  caps: { touchpad: true, motion: true, battery: true, rumble: true, lightbar: true, lightbarFlash: false, playerLeds: true, micLed: true, adaptiveTriggers: true, edge: false },
-  subscribe: () => () => {}, rumble: async () => {}, setLightbar: async () => {}, setLightbarFlash: async () => {}, setPlayerLeds: async () => {},
-  setMicLed: async () => {}, setTrigger: async () => {}, setAudio: async () => {}, info: async () => ({}), factory: async () => ({}), close: async () => {},
+  family: 'dualsense',
+  label,
+  transport: 'usb',
+  device: {} as HIDDevice,
+  caps: {
+    touchpad: true,
+    motion: true,
+    battery: true,
+    rumble: true,
+    lightbar: true,
+    lightbarFlash: false,
+    playerLeds: true,
+    micLed: true,
+    adaptiveTriggers: true,
+    edge: false,
+  },
+  subscribe: () => () => {},
+  rumble: async () => {},
+  setLightbar: async () => {},
+  setLightbarFlash: async () => {},
+  setPlayerLeds: async () => {},
+  setMicLed: async () => {},
+  setTrigger: async () => {},
+  setAudio: async () => {},
+  info: async () => ({}),
+  factory: async () => ({}),
+  close: async () => {},
 })
 
 beforeEach(() => useStore.getState().setHid(null))
@@ -17,7 +40,10 @@ describe('store', () => {
   it('tracks pads, active index and learned layouts', () => {
     saveLayout('padB', emptyLayout())
     const s = useStore.getState()
-    s.setPads([{ index: 0, id: 'padA', mapping: 'standard' }, { index: 1, id: 'padB', mapping: '' }])
+    s.setPads([
+      { index: 0, id: 'padA', mapping: 'standard' },
+      { index: 1, id: 'padB', mapping: '' },
+    ])
     expect(useStore.getState().activeIndex).toBe(0)
     s.setActive(1)
     expect(useStore.getState().layout).toBeDefined()
@@ -46,7 +72,12 @@ describe('store', () => {
     await useStore.getState().hids[0]!.setLightbar([9, 9, 9])
     expect(useStore.getState().hidOuts[0]!.lightbar).toEqual([9, 9, 9])
     expect(useStore.getState().hidOut.lightbar).toEqual([1, 2, 3])
-    await useStore.getState().hid!.setAudio!({ path: 'speaker', headphoneVolume: 0, speakerVolume: 1, micVolume: 1 })
+    await useStore.getState().hid!.setAudio!({
+      path: 'speaker',
+      headphoneVolume: 0,
+      speakerVolume: 1,
+      micVolume: 1,
+    })
     expect(useStore.getState().hidOut.audio?.path).toBe('speaker')
     expect(await useStore.getState().hid!.factory!()).toEqual({})
     s.setActiveHid(0)
@@ -79,14 +110,37 @@ describe('store', () => {
     s.clearHidLog()
     expect(useStore.getState().hidLog).toEqual([])
     expect(useStore.getState().settings.theme).toBe('system')
+    expect(useStore.getState().settings.lang).toBe('auto')
     s.setSettings({ theme: 'light' })
     expect(useStore.getState().settings.theme).toBe('light')
-    s.setReport({ at: 'now', padId: 'x', score: { score: 1, grade: 'F', breakdown: { driftMagnitude: 0, circularityErrorPct: 0, resolutionBits: 0, pollingHz: 0, chatterEvents: 0, stuckButtons: 0 } }, metrics: {} })
+    s.setReport({
+      at: 'now',
+      padId: 'x',
+      score: {
+        score: 1,
+        grade: 'F',
+        breakdown: {
+          driftMagnitude: 0,
+          circularityErrorPct: 0,
+          resolutionBits: 0,
+          pollingHz: 0,
+          chatterEvents: 0,
+          stuckButtons: 0,
+        },
+      },
+      metrics: {},
+    })
     expect(useStore.getState().report?.score.grade).toBe('F')
   })
   it('shows the landing until a pad, a HID device or the user enters the shell', () => {
     expect(selectLanding({ pads: [], hids: [], entered: false })).toBe(true)
-    expect(selectLanding({ pads: [{ index: 0, id: 'x', mapping: 'standard' }], hids: [], entered: false })).toBe(false)
+    expect(
+      selectLanding({
+        pads: [{ index: 0, id: 'x', mapping: 'standard' }],
+        hids: [],
+        entered: false,
+      }),
+    ).toBe(false)
     expect(selectLanding({ pads: [], hids: [{} as never], entered: false })).toBe(false)
     useStore.getState().setEntered(true)
     expect(selectLanding(useStore.getState())).toBe(false)

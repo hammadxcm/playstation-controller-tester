@@ -34,7 +34,12 @@ describe('FakeHidDevice', () => {
 describe('mock HID', () => {
   it('produces synthetic state for DualSense and DualShock 4 and records commands', async () => {
     vi.useFakeTimers()
-    ;(window as unknown as { __ct: unknown }).__ct = { gp: { axes: [0, 0, 0, 0], buttons: Array.from({ length: 18 }, () => ({ pressed: false, value: 0 })) } }
+    ;(window as unknown as { __ct: unknown }).__ct = {
+      gp: {
+        axes: [0, 0, 0, 0],
+        buttons: Array.from({ length: 18 }, () => ({ pressed: false, value: 0 })),
+      },
+    }
     const m = createMockHid('dualsense')
     const seen: unknown[] = []
     const off = m.subscribe((s) => seen.push(s))
@@ -64,11 +69,23 @@ describe('mock HID', () => {
     vi.useRealTimers()
   })
   it('installs navigator.hid, injects mocks into the store and applies URL options', async () => {
-    ;(window as unknown as { __ct: unknown }).__ct = { gp: { axes: [0, 0, 0, 0], buttons: Array.from({ length: 18 }, () => ({ pressed: false, value: 0 })) } }
-    const q = new URLSearchParams('hid=2&lb=ff0044&leds=P3&mic=pulse&flash=100,200&trig=left:weapon')
+    ;(window as unknown as { __ct: unknown }).__ct = {
+      gp: {
+        axes: [0, 0, 0, 0],
+        buttons: Array.from({ length: 18 }, () => ({ pressed: false, value: 0 })),
+      },
+    }
+    const q = new URLSearchParams(
+      'hid=2&lb=ff0044&leds=P3&mic=pulse&flash=100,200&trig=left:weapon',
+    )
     const mock = await installMockHid('dualsense', q)
     expect('hid' in navigator).toBe(true)
-    const nh = navigator.hid as unknown as { addEventListener(): void; removeEventListener(): void; getDevices(): Promise<unknown[]>; requestDevice(): Promise<unknown[]> }
+    const nh = navigator.hid as unknown as {
+      addEventListener(): void
+      removeEventListener(): void
+      getDevices(): Promise<unknown[]>
+      requestDevice(): Promise<unknown[]>
+    }
     nh.addEventListener()
     nh.removeEventListener()
     expect(await nh.getDevices()).toEqual([])

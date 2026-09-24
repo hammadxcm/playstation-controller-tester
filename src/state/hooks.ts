@@ -16,7 +16,9 @@ export function useFrame(cb: (frame: Frame) => void): void {
   const active = useStore((s) => s.activeIndex)
   const layout = useStore((s) => s.layout)
   const ref = useRef(cb)
-  useEffect(() => { ref.current = cb })
+  useEffect(() => {
+    ref.current = cb
+  })
   useEffect(() => {
     if (active === null) return
     return onFrames((frames) => {
@@ -39,7 +41,9 @@ export const useActivePad = () => useStore(selectActivePad)
 export function useRawFrame(cb: (frame: Frame) => void): void {
   const active = useStore((s) => s.activeIndex)
   const ref = useRef(cb)
-  useEffect(() => { ref.current = cb })
+  useEffect(() => {
+    ref.current = cb
+  })
   useEffect(() => {
     if (active === null) return
     return onFrames((frames) => {
@@ -59,7 +63,9 @@ export function usePadRegistry(): void {
 export function useHidState(cb: (s: HidState) => void): void {
   const hid = useStore((s) => s.hid)
   const ref = useRef(cb)
-  useEffect(() => { ref.current = cb })
+  useEffect(() => {
+    ref.current = cb
+  })
   useEffect(() => hid?.subscribe((s) => ref.current(s)), [hid])
 }
 
@@ -67,7 +73,9 @@ export function useHidState(cb: (s: HidState) => void): void {
 export function useSampled<T>(read: () => T, hz = 10): T {
   const [v, setV] = useState(read)
   const ref = useRef(read)
-  useEffect(() => { ref.current = read })
+  useEffect(() => {
+    ref.current = read
+  })
   useEffect(() => {
     const id = setInterval(() => setV(ref.current()), 1000 / hz)
     return () => clearInterval(id)

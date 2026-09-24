@@ -27,7 +27,15 @@ export function circularity(samples: readonly Point[]): CircularityResult {
   }
   const filled = bins.filter((r) => r > 0)
   if (!filled.length) {
-    return { errorPct: 0, coverage: 0, minR: 0, maxR: 0, bins, incompleteRange: false, verdict: 'good' }
+    return {
+      errorPct: 0,
+      coverage: 0,
+      minR: 0,
+      maxR: 0,
+      bins,
+      incompleteRange: false,
+      verdict: 'good',
+    }
   }
   const err = filled.reduce((s, r) => s + Math.abs(r - 1), 0) / filled.length
   const minR = Math.min(...filled)

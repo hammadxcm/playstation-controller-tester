@@ -1,17 +1,31 @@
 import { describe, expect, it } from 'vitest'
 import { buildGraph, pickControllerDevices, rms, type GraphContext } from './usbAudio'
 
-const dev = (kind: MediaDeviceKind, label: string) => ({ kind, label, deviceId: label, groupId: '', toJSON: () => ({}) }) as MediaDeviceInfo
+const dev = (kind: MediaDeviceKind, label: string) =>
+  ({ kind, label, deviceId: label, groupId: '', toJSON: () => ({}) }) as MediaDeviceInfo
 
 function fakeCtx(maxChannelCount: number) {
   const connections: string[] = []
   const node = (name: string) => {
-    const n = { name, gain: { value: 1 }, connect: (to: { name?: string }, _out?: number, inp?: number) => { connections.push(`${name}->${to.name ?? 'dest'}${inp !== undefined ? `:${inp}` : ''}`); return to } }
+    const n = {
+      name,
+      gain: { value: 1 },
+      connect: (to: { name?: string }, _out?: number, inp?: number) => {
+        connections.push(`${name}->${to.name ?? 'dest'}${inp !== undefined ? `:${inp}` : ''}`)
+        return to
+      },
+    }
     return n as unknown as GainNode & ChannelMergerNode
   }
   let gains = 0
   const ctx: GraphContext = {
-    destination: { name: 'dest', channelCount: 2, maxChannelCount, channelCountMode: 'max', channelInterpretation: 'speakers' } as GraphContext['destination'],
+    destination: {
+      name: 'dest',
+      channelCount: 2,
+      maxChannelCount,
+      channelCountMode: 'max',
+      channelInterpretation: 'speakers',
+    } as GraphContext['destination'],
     createGain: () => node(`gain${gains++}`),
     createChannelMerger: (n) => node(`merger${n}`),
   }
@@ -20,7 +34,12 @@ function fakeCtx(maxChannelCount: number) {
 
 describe('pickControllerDevices', () => {
   it('keeps only Sony-looking devices, split by kind', () => {
-    const d = pickControllerDevices([dev('audiooutput', 'DualSense Wireless Controller'), dev('audioinput', 'Wireless Controller'), dev('audiooutput', 'MacBook Pro Speakers'), dev('audioinput', '')])
+    const d = pickControllerDevices([
+      dev('audiooutput', 'DualSense Wireless Controller'),
+      dev('audioinput', 'Wireless Controller'),
+      dev('audiooutput', 'MacBook Pro Speakers'),
+      dev('audioinput', ''),
+    ])
     expect(d.outputs.map((x) => x.label)).toEqual(['DualSense Wireless Controller'])
     expect(d.inputs.map((x) => x.label)).toEqual(['Wireless Controller'])
   })

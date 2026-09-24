@@ -46,7 +46,12 @@ function StickPanel({ label, buf }: { label: string; buf: React.RefObject<Buf> }
   useEffect(() => {
     if (complete && !wasComplete.current) {
       const c = panel.current?.querySelector('canvas')
-      if (c) animate(c, [{ boxShadow: '0 0 0 0 var(--accent)' }, { boxShadow: '0 0 0 14px transparent' }], { duration: 700, easing: 'cubic-bezier(.16,1,.3,1)' })
+      if (c)
+        animate(
+          c,
+          [{ boxShadow: '0 0 0 0 var(--accent)' }, { boxShadow: '0 0 0 14px transparent' }],
+          { duration: 700, easing: 'cubic-bezier(.16,1,.3,1)' },
+        )
     }
     wasComplete.current = complete
   }, [complete])
@@ -59,8 +64,17 @@ function StickPanel({ label, buf }: { label: string; buf: React.RefObject<Buf> }
     m.z.axisSnapping && ['Axis snapping', 'ok'],
   ].filter(Boolean) as [string, 'ok' | 'bad'][]
   return (
-    <Card title={label} right={<Button small onClick={reset}>Reset</Button>}>
-      <div ref={panel}><StickCanvas trace={traceRef} deadzone={deadzone} mode={trace} /></div>
+    <Card
+      title={label}
+      right={
+        <Button small onClick={reset}>
+          Reset
+        </Button>
+      }
+    >
+      <div ref={panel}>
+        <StickCanvas trace={traceRef} deadzone={deadzone} mode={trace} />
+      </div>
       <div className="row small mono muted" style={{ justifyContent: 'center' }}>
         <span>x {m.cur.x.toFixed(4)}</span>
         <span>y {m.cur.y.toFixed(4)}</span>
@@ -68,20 +82,43 @@ function StickPanel({ label, buf }: { label: string; buf: React.RefObject<Buf> }
       </div>
       <div className="metrics">
         <Metric label="Drift" value={m.d.magnitude.toFixed(3)} tone={m.d.verdict} />
-        <Metric label="Circularity err" value={m.c.coverage > 0.5 ? `${m.c.errorPct.toFixed(1)} %` : '–'} tone={m.c.coverage > 0.5 ? m.c.verdict : undefined} />
+        <Metric
+          label="Circularity err"
+          value={m.c.coverage > 0.5 ? `${m.c.errorPct.toFixed(1)} %` : '–'}
+          tone={m.c.coverage > 0.5 ? m.c.verdict : undefined}
+        />
         <Metric label="Coverage" value={`${Math.round(m.c.coverage * 100)} %`} />
         <Metric label="Resolution" value={m.r.bits ? `${m.r.bits}-bit` : '–'} />
         <Metric label="Inner DZ" value={m.z.inner ? m.z.inner.toFixed(3) : '–'} />
       </div>
       <div className="row">
-        {faults.length ? faults.map(([f, tone]) => <span key={f} className="pop"><Badge tone={tone}>{f}</Badge></span>) : <Badge tone="good">No faults detected</Badge>}
+        {faults.length ? (
+          faults.map(([f, tone]) => (
+            <span key={f} className="pop">
+              <Badge tone={tone}>{f}</Badge>
+            </span>
+          ))
+        ) : (
+          <Badge tone="good">No faults detected</Badge>
+        )}
         <span className="dim small">{m.n} samples</span>
       </div>
       <details className="small muted">
         <summary>How to test</summary>
-        <p>Drift: let go of the stick and watch the offset. Circularity: roll the stick slowly around its outer edge two or three times; below 10 % is excellent. Resolution: move the stick slowly; 8-bit is typical, 12-bit is Edge/Elite class.</p>
+        <p>
+          Drift: let go of the stick and watch the offset. Circularity: roll the stick slowly around
+          its outer edge two or three times; below 10 % is excellent. Resolution: move the stick
+          slowly; 8-bit is typical, 12-bit is Edge/Elite class.
+        </p>
       </details>
-      <Slider label="Deadzone ring" value={deadzone} max={0.3} step={0.01} onChange={(v) => setSettings({ deadzone: v })} format={(v) => `${Math.round(v * 100)} %`} />
+      <Slider
+        label="Deadzone ring"
+        value={deadzone}
+        max={0.3}
+        step={0.01}
+        onChange={(v) => setSettings({ deadzone: v })}
+        format={(v) => `${Math.round(v * 100)} %`}
+      />
     </Card>
   )
 }
@@ -101,7 +138,17 @@ export function Sticks() {
       <div className="row">
         <span className="muted small">Trace</span>
         {(['fade', 'constant', 'none'] as const).map((m) => (
-          <Button key={m} small primary={traceMode === m} onClick={() => { setSettings({ trace: m }); force((n) => n + 1) }}>{m}</Button>
+          <Button
+            key={m}
+            small
+            primary={traceMode === m}
+            onClick={() => {
+              setSettings({ trace: m })
+              force((n) => n + 1)
+            }}
+          >
+            {m}
+          </Button>
         ))}
       </div>
       <div className="grid-2">

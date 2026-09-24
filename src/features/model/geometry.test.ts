@@ -4,7 +4,21 @@ import { GEOMETRY } from './geometry'
 describe('geometry', () => {
   it('every family defines every standard control', () => {
     for (const [name, g] of Object.entries(GEOMETRY)) {
-      for (const k of ['ls', 'rs', 'face', 'dpad', 'l1', 'r1', 'l2', 'r2', 'select', 'start', 'home', 'grips'] as const) expect(g[k], `${name}.${k}`).toBeDefined()
+      for (const k of [
+        'ls',
+        'rs',
+        'face',
+        'dpad',
+        'l1',
+        'r1',
+        'l2',
+        'r2',
+        'select',
+        'start',
+        'home',
+        'grips',
+      ] as const)
+        expect(g[k], `${name}.${k}`).toBeDefined()
     }
     expect(GEOMETRY.xbox.impulseTriggers).toBe(true)
     expect(GEOMETRY.dualsense.touchpad).toBeDefined()

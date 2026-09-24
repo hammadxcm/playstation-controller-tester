@@ -33,7 +33,9 @@ describe('device branches', () => {
     await dev.setLightbarFlash()
     await dev.setLightbar(null)
     expect(fake.sent.at(-1)!.data[44]).toBe(0)
-    fake.close = async () => { throw new Error('nope') }
+    fake.close = async () => {
+      throw new Error('nope')
+    }
     await dev.close()
     expect(log.some((e) => e.note?.includes('close: nope'))).toBe(true)
   })
@@ -52,7 +54,11 @@ describe('device branches', () => {
   it('SonyDevice: descriptor edge cases, unsubscribe, keepalive skips while a send is in flight, close paths', async () => {
     const odd = new FakeHidDevice(SONY, PID.dualsense, 'DualSense')
     ;(odd as unknown as { collections: unknown[] }).collections = [
-      { usagePage: 0x0c, usage: 0x01, inputReports: [{ items: [{ reportSize: 8, reportCount: 100 }] }] },
+      {
+        usagePage: 0x0c,
+        usage: 0x01,
+        inputReports: [{ items: [{ reportSize: 8, reportCount: 100 }] }],
+      },
       { usagePage: 0x01, usage: 0x05 },
       { usagePage: 0x01, usage: 0x05, inputReports: [{ items: [{}] }, {}], outputReports: [{}] },
     ]
@@ -63,7 +69,10 @@ describe('device branches', () => {
     await never.close() // never opened, transport unknown → nothing sent
     expect(odd.sent.length).toBe(0)
     vi.useFakeTimers()
-    const fake = new FakeHidDevice(SONY, PID.dualsense, 'DualSense', { inputBits: 616, outputIds: [0x31] })
+    const fake = new FakeHidDevice(SONY, PID.dualsense, 'DualSense', {
+      inputBits: 616,
+      outputIds: [0x31],
+    })
     const dev = new DualSenseDevice(fake.asHid())
     const off = dev.subscribe(() => undefined)
     off()
@@ -96,7 +105,10 @@ describe('device branches', () => {
   })
   it('SonyDevice: unknown transport times out then initialises when a report finally arrives', async () => {
     vi.useFakeTimers()
-    const fake = new FakeHidDevice(SONY, PID.dualsense, 'DualSense', { inputBits: 8, outputIds: [] })
+    const fake = new FakeHidDevice(SONY, PID.dualsense, 'DualSense', {
+      inputBits: 8,
+      outputIds: [],
+    })
     const log: HidLogEntry[] = []
     const dev = new DualSenseDevice(fake.asHid(), (e) => log.push(e))
     const opening = dev.open()
@@ -116,7 +128,10 @@ describe('device branches', () => {
   })
   it('SonyDevice: Bluetooth keepalive resends state and stops on close', async () => {
     vi.useFakeTimers()
-    const fake = new FakeHidDevice(SONY, PID.dualsense, 'DualSense', { inputBits: 616, outputIds: [0x31] })
+    const fake = new FakeHidDevice(SONY, PID.dualsense, 'DualSense', {
+      inputBits: 616,
+      outputIds: [0x31],
+    })
     const dev = new DualSenseDevice(fake.asHid())
     const opening = dev.open()
     await vi.advanceTimersByTimeAsync(1)
@@ -152,7 +167,9 @@ describe('device branches', () => {
     fake.features.set(0x02, new Uint8Array(41))
     const dev = new DualShock4Device(fake.asHid())
     expect(dev.label).toBe('DualShock 4 (v1)')
-    expect(new DualShock4Device(new FakeHidDevice(SONY, PID.ds4dongle, 'x').asHid()).label).toContain('adapter')
+    expect(
+      new DualShock4Device(new FakeHidDevice(SONY, PID.ds4dongle, 'x').asHid()).label,
+    ).toContain('adapter')
     const seen: unknown[] = []
     dev.subscribe((s) => seen.push(s))
     await dev.open()
