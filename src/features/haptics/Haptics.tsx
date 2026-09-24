@@ -4,6 +4,7 @@ import { getGamepad } from '@/core/gamepad/poller'
 import { Badge, Button, Card, Slider } from '@/components/ui'
 import { useSampled } from '@/state/hooks'
 import { useActivePad, useStore } from '@/state/store'
+import { fx } from '@/state/fx'
 
 const PRESETS = [
   { label: 'Heavy only', strong: 1, weak: 0 },
@@ -25,6 +26,7 @@ export function Haptics() {
   const [result, setResult] = useState('')
   const fire = async (s: number, w: number, l = 0, r = 0) => {
     setResult('playing…')
+    fx.emit('rumble', { strong: s, weak: w, lt: l, rt: r, durationMs: duration })
     const res = await rumble(pad ? getGamepad(pad.index) : null, { duration, strong: s, weak: w, leftTrigger: l, rightTrigger: r })
     setResult(res)
   }
@@ -43,7 +45,7 @@ export function Haptics() {
         <div className="row">
           <Button primary disabled={!caps.dual} onClick={() => fire(strong, weak)}>Play</Button>
           {PRESETS.map((p) => <Button key={p.label} small disabled={!caps.dual} onClick={() => fire(p.strong, p.weak)}>{p.label}</Button>)}
-          <Button small onClick={() => stopRumble(pad ? getGamepad(pad.index) : null)}>Stop</Button>
+          <Button small onClick={() => { fx.emit('stop', undefined); void stopRumble(pad ? getGamepad(pad.index) : null) }}>Stop</Button>
         </div>
         {result && <p className="small mono muted">result: {result}</p>}
         <p className="small muted">Firefox and Safari expose little or no rumble. Chrome and Edge are the most complete. On DualSense over Bluetooth, use Pro Mode rumble below if this does nothing.</p>

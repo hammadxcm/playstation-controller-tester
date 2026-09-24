@@ -1,0 +1,32 @@
+.model { position: relative; width: 100%; max-width: 640px; margin: 0 auto; aspect-ratio: 400 / 260; }
+.model.compact { max-width: 380px; }
+.model-glow { position: absolute; inset: 12% 14% 8%; border-radius: 50%; background: radial-gradient(closest-side, var(--glow), transparent 72%); filter: blur(22px); opacity: 0.55; pointer-events: none; transition: opacity var(--dur) var(--ease); }
+.model svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.model-parts * { transform-box: fill-box; transform-origin: center; }
+.m-label { font-family: var(--font); font-size: 7.5px; font-weight: 600; fill: #aeb4c4; text-anchor: middle; dominant-baseline: central; pointer-events: none; user-select: none; }
+.m-halo { opacity: 0; transition: opacity 180ms var(--ease); }
+[data-on='true'] > .m-halo { opacity: 1; transition-duration: 60ms; }
+.m-cap { transition: transform 180ms var(--ease), fill 180ms var(--ease); }
+[data-on='true'] > .m-cap { transform: translateY(1px) scale(0.96); transition-duration: 60ms; }
+[data-on='true'] > .m-glyph { fill: #fff !important; }
+.m-ripple { opacity: 0; }
+.m-trigger .m-tbody, .m-trigger .m-tfill { transform: translateY(calc(var(--v) * 4px)) scaleY(calc(1 - var(--v) * 0.25)); transform-origin: center bottom; }
+.m-trigger .m-tfill { opacity: var(--v); }
+.m-impulse { opacity: 0; fill: none; stroke: var(--accent); stroke-width: 2; }
+.m-dpad .m-arm { transition: transform 120ms var(--ease); }
+.m-dpad [data-dir='up'][data-on='true'] > .m-arm { transform: translateY(-1px) scaleY(0.94); }
+.m-dpad [data-dir='down'][data-on='true'] > .m-arm { transform: translateY(1px) scaleY(0.94); }
+.m-dpad [data-dir='left'][data-on='true'] > .m-arm { transform: translateX(-1px) scaleX(0.94); }
+.m-dpad [data-dir='right'][data-on='true'] > .m-arm { transform: translateX(1px) scaleX(0.94); }
+.m-lightbar { --lb-a: 0; }
+.m-lb { fill: rgb(var(--lb)); stroke: rgb(var(--lb)); opacity: var(--lb-a); transition: opacity 200ms var(--ease); }
+.m-lb-stroke { fill: none; }
+.m-lb-glow { stroke: rgb(var(--lb)); opacity: calc(var(--lb-a) * 0.35); transition: opacity 200ms var(--ease); }
+.m-led { opacity: 0.12; transition: opacity 200ms var(--ease); }
+.m-led[data-on='true'] { opacity: var(--led-b, 1); }
+.m-mic { opacity: 0.15; transition: opacity 200ms var(--ease); }
+.m-mic[data-mode='on'] { opacity: 1; }
+.m-mic[data-mode='pulse'] { opacity: 1; animation: soft-pulse 1.2s ease-in-out infinite; }
+.m-heat { opacity: 0; transition: opacity 220ms var(--ease); }
+.model[data-fx='trigger'] .m-trigger[data-fx='on'] .m-tbody { stroke: var(--accent); }
+:root[data-motion='reduce'] .model-parts *, :root[data-motion='reduce'] .m-mic { transition: none; animation: none; }

@@ -5,7 +5,7 @@ import { getGamepad } from '@/core/gamepad/poller'
 import { Badge, Card } from '@/components/ui'
 import { useActivePad } from '@/state/store'
 import { useSampled } from '@/state/hooks'
-import { Silhouette } from './Silhouette'
+import { ControllerModel } from '@/features/model/ControllerModel'
 
 export function Overview() {
   const pad = useActivePad()
@@ -17,8 +17,8 @@ export function Overview() {
   return (
     <div className="grid-2">
       <Card title="Live view">
-        <Silhouette family={p.family} />
-        <p className="small muted">Press buttons and move sticks. Highlights come straight from the Gamepad API at your display's refresh rate.</p>
+        <ControllerModel family={p.family} />
+        <p className="small muted">Press buttons and move sticks. Lightbar, player LEDs and mic light follow what Pro Mode sends.</p>
       </Card>
       <Card title="Device">
         <dl className="kv">
