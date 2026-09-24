@@ -3,11 +3,30 @@ import { animate, onRaf, perf, reducedMotion, smooth } from '@/lib/motion'
 import { fx } from '@/state/fx'
 import { useFrame, useHidOutput } from '@/state/hooks'
 import { createRig } from './rig'
+import type { Frame } from '@/core/gamepad/types'
 
-const SHAKE = [[1, 0], [-1, 0.6], [0.4, -1], [-0.7, -0.3], [1, 0.5], [-0.5, 1], [0, -0.8], [0.8, 0.3], [-1, -0.5], [0.3, 1], [-0.4, -0.6], [0, 0]]
+/** Anything that pushes frames: `(cb) => unsubscribe`. Lets a model run from scripted input (landing demo). */
+export type FrameSource = (cb: (f: Frame) => void) => () => void
+
+const SHAKE = [
+  [1, 0],
+  [-1, 0.6],
+  [0.4, -1],
+  [-0.7, -0.3],
+  [1, 0.5],
+  [-0.5, 1],
+  [0, -0.8],
+  [0.8, 0.3],
+  [-1, -0.5],
+  [0.3, 1],
+  [-0.4, -0.6],
+  [0, 0],
+]
 
 function shakeFrames(amp: number, rot: number): Keyframe[] {
-  return SHAKE.map(([x, y]) => ({ transform: `translate(${(x! * amp).toFixed(2)}px, ${(y! * amp).toFixed(2)}px) rotate(${(x! * rot).toFixed(2)}deg)` }))
+  return SHAKE.map(([x, y]) => ({
+    transform: `translate(${(x! * amp).toFixed(2)}px, ${(y! * amp).toFixed(2)}px) rotate(${(x! * rot).toFixed(2)}deg)`,
+  }))
 }
 
 export interface RigOptions {
@@ -15,10 +34,15 @@ export interface RigOptions {
   travel: number
   /** re-collect nodes when this changes (e.g. artwork loaded) */
   key?: unknown
+  /** scripted frames instead of the active pad; keep the identity stable (module constant) or it resubscribes every render */
+  source?: FrameSource
 }
 
 /** Binds the pure rig to the DOM under `wrapper`: frame diffs → attribute/var writes, hidOut → lightbar/LEDs, fx → shake. */
-export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { travel: TRAVEL, key }: RigOptions) {
+export function useControllerRig(
+  wrapper: RefObject<HTMLDivElement | null>,
+  { travel: TRAVEL, key, source }: RigOptions,
+) {
   const nodes = useRef(new Map<string, Element>())
   const target = useRef({ l2: 0, r2: 0, lsx: 0, lsy: 0, rsx: 0, rsy: 0 })
   const cur = useRef({ l2: -1, r2: -1, lsx: 0, lsy: 0, rsx: 0, rsy: 0 })
@@ -31,10 +55,16 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
     root?.querySelectorAll('[data-part]').forEach((el) => m.set(el.getAttribute('data-part')!, el))
     for (const s of ['ls', 'rs']) {
       const p = m.get(s)
-      p?.querySelectorAll('[data-sub]').forEach((el) => m.set(`${s}:${el.getAttribute('data-sub')}`, el))
+      p?.querySelectorAll('[data-sub]').forEach((el) =>
+        m.set(`${s}:${el.getAttribute('data-sub')}`, el),
+      )
     }
-    root?.querySelectorAll('.m-heat').forEach((el) => m.set(`heat:${el.getAttribute('data-heat')}`, el))
-    root?.querySelectorAll('.m-led').forEach((el) => m.set(`led:${el.getAttribute('data-led')}`, el))
+    root
+      ?.querySelectorAll('.m-heat')
+      .forEach((el) => m.set(`heat:${el.getAttribute('data-heat')}`, el))
+    root
+      ?.querySelectorAll('.m-led')
+      .forEach((el) => m.set(`led:${el.getAttribute('data-led')}`, el))
     const mic = root?.querySelector('.m-mic')
     if (mic) m.set('mic', mic)
     const lb = root?.querySelector('.m-lightbar')
@@ -44,7 +74,7 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
     cur.current = { l2: -1, r2: -1, lsx: 0, lsy: 0, rsx: 0, rsy: 0 }
   }, [wrapper, key])
 
-  useFrame((f) => {
+  const onFrame = (f: Frame) => {
     const t0 = performance.now()
     const writes = rig.current.diff(f)
     const m = nodes.current
@@ -52,7 +82,15 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
       if (w.kind === 'on') m.get(w.part)?.setAttribute('data-on', String(w.on))
       else if (w.kind === 'edge') {
         const r = m.get(w.part)?.querySelector('.m-ripple')
-        if (r) animate(r, [{ transform: 'scale(1)', opacity: 0.55 }, { transform: 'scale(2.4)', opacity: 0 }], { duration: 320, easing: 'cubic-bezier(.16,1,.3,1)' })
+        if (r)
+          animate(
+            r,
+            [
+              { transform: 'scale(1)', opacity: 0.55 },
+              { transform: 'scale(2.4)', opacity: 0 },
+            ],
+            { duration: 320, easing: 'cubic-bezier(.16,1,.3,1)' },
+          )
       } else if (w.kind === 'var') target.current[w.part] = w.value
       else {
         target.current[`${w.part}x`] = w.x
@@ -63,7 +101,13 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
       perf.count('writes', writes.length)
       perf.sample('rig', performance.now() - t0)
     }
+  }
+  const onFrameRef = useRef(onFrame)
+  useEffect(() => {
+    onFrameRef.current = onFrame
   })
+  useFrame((f) => onFrameRef.current(f))
+  useEffect(() => source?.((f) => onFrameRef.current(f)), [source, key])
 
   useEffect(
     () =>
@@ -88,9 +132,18 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
             const cap = m.get(`${s}:cap`) as HTMLElement | undefined
             const sh = m.get(`${s}:shadow`) as HTMLElement | undefined
             const hi = m.get(`${s}:hi`) as HTMLElement | undefined
-            cap?.style.setProperty('transform', `translate(${(x * TRAVEL).toFixed(2)}px, ${(y * TRAVEL).toFixed(2)}px) scale(${(1 - 0.07 * mag).toFixed(3)})`)
-            sh?.style.setProperty('transform', `translate(${(x * TRAVEL * 0.45).toFixed(2)}px, ${(y * TRAVEL * 0.45).toFixed(2)}px)`)
-            hi?.style.setProperty('transform', `translate(${(x * TRAVEL * 1.35).toFixed(2)}px, ${(y * TRAVEL * 1.35).toFixed(2)}px)`)
+            cap?.style.setProperty(
+              'transform',
+              `translate(${(x * TRAVEL).toFixed(2)}px, ${(y * TRAVEL).toFixed(2)}px) scale(${(1 - 0.07 * mag).toFixed(3)})`,
+            )
+            sh?.style.setProperty(
+              'transform',
+              `translate(${(x * TRAVEL * 0.45).toFixed(2)}px, ${(y * TRAVEL * 0.45).toFixed(2)}px)`,
+            )
+            hi?.style.setProperty(
+              'transform',
+              `translate(${(x * TRAVEL * 1.35).toFixed(2)}px, ${(y * TRAVEL * 1.35).toFixed(2)}px)`,
+            )
           }
         }
       }),
@@ -112,7 +165,16 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
         const { onMs, offMs } = hidOut.flash
         const total = onMs + offMs || 1
         lb.querySelectorAll('.m-lb, .m-lb-glow').forEach((el) => {
-          const a = animate(el, [{ opacity: 1, offset: 0 }, { opacity: 1, offset: onMs / total }, { opacity: 0, offset: onMs / total }, { opacity: 0, offset: 1 }], { duration: total, iterations: Infinity })
+          const a = animate(
+            el,
+            [
+              { opacity: 1, offset: 0 },
+              { opacity: 1, offset: onMs / total },
+              { opacity: 0, offset: onMs / total },
+              { opacity: 0, offset: 1 },
+            ],
+            { duration: total, iterations: Infinity },
+          )
           if (a) flashAnim.current.push(a)
         })
       }
@@ -124,7 +186,11 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
       led.style.setProperty('--led-b', String([1, 0.6, 0.3][hidOut.playerLeds.brightness]))
     }
     m.get('mic')?.setAttribute('data-mode', hidOut.micLed)
-    for (const side of ['left', 'right'] as const) m.get(side === 'left' ? 'l2' : 'r2')?.setAttribute('data-fx', hidOut.trigger[side] !== 0x05 ? 'on' : 'off')
+    for (const side of ['left', 'right'] as const)
+      m.get(side === 'left' ? 'l2' : 'r2')?.setAttribute(
+        'data-fx',
+        hidOut.trigger[side] !== 0x05 ? 'on' : 'off',
+      )
   }, [hidOut, key])
 
   // Transient: rumble → shake wrapper, heat grips, Xbox impulse rings
@@ -135,7 +201,10 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
       const m = nodes.current
       ;(m.get('heat:l') as HTMLElement | undefined)?.style.setProperty('opacity', String(l * 0.9))
       ;(m.get('heat:r') as HTMLElement | undefined)?.style.setProperty('opacity', String(r * 0.9))
-      for (const [p, v] of [['l2', lt], ['r2', rt]] as const) {
+      for (const [p, v] of [
+        ['l2', lt],
+        ['r2', rt],
+      ] as const) {
         const ring = m.get(p)?.querySelector('.m-impulse') as HTMLElement | null | undefined
         ring?.style.setProperty('opacity', String(v))
       }
@@ -153,9 +222,24 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { tr
       const el = wrapper.current
       if (el && !reducedMotion()) {
         el.style.willChange = 'transform'
-        const iter = (cycle: number) => (r.durationMs ? Math.max(1, Math.round(r.durationMs / cycle)) : Infinity)
-        if (r.strong) anims.push(el.animate(shakeFrames(2.4 * r.strong, 0.4 * r.strong), { duration: 80, iterations: iter(80), composite: 'add' }))
-        if (r.weak) anims.push(el.animate(shakeFrames(1 * r.weak, 0.1 * r.weak), { duration: 34, iterations: iter(34), composite: 'add' }))
+        const iter = (cycle: number) =>
+          r.durationMs ? Math.max(1, Math.round(r.durationMs / cycle)) : Infinity
+        if (r.strong)
+          anims.push(
+            el.animate(shakeFrames(2.4 * r.strong, 0.4 * r.strong), {
+              duration: 80,
+              iterations: iter(80),
+              composite: 'add',
+            }),
+          )
+        if (r.weak)
+          anims.push(
+            el.animate(shakeFrames(1 * r.weak, 0.1 * r.weak), {
+              duration: 34,
+              iterations: iter(34),
+              composite: 'add',
+            }),
+          )
       }
       if (r.durationMs) timer = window.setTimeout(stop, r.durationMs)
     })

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui'
-import { ArtworkModel } from '@/features/model/ArtworkModel'
+import { HeroArtwork } from './HeroArtwork'
 import { useResolvedTheme } from '@/state/hooks'
 import { useStore } from '@/state/store'
 import { AddDevice } from './AddDevice'
@@ -54,7 +54,7 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
           </div>
         </div>
         <div className="hero-art">
-          <ArtworkModel kind="dualsense" />
+          <HeroArtwork />
         </div>
       </section>
       <AddDevice />
