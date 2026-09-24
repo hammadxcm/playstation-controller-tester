@@ -542,6 +542,15 @@ html[data-dir='back']::view-transition-new(screen) {
 .header .spacer {
   flex: 1;
 }
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand-mark {
+  flex: none;
+  color: var(--fg);
+}
 .screen {
   display: grid;
   gap: 16px;

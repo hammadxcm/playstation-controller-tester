@@ -1,8 +1,8 @@
 import type { Dict } from './index'
 export const ko: Dict = {
   app: {
-    title: 'Controller Tester',
-    tabTitle: 'Controller Tester · 당신의 컨트롤러, GTA VI 준비됐나요?',
+    title: 'Deadzone',
+    tabTitle: 'Deadzone · 당신의 컨트롤러, GTA VI 준비됐나요?',
     description:
       '당신의 컨트롤러는 GTA VI 준비가 됐나요? PS5 DualSense, DualShock 4, Xbox 및 모든 게임패드를 브라우저에서 테스트: 스틱 드리프트, 데드존, 버튼, 진동, 적응형 트리거, 배터리. 무료, 업로드 없음.',
   },

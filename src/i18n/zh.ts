@@ -1,8 +1,8 @@
 import type { Dict } from './index'
 export const zh: Dict = {
   app: {
-    title: 'Controller Tester',
-    tabTitle: 'Controller Tester · 你的手柄准备好迎接 GTA VI 了吗？',
+    title: 'Deadzone',
+    tabTitle: 'Deadzone · 你的手柄准备好迎接 GTA VI 了吗？',
     description:
       '你的手柄准备好迎接 GTA VI 了吗？在浏览器中测试 PS5 DualSense、DualShock 4、Xbox 及任何手柄：摇杆漂移、死区、按键、震动、自适应扳机、电量。免费，不上传任何数据。',
   },

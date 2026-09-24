@@ -1,8 +1,8 @@
 import type { Dict } from './index'
 export const es: Dict = {
   app: {
-    title: 'Controller Tester',
-    tabTitle: 'Controller Tester · ¿Tu mando está listo para GTA VI?',
+    title: 'Deadzone',
+    tabTitle: 'Deadzone · ¿Tu mando está listo para GTA VI?',
     description:
       '¿Tu mando está listo para GTA VI? Prueba DualSense de PS5, DualShock 4, Xbox y cualquier mando en el navegador: deriva del stick, zonas muertas, botones, vibración, gatillos adaptativos, batería. Gratis, nada se sube.',
   },

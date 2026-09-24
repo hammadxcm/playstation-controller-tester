@@ -1,6 +1,6 @@
 # Releasing
 
-Controller Tester is a static site with two deployment tracks:
+Deadzone is a static site with two deployment tracks:
 
 | Track                     | Trigger                | What happens                                                                                                                                                                                                                             |
 | ------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -36,7 +36,7 @@ The version lives in one place, `package.json`, and is shown in the app footer a
 4. Commit and tag:
    ```sh
    git commit -am "Release X.Y.Z"
-   git tag -a vX.Y.Z -m "Controller Tester X.Y.Z"
+   git tag -a vX.Y.Z -m "Deadzone X.Y.Z"
    git push origin main --follow-tags
    ```
 5. The push to `main` deploys the site; the tag publishes the release. Both appear under **Actions**. Check the live site and the release page.

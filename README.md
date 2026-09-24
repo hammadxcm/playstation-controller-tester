@@ -1,6 +1,8 @@
 <div align="center">
 
-# Controller Tester
+# Deadzone
+
+<sub>Controller tester for PlayStation, Xbox and any gamepad</sub>
 
 **Is your controller GTA VI ready? Test any gamepad in your browser: PS5 DualSense and DualSense Edge, PS4 DualShock 4, Xbox, and everything else the Gamepad API can see.**
 
@@ -17,7 +19,7 @@ No install. No account. Nothing uploaded.
 
 **[Open the app](https://dualsense.fyniti.co.uk/)** · [Report a bug](https://github.com/hammadxcm/playstation-controller-tester/issues/new/choose) · [Changelog](CHANGELOG.md)
 
-<img src="docs/landing-dark.png" alt="Controller Tester landing page, dark theme, with a live DualSense render" width="880">
+<img src="docs/landing-dark.png" alt="Deadzone landing page, dark theme, with a live DualSense render" width="880">
 
 </div>
 

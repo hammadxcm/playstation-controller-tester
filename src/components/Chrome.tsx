@@ -139,6 +139,29 @@ export function TopBarMenu({ children }: { children: ReactNode }) {
   )
 }
 
+/** The Deadzone mark: Iconoir "gamepad" (MIT, © 2021 Luca Burgio), drawn in the current text colour. */
+export function BrandMark() {
+  return (
+    <svg
+      className="brand-mark"
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M17.5 17.5C20 21 23.9486 18.4151 23 15C21.5753 9.87113 20.8001 7.01556 20.3969 5.50793C20.1597 4.62136 19.3562 4 18.4384 4L5.56155 4C4.64382 4 3.844 4.62481 3.62085 5.515C2.7815 8.86349 2.0326 11.8016 1.14415 15C0.195501 18.4151 4.14415 21 6.64415 17.5" />
+      <path d="M18 8.5L18.0111 8.51M16.49 7L16.5011 7.01M16.49 10L16.5011 10.01M15 8.5L15.0111 8.51M7 7V10M5.5 8.5H8.5" />
+      <circle cx="8" cy="14" r="2" />
+      <circle cx="16" cy="14" r="2" />
+    </svg>
+  )
+}
+
 export const REPO = 'https://github.com/hammadxcm/playstation-controller-tester'
 const AUTHOR = {
   name: 'Hammad Khan',

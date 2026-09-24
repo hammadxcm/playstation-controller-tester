@@ -1,8 +1,8 @@
 import type { Dict } from './index'
 export const de: Dict = {
   app: {
-    title: 'Controller Tester',
-    tabTitle: 'Controller Tester · Ist dein Controller bereit für GTA VI?',
+    title: 'Deadzone',
+    tabTitle: 'Deadzone · Ist dein Controller bereit für GTA VI?',
     description:
       'Ist dein Controller bereit für GTA VI? Teste PS5 DualSense, DualShock 4, Xbox und jedes Gamepad im Browser: Stick-Drift, Totzonen, Tasten, Vibration, adaptive Trigger, Akku. Kostenlos, nichts wird hochgeladen.',
   },

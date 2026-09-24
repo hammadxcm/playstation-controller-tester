@@ -1,8 +1,8 @@
 /** Source-of-truth dictionary. Every other language mirrors this shape (checked by a test). */
 export const en = {
   app: {
-    title: 'Controller Tester',
-    tabTitle: 'Controller Tester · Is your controller GTA VI ready?',
+    title: 'Deadzone',
+    tabTitle: 'Deadzone · Is your controller GTA VI ready?',
     description:
       'Is your controller GTA VI ready? Test PS5 DualSense, DualShock 4, Xbox and any gamepad in your browser: stick drift, dead zones, buttons, rumble, adaptive triggers, battery. Free, nothing uploaded.',
   },

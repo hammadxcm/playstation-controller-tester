@@ -1,5 +1,13 @@
 import { Button } from '@/components/ui'
-import { LangPicker, REPO, RepoLink, SiteLinks, ThemeButton, TopBarMenu } from '@/components/Chrome'
+import {
+  BrandMark,
+  LangPicker,
+  REPO,
+  RepoLink,
+  SiteLinks,
+  ThemeButton,
+  TopBarMenu,
+} from '@/components/Chrome'
 import { useT } from '@/i18n/useT'
 import type { Tab } from '@/features/screens'
 import { HeroArtwork } from './HeroArtwork'
@@ -17,7 +25,10 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
   return (
     <div className="landing">
       <header className="landing-nav topbar">
-        <span className="brand">{t('app.title')}</span>
+        <span className="brand">
+          <BrandMark />
+          {t('app.title')}
+        </span>
         <span className="spacer" />
         <nav aria-label={t('app.title')}>
           <TopBarMenu>

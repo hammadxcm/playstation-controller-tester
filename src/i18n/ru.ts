@@ -1,8 +1,8 @@
 import type { Dict } from './index'
 export const ru: Dict = {
   app: {
-    title: 'Controller Tester',
-    tabTitle: 'Controller Tester · Ваш геймпад готов к GTA VI?',
+    title: 'Deadzone',
+    tabTitle: 'Deadzone · Ваш геймпад готов к GTA VI?',
     description:
       'Ваш геймпад готов к GTA VI? Проверьте DualSense PS5, DualShock 4, Xbox и любой геймпад в браузере: дрейф стиков, мёртвые зоны, кнопки, вибрация, адаптивные триггеры, батарея. Бесплатно, ничего не отправляется.',
   },

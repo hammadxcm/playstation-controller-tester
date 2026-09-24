@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- The site is now called **Deadzone**. The name replaces "Controller Tester" in the top bar, tab title, metadata, web manifest, README and release titles; the app's translations keep the brand untranslated. A gamepad mark (Iconoir, MIT) sits next to the wordmark in both top bars and replaces the old lightning-bolt favicon, following the light and dark themes. The share image is regenerated from the current landing page.
+
 ## [1.2.0] - 2026-09-24
 
 ### Added

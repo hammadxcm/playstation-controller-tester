@@ -6,6 +6,7 @@ import { PROFILES } from '@/core/gamepad/profiles'
 import { Badge, Button, Card, Tabs } from '@/components/ui'
 import {
   Ambient,
+  BrandMark,
   LangPicker,
   RepoLink,
   SiteLinks,
@@ -102,7 +103,10 @@ export default function App() {
             data-family={profile?.family ?? (hid ? hid.family : undefined)}
           >
             <header className="header topbar">
-              <h1 className="brand">{t('app.title')}</h1>
+              <h1 className="brand">
+                <BrandMark />
+                {t('app.title')}
+              </h1>
               {profile && <Badge tone="accent">{PROFILES[profile.family].label}</Badge>}
               {pad &&
                 (pad.mapping === 'standard' ? (

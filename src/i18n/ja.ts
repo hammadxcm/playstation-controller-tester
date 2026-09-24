@@ -1,8 +1,8 @@
 import type { Dict } from './index'
 export const ja: Dict = {
   app: {
-    title: 'Controller Tester',
-    tabTitle: 'Controller Tester · あなたのコントローラー、GTA VI の準備はできていますか？',
+    title: 'Deadzone',
+    tabTitle: 'Deadzone · あなたのコントローラー、GTA VI の準備はできていますか？',
     description:
       'あなたのコントローラーは GTA VI の準備ができていますか？PS5 DualSense、DualShock 4、Xbox などあらゆるゲームパッドをブラウザでテスト：スティックのドリフト、デッドゾーン、ボタン、振動、アダプティブトリガー、バッテリー。無料、データ送信なし。',
   },
