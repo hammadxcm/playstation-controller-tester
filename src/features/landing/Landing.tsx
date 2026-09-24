@@ -3,6 +3,8 @@ import { HeroArtwork } from './HeroArtwork'
 import { useResolvedTheme } from '@/state/hooks'
 import { useStore } from '@/state/store'
 import { AddDevice } from './AddDevice'
+import { Showcase } from './Showcase'
+import { FeatureTour } from './FeatureTour'
 import './landing.css'
 
 export type LandingTab =
@@ -58,6 +60,8 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
         </div>
       </section>
       <AddDevice />
+      <Showcase />
+      <FeatureTour onEnter={onEnter} />
       <footer className="landing-footer small dim">
         <span>Everything runs in your browser; nothing is uploaded.</span>
         <a href="https://github.com/hammadxcm/playstation-controller-tester" rel="noopener">

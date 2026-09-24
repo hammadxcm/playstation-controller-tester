@@ -39,3 +39,15 @@ describe('demoFrame', () => {
     expect(DEMO_STILL.axes[0]).not.toBe(0)
   })
 })
+
+describe('poseFrame', () => {
+  it('holds the named buttons and sticks', async () => {
+    const { poseFrame } = await import('./demoFrame')
+    const f = poseFrame(['l2', 'touchpad'], [0.3, 0, 0, -0.3])
+    expect(f.buttons[STD.l2]).toEqual({ pressed: true, value: 1 })
+    expect(f.buttons[STD.touchpad]!.pressed).toBe(true)
+    expect(f.buttons[STD.south]!.pressed).toBe(false)
+    expect(f.axes).toEqual([0.3, 0, 0, -0.3])
+    expect(poseFrame([]).axes).toEqual([0, 0, 0, 0])
+  })
+})

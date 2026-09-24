@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Button } from '@/components/ui'
 import { useAddDevice } from '@/state/hooks'
 import { detectSupport, ENGINE_LABEL, phaseFor } from './support'
+import { ParallaxGlow } from './ParallaxGlow'
 
 /** Both ways in: the Gamepad API (press any button) and WebHID pairing (Chrome/Edge desktop). */
 export function AddDevice() {
@@ -21,7 +22,7 @@ export function AddDevice() {
       id="add-device"
       aria-labelledby="add-device-title"
     >
-      <div className="section-glow" aria-hidden />
+      <ParallaxGlow />
       <h2 id="add-device-title" className="display">
         Add a device
       </h2>

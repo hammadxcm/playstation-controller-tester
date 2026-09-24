@@ -33,3 +33,13 @@ export function demoFrame(t: number): Frame {
 
 /** Frozen pose for reduced motion: sticks slightly deflected, one trigger part-way, nothing blinking. */
 export const DEMO_STILL: Frame = demoFrame(0.3)
+
+/** A held pose: the named standard buttons pressed (triggers at full travel), sticks optionally deflected. */
+export function poseFrame(
+  pressed: readonly (keyof typeof STD)[],
+  axes: readonly number[] = [0, 0, 0, 0],
+): Frame {
+  const buttons = Array.from({ length: 18 }, () => ({ pressed: false, value: 0 }))
+  for (const name of pressed) buttons[STD[name]] = { pressed: true, value: 1 }
+  return { index: -1, id: 'pose', mapping: 'standard', t: 0, hwT: 0, axes: [...axes], buttons }
+}
