@@ -8,7 +8,7 @@ const fake = (): HidController & { calls: string[] } => {
   const rec = (n: string) => async () => { calls.push(n) }
   return {
     calls, family: 'dualsense', label: 'x', transport: 'usb', device: {} as HIDDevice,
-    caps: { touchpad: true, motion: true, battery: true, rumble: true, lightbar: true, lightbarFlash: false, playerLeds: true, micLed: true, adaptiveTriggers: true },
+    caps: { touchpad: true, motion: true, battery: true, rumble: true, lightbar: true, lightbarFlash: false, playerLeds: true, micLed: true, adaptiveTriggers: true, edge: false },
     subscribe: () => () => {}, rumble: rec('rumble'), setLightbar: rec('lightbar'), setLightbarFlash: rec('flash'),
     setPlayerLeds: rec('leds'), setMicLed: rec('mic'), setTrigger: rec('trigger'), info: async () => ({}), close: rec('close'),
   }

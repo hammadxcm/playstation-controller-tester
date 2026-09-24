@@ -10,6 +10,8 @@ export interface DualSenseOutput {
   lightbarSetup: boolean
   /** firmware >= 2.21 wants the v2 vibration flag */
   vibrationV2: boolean
+  /** hand LED control back to the firmware (used when disconnecting) */
+  releaseLeds?: boolean
 }
 
 export function emptyOutput(): DualSenseOutput {
@@ -45,9 +47,11 @@ export function encodeOutput(o: DualSenseOutput): Uint8Array {
   }
   if (o.playerLeds) {
     p[1] = p[1]! | (FLAG1.playerLeds)
+    p[38] = p[38]! | (FLAG2.ledBrightness)
     p[42] = o.playerLeds.brightness
     p[43] = o.playerLeds.mask & 0x1f
   }
+  if (o.releaseLeds) p[1] = p[1]! | (FLAG1.releaseLeds)
   if (o.lightbarSetup) {
     p[38] = p[38]! | (FLAG2.lightbarSetup)
     p[41] = 0x02

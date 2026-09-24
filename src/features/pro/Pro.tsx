@@ -3,22 +3,26 @@ import type { HidController, HidState, MicLedMode } from '@/core/hid/controller'
 import { PLAYER_LED } from '@/core/hid/dualsense/output'
 import { reopenGranted, requestController, webHidSupported } from '@/core/hid/registry'
 import { Badge, Button, Card, Metric, Slider, Toggle } from '@/components/ui'
+import { hex, type HidLogEntry } from '@/core/hid/log'
 import { useHidState, useSampled } from '@/state/hooks'
 import { useStore } from '@/state/store'
 import { build, defaults, PARAMS, type Mode } from './triggerParams'
 
 const hexdump = (u: Uint8Array) => Array.from(u, (b) => b.toString(16).padStart(2, '0')).join(' ')
+const logTo = () => useStore.getState().pushHidLog
+/** Run a controller command and route failures into the HID console instead of the void. */
+const run = (p: Promise<unknown>) => p.catch((e: unknown) => logTo()({ t: performance.now(), dir: 'error', note: e instanceof Error ? `${e.name}: ${e.message}` : String(e) }))
 
 function Connect() {
   const setHid = useStore((s) => s.setHid)
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
-  useEffect(() => { void reopenGranted().then((c) => c && setHid(c)) }, [setHid])
+  useEffect(() => { void reopenGranted(logTo()).then((cs) => cs[0] && setHid(cs[0])) }, [setHid])
   const connect = async () => {
     setBusy(true)
     setErr('')
     try {
-      const c = await requestController()
+      const c = await requestController(logTo())
       if (c) setHid(c)
       else setErr('No controller selected.')
     } catch (e) {
@@ -140,6 +144,7 @@ function Panel({ hid }: { hid: HidController }) {
         {caps.playerLeds && <PlayerLeds hid={hid} />}
         {caps.micLed && <MicLed hid={hid} />}
       </div>
+      <Console hid={hid} />
       {caps.adaptiveTriggers && (
         <div className="grid-2">
           <Trigger hid={hid} side="left" status={v?.extra.l2Status} engaged={!!v?.extra.l2Engaged} />
@@ -150,6 +155,27 @@ function Panel({ hid }: { hid: HidController }) {
   )
 }
 
+function Console({ hid }: { hid: HidController }) {
+  const log = useStore((s) => s.hidLog)
+  const clear = useStore((s) => s.clearHidLog)
+  const fmt = (e: HidLogEntry) => `${(e.t / 1000).toFixed(3)}  ${e.dir.padEnd(11)} ${e.reportId !== undefined ? `0x${e.reportId.toString(16).padStart(2, '0')} ` : ''}${e.note ?? ''}${e.ms !== undefined ? ` (${e.ms.toFixed(1)} ms)` : ''}${e.bytes ? `\n    ${hex(e.bytes)}` : ''}`
+  const text = log.map(fmt).join('\n')
+  const errors = log.filter((e) => e.dir === 'error').length
+  return (
+    <Card title="HID console" right={<div className="row">{errors ? <Badge tone="bad">{errors} errors</Badge> : <Badge tone="good">no errors</Badge>}<Button small onClick={() => navigator.clipboard.writeText(text)}>Copy</Button><Button small onClick={clear}>Clear</Button></div>}>
+      <div className="row">
+        <span className="small muted">Test packets:</span>
+        <Button small onClick={() => run(hid.setLightbar([255, 0, 0]))}>Lightbar red</Button>
+        <Button small onClick={() => { run(hid.rumble(1, 1)); setTimeout(() => run(hid.rumble(0, 0)), 300) }}>Rumble 300 ms</Button>
+        {hid.caps.playerLeds && <Button small onClick={() => run(hid.setPlayerLeds(0b00100, 0))}>LED P1</Button>}
+        {hid.caps.adaptiveTriggers && <Button small onClick={() => run(hid.setTrigger('left', new Uint8Array([0x21, 0xfc, 0x03, 0xff, 0xff, 0xff, 0x3f, 0, 0, 0, 0])))}>L2 stiff</Button>}
+        {hid.caps.adaptiveTriggers && <Button small onClick={() => run(hid.setTrigger('left', new Uint8Array([0x05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])))}>L2 release</Button>}
+      </div>
+      <pre className="hex" style={{ maxHeight: 220 }}>{text || 'Every report sent to or received from the controller shows up here with its bytes. If something on the controller does not react, copy this and report it.'}</pre>
+    </Card>
+  )
+}
+
 const SWATCHES = ['#2f6df6', '#f25757', '#34c77b', '#f2b53a', '#c04cf2', '#ffffff']
 const hexToRgb = (h: string): [number, number, number] => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]
 
@@ -157,19 +183,19 @@ function Lightbar({ hid }: { hid: HidController }) {
   const [color, setColor] = useState('#2f6df6')
   const [on, setOn] = useState(200)
   const [off, setOff] = useState(200)
-  const apply = (c: string) => { setColor(c); void hid.setLightbar(hexToRgb(c)) }
+  const apply = (c: string) => { setColor(c); run(hid.setLightbar(hexToRgb(c))) }
   return (
     <Card title="Lightbar">
       <div className="row">
         <input type="color" value={color} onChange={(e) => apply(e.target.value)} aria-label="Lightbar colour" />
         {SWATCHES.map((s) => <button key={s} className="swatch" style={{ background: s }} onClick={() => apply(s)} aria-label={s} />)}
-        <Button small onClick={() => hid.setLightbar(null)}>Off</Button>
+        <Button small onClick={() => run(hid.setLightbar(null))}>Off</Button>
       </div>
       {hid.caps.lightbarFlash && (
         <>
           <Slider label="Flash on" value={on} min={0} max={2550} step={10} onChange={setOn} format={(x) => `${x} ms`} />
           <Slider label="Flash off" value={off} min={0} max={2550} step={10} onChange={setOff} format={(x) => `${x} ms`} />
-          <div className="row"><Button small onClick={() => hid.setLightbarFlash(on, off)}>Start flashing</Button><Button small onClick={() => hid.setLightbarFlash(0, 0)}>Stop</Button></div>
+          <div className="row"><Button small onClick={() => run(hid.setLightbarFlash(on, off))}>Start flashing</Button><Button small onClick={() => run(hid.setLightbarFlash(0, 0))}>Stop</Button></div>
         </>
       )}
     </Card>
@@ -179,7 +205,7 @@ function Lightbar({ hid }: { hid: HidController }) {
 function PlayerLeds({ hid }: { hid: HidController }) {
   const [mask, setMask] = useState(0)
   const [bright, setBright] = useState<0 | 1 | 2>(0)
-  const set = (m: number, b = bright) => { setMask(m); void hid.setPlayerLeds(m, b) }
+  const set = (m: number, b = bright) => { setMask(m); run(hid.setPlayerLeds(m, b)) }
   return (
     <Card title="Player LEDs">
       <div className="leds">
@@ -199,7 +225,7 @@ function PlayerLeds({ hid }: { hid: HidController }) {
 function MicLed({ hid }: { hid: HidController }) {
   return (
     <Card title="Mic LED">
-      <div className="row">{(['off', 'on', 'pulse'] as MicLedMode[]).map((m) => <Button key={m} small onClick={() => hid.setMicLed(m)}>{m}</Button>)}</div>
+      <div className="row">{(['off', 'on', 'pulse'] as MicLedMode[]).map((m) => <Button key={m} small onClick={() => run(hid.setMicLed(m))}>{m}</Button>)}</div>
     </Card>
   )
 }
@@ -217,8 +243,8 @@ function Trigger({ hid, side, status, engaged }: { hid: HidController; side: 'le
         <Slider key={p.key} label={p.label} value={vals[p.key] ?? p.def} min={p.min} max={p.max} step={1} onChange={(x) => setVals({ ...vals, [p.key]: x })} />
       ))}
       <div className="row">
-        <Button primary onClick={() => hid.setTrigger(side, build(mode, vals))}>Apply</Button>
-        <Button onClick={() => hid.setTrigger(side, build('off', {}))}>Release</Button>
+        <Button primary onClick={() => run(hid.setTrigger(side, build(mode, vals)))}>Apply</Button>
+        <Button onClick={() => run(hid.setTrigger(side, build('off', {})))}>Release</Button>
       </div>
     </Card>
   )

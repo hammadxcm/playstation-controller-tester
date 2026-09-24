@@ -13,6 +13,8 @@ export interface HidCaps {
   playerLeds: boolean
   micLed: boolean
   adaptiveTriggers: boolean
+  /** DualSense Edge: Fn buttons, back paddles, trigger stops, active profile */
+  edge: boolean
 }
 
 export interface HidState {

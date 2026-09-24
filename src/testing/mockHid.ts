@@ -3,7 +3,7 @@ import { PLAYER_LED } from '@/core/hid/dualsense/output'
 import { useStore } from '@/state/store'
 import { POSES } from './poses'
 
-const DS_CAPS = { touchpad: true, motion: true, battery: true, rumble: true, lightbar: true, lightbarFlash: false, playerLeds: true, micLed: true, adaptiveTriggers: true }
+const DS_CAPS = { touchpad: true, motion: true, battery: true, rumble: true, lightbar: true, lightbarFlash: false, playerLeds: true, micLed: true, adaptiveTriggers: true, edge: false }
 const DS4_CAPS = { ...DS_CAPS, lightbarFlash: true, playerLeds: false, micLed: false, adaptiveTriggers: false }
 const to255 = (v: number) => Math.round((v + 1) * 127.5)
 

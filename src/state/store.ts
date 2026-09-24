@@ -4,6 +4,7 @@ import type { HidController } from '@/core/hid/controller'
 import { getLayout, type Layout } from '@/core/gamepad/mapping'
 import type { ScoreResult } from '@/core/analysis'
 import { EMPTY_OUTPUT, trackOutput, type HidOutput } from './hidOutput'
+import type { HidLogEntry } from '@/core/hid/log'
 
 export interface PadInfo {
   index: number
@@ -30,6 +31,7 @@ interface Store {
   layout: Layout | undefined
   hid: HidController | null
   hidOut: HidOutput
+  hidLog: HidLogEntry[]
   report: WizardReport | null
   settings: Settings
   setPads(pads: PadInfo[]): void
@@ -37,6 +39,8 @@ interface Store {
   refreshLayout(): void
   setHid(h: HidController | null): void
   setHidOut(patch: Partial<HidOutput>): void
+  pushHidLog(e: HidLogEntry): void
+  clearHidLog(): void
   setReport(r: WizardReport | null): void
   setSettings(s: Partial<Settings>): void
 }
@@ -49,6 +53,7 @@ export const useStore = create<Store>()(
       layout: undefined,
       hid: null,
       hidOut: EMPTY_OUTPUT,
+      hidLog: [],
       report: null,
       settings: { deadzone: 0.05, trace: 'fade', theme: 'dark' },
       setPads(pads) {
@@ -66,6 +71,8 @@ export const useStore = create<Store>()(
       },
       setHid: (hid) => set({ hid: hid ? trackOutput(hid, (p) => get().setHidOut(p), () => get().hidOut) : null, hidOut: EMPTY_OUTPUT }),
       setHidOut: (patch) => set({ hidOut: { ...get().hidOut, ...patch } }),
+      pushHidLog: (e) => set({ hidLog: [...get().hidLog.slice(-99), e] }),
+      clearHidLog: () => set({ hidLog: [] }),
       setReport: (report) => set({ report }),
       setSettings: (s) => set({ settings: { ...get().settings, ...s } }),
     }),

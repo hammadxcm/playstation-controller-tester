@@ -1,6 +1,7 @@
 import type { HidCaps, HidController, HidState } from '../controller'
+import type { HidLogger } from '../log'
 import { parseCalibration, type Calibration } from '../sony/calibration'
-import { SonyDevice } from '../sony/device'
+import { SonyDevice, type SonyIds } from '../sony/device'
 import { REPORT, SIZE } from './constants'
 import { parseDualShock4 } from './input'
 import { encodeOutput, type DualShock4Output } from './output'
@@ -8,14 +9,14 @@ import { PID } from '../../gamepad/identify'
 
 const CAPS: HidCaps = {
   touchpad: true, motion: true, battery: true, rumble: true, lightbar: true,
-  lightbarFlash: true, playerLeds: false, micLed: false, adaptiveTriggers: false,
+  lightbarFlash: true, playerLeds: false, micLed: false, adaptiveTriggers: false, edge: false,
 }
 
 export class DualShock4Device extends SonyDevice implements HidController {
   readonly family = 'dualshock4' as const
   readonly caps = CAPS
   readonly label: string
-  protected readonly ids = {
+  protected readonly ids: SonyIds = {
     inputUsb: REPORT.inputUsb, inputBt: REPORT.inputBt,
     outputUsb: REPORT.outputUsb, outputBt: REPORT.outputBt,
     calibration: [REPORT.featCalibrationBt, REPORT.featCalibrationUsb],
@@ -24,8 +25,8 @@ export class DualShock4Device extends SonyDevice implements HidController {
   private cal: Calibration | null = null
   private out: DualShock4Output = { rumble: null, lightbar: null, flash: null }
 
-  constructor(device: HIDDevice) {
-    super(device)
+  constructor(device: HIDDevice, log?: HidLogger) {
+    super(device, log)
     this.label = device.productId === PID.ds4v1 ? 'DualShock 4 (v1)' : device.productId === PID.ds4dongle ? 'DualShock 4 (USB adapter)' : 'DualShock 4'
   }
 
@@ -46,14 +47,21 @@ export class DualShock4Device extends SonyDevice implements HidController {
   protected encode(): Uint8Array {
     return encodeOutput(this.out)
   }
+  protected initPayload(): Uint8Array | null {
+    return null
+  }
+  protected offPayload(): Uint8Array {
+    return encodeOutput({ rumble: { strong: 0, weak: 0 }, lightbar: null, flash: null })
+  }
   protected frameUsb(payload: Uint8Array): Uint8Array<ArrayBuffer> {
     const b = new Uint8Array(SIZE.outputUsb)
     b.set(payload, 0)
     return b
   }
+  /** BT: 0xC0 = HID data + CRC present (no sequence nibble on DS4), payload at 2, CRC at 73. */
   protected frameBt(payload: Uint8Array): Uint8Array<ArrayBuffer> {
     const b = new Uint8Array(SIZE.outputBt)
-    b[0] = 0xc0 // HID data + CRC present; SonyDevice overwrites the high nibble with the sequence
+    b[0] = 0xc0
     b.set(payload, 2)
     return b
   }
