@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { score } from '@/core/analysis'
 import { Badge, Button, Card } from '@/components/ui'
-import { useFrame, useSampled } from '@/state/hooks'
+import { useFrame } from '@/state/hooks'
 import { useActivePad, useStore } from '@/state/store'
 import { buildSteps, DEFAULT_METRICS, type Row, type WizardStep } from './steps'
 
@@ -19,9 +19,8 @@ export function Wizard() {
   const metrics = useRef({ ...DEFAULT_METRICS })
   const step = steps[i]
 
+  const [progress, setProgress] = useState(0)
   useFrame((f) => { if (phase === 'running') step?.feed(f) })
-  const progress = useSampled(() => (phase === 'running' && step ? step.progress() : 0), 10)
-  const elapsed = useSampled(() => (phase === 'running' ? performance.now() - startedAt : 0), 4)
 
   const start = () => {
     setSteps(buildSteps())
@@ -33,26 +32,36 @@ export function Wizard() {
   }
   const advance = (skip = false) => {
     if (!step) return
+    let next: Row[]
     if (!skip) {
       const out = step.finish()
-      setRows((r) => [...r, ...out.rows])
+      next = [...rows, ...out.rows]
       Object.assign(metrics.current, out.metrics)
     } else {
-      setRows((r) => [...r, { label: step.title, value: 'skipped' }])
+      next = [...rows, { label: step.title, value: 'skipped' }]
     }
+    setRows(next)
     if (i + 1 >= steps.length) {
       const sc = score(metrics.current)
-      setReport({ at: new Date().toISOString(), padId: pad?.id ?? '', score: sc, metrics: Object.fromEntries(rows.map((r) => [r.label, r.value])) })
+      setReport({ at: new Date().toISOString(), padId: pad?.id ?? '', score: sc, metrics: Object.fromEntries(next.map((r) => [r.label, r.value])) })
       setPhase('done')
     } else {
       setI(i + 1)
       setStartedAt(performance.now())
+      setProgress(0)
     }
   }
+  const advanceRef = useRef(advance)
+  useEffect(() => { advanceRef.current = advance })
   useEffect(() => {
     if (phase !== 'running' || !step) return
-    if (progress >= 1 || elapsed >= step.maxMs) advance()
-  }, [progress, elapsed]) // eslint-disable-line react-hooks/exhaustive-deps
+    const id = setInterval(() => {
+      const p = step.progress()
+      setProgress(p)
+      if (p >= 1 || performance.now() - startedAt >= step.maxMs) advanceRef.current()
+    }, 100)
+    return () => clearInterval(id)
+  }, [phase, step, startedAt])
 
   if (!pad) return null
   return (

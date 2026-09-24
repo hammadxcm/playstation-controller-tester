@@ -1,32 +1,58 @@
-# React + TypeScript + Vite
+# Controller Tester
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Test PS5 DualSense / DualSense Edge, PS4 DualShock 4, Xbox and any other gamepad in the browser. No install, nothing uploaded.
 
-Currently, two official plugins are available:
+**Live:** https://hammadxcm.github.io/playstation-controller-tester/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+Every controller, every browser (Gamepad API):
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Live controller silhouette with button, stick and trigger highlights
+- Stick lab: trace, drift, circularity error, coverage, resolution bits, deadzone and fault badges (inner deadzone, center skipping, low resolution, incomplete range, axis snapping)
+- Trigger lab: analog value, range, resolution
+- Button lab: press counts, hold time, chatter (re-press within 20 ms) and stuck detection, raw axes
+- Rumble: dual-rumble and, where supported, trigger-rumble (Xbox impulse triggers)
+- Health check: six guided steps producing a 0–100 score and grade
+- Report: JSON and PNG export, copy summary, for warranty or RMA tickets
+- Learn mapping: teach the app the layout of pads the browser does not recognise
 
-## Expanding the Oxlint configuration
+Pro Mode (WebHID, desktop Chrome / Edge, USB or Bluetooth):
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+| | DualSense / Edge | DualShock 4 |
+|---|---|---|
+| Raw sticks, triggers, buttons | ✓ | ✓ |
+| Touchpad (two fingers) | ✓ | ✓ |
+| Gyro / accelerometer, factory calibration | ✓ | ✓ |
+| Battery, charging, USB / headset flags | ✓ | ✓ |
+| Rumble over HID (works on Bluetooth) | ✓ | ✓ |
+| Lightbar | ✓ | ✓ + flash |
+| Player LEDs, mic LED | ✓ | – |
+| Adaptive triggers (feedback, weapon, vibration, bow, galloping, machine) | ✓ | – |
+| Firmware / hardware version | ✓ | – |
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Browser support
+
+| | Chrome / Edge desktop | Chrome Android | Firefox | Safari |
+|---|---|---|---|---|
+| Gamepad API | ✓ | ✓ | ✓ (no timestamps) | ✓ (no vendor ids) |
+| dual-rumble | ✓ | ✓ | partial | – |
+| trigger-rumble | ✓ Win / macOS, Linux BT | – | – | – |
+| Pro Mode (WebHID) | ✓ | – | – | – |
+
+Report-rate and latency figures are what the browser observes, not what the hardware sends.
+
+If Pro Mode finds nothing, close Steam, PS Remote Play, DS4Windows or reWASD: they take the HID reports first.
+
+## Development
+
+```
+pnpm install
+pnpm dev        # http://localhost:5173/playstation-controller-tester/
+pnpm test       # vitest: parsers, encoders, CRC, analysis
+pnpm typecheck && pnpm lint && pnpm build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Layout: `src/core` is framework-free and unit-tested (Gamepad helpers, WebHID drivers, analysis); `src/features` holds one folder per screen; `src/state` is a small zustand store. Hot-path frames never touch React state.
+
+Protocol references: Linux `hid-playstation.c`, SDL `SDL_hidapi_ps5.c` / `SDL_hidapi_ps4.c`, Nielk1's TriggerEffectGenerator, nondebug/dualsense.
