@@ -58,7 +58,7 @@ describe('mapping', () => {
     expect(applyLayout(f)).toBe(f)
     deleteLayout('padA')
     expect(getLayout('padA')).toBeUndefined()
-    localStorage.setItem('ct:layouts', '{bad json')
+    localStorage.setItem(`ct${import.meta.env.BASE_URL}layouts`, '{bad json')
     expect(getLayout('x')).toBeUndefined()
   })
 })

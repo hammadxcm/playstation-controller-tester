@@ -33,6 +33,14 @@ export function prepareArtwork(svgText: string, spec: ArtworkSpec): PreparedArtw
   const viewBox = svg.getAttribute('viewBox') ?? '0 0 100 100'
   const [, , w, h] = viewBox.split(/\s+/).map(Number)
   for (const id of spec.remove) doc.getElementById(id)?.remove()
+  // Drawings are bundled and reviewed, but never trust markup you hand to innerHTML.
+  doc.querySelectorAll('script, foreignObject, iframe, object, embed, use, image, a').forEach((el) => el.remove())
+  doc.querySelectorAll('*').forEach((el) => {
+    for (const attr of Array.from(el.attributes)) {
+      const name = attr.name.toLowerCase()
+      if (name.startsWith('on') || ((name === 'href' || name === 'xlink:href') && !attr.value.startsWith('#'))) el.removeAttribute(attr.name)
+    }
+  })
 
   const walk = (el: Element, group: string | null) => {
     for (const child of Array.from(el.children)) {

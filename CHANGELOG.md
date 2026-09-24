@@ -5,7 +5,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ## [Unreleased]
 
 ### Security
-- Pin every GitHub Action to a commit SHA; self-host fonts so visitors never contact Google; redact factory-command payloads (serial, Bluetooth address) from the HID console; ship the `?mock=` harness in dev builds only.
+- Pin every GitHub Action to a commit SHA; self-host fonts so visitors never contact Google; redact factory-command payloads (serial, Bluetooth address) from the HID console; ship the `?mock=` harness in dev builds only; add a Content-Security-Policy; namespace `localStorage` keys by deploy path (github.io projects share one origin); strip scripts, event handlers and external references from controller drawings before rendering.
 
 ## [1.0.0] - 2026-09-24
 

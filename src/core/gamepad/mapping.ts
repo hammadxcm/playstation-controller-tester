@@ -13,7 +13,8 @@ export function emptyLayout(): Layout {
   }
 }
 
-const KEY = 'ct:layouts'
+// ponytail: keyed by base path because every project on a github.io account shares one origin
+const KEY = `ct${import.meta.env.BASE_URL}layouts`
 
 function load(): Record<string, Layout> {
   try {

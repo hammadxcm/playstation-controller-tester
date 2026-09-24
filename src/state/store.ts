@@ -132,7 +132,7 @@ export const useStore = create<Store>()(
       setReport: (report) => set({ report }),
       setSettings: (s) => set({ settings: { ...get().settings, ...s } }),
     }),
-    { name: 'ct:settings', partialize: (s) => ({ settings: s.settings, report: s.report }) },
+    { name: `ct${import.meta.env.BASE_URL}settings`, partialize: (s) => ({ settings: s.settings, report: s.report }) },
   ),
 )
 

@@ -39,6 +39,16 @@ describe('prepareArtwork', () => {
     const odd = prepareArtwork('<svg viewBox="0 0"><g id="Main"/></svg>', SPECS.dualshock4)
     expect(odd.width).toBe(100)
   })
+  it('strips scripts, handlers and external references from untrusted markup', () => {
+    const evil = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 10 10"><script>alert(1)</script><g id="Main"><path id="p" onclick="x()" onload="y()"/><a href="https://evil"><path id="q"/></a><use href="https://evil/#x"/><image href="http://t"/><path id="r" xlink:href="#ok"/></g></svg>'
+    const out = prepareArtwork(evil, SPECS.dualshock4)
+    expect(out.inner).not.toContain('<script')
+    expect(out.inner).not.toContain('onclick')
+    expect(out.inner).not.toContain('evil')
+    expect(out.inner).not.toContain('<use')
+    expect(out.inner).toContain('xlink:href="#ok"')
+    expect(out.inner).toContain('id="p"')
+  })
   it('survives a missing element in the spec', () => {
     const out = prepareArtwork('<svg viewBox="0 0 10 10"><g id="Main"><path id="a"/></g></svg>', { ...SPECS.dualshock4, parts: { south: ['nope'] }, sticks: { ls: { cap: 'nope' }, rs: { cap: 'nope' } } })
     expect(out.tagged).toEqual({})
