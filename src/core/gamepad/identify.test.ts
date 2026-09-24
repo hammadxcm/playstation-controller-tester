@@ -14,6 +14,13 @@ describe('identify', () => {
     expect(identify('DUALSHOCK4 Wireless Controller Extended Gamepad')).toMatchObject({ family: 'dualshock4', vid: undefined })
     expect(identify('Xbox Wireless Controller Extended Gamepad').family).toBe('xbox')
   })
+  it('covers DS4 variants, name heuristics and empty ids', () => {
+    expect(identify('X (Vendor: 054c Product: 05c4)').family).toBe('dualshock4')
+    expect(identify('X (Vendor: 054c Product: 0ba0)').family).toBe('dualshock4')
+    expect(identify('X (Vendor: 054c Product: 1234)').family).toBe('generic')
+    expect(identify('DualSense Edge Wireless Controller Extended Gamepad').family).toBe('dualsense')
+    expect(identify('').name).toBe('Gamepad')
+  })
   it('detects Xbox by vendor and Edge by pid', () => {
     expect(identify('Xbox Wireless Controller (STANDARD GAMEPAD Vendor: 045e Product: 0b13)').family).toBe('xbox')
     expect(identify('X (Vendor: 054c Product: 0df2)').family).toBe('dualsense')

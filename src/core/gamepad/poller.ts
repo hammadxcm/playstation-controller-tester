@@ -40,7 +40,7 @@ function tick() {
 }
 
 function ensureRunning() {
-  if (!raf && (frameListeners.size || padsListeners.size)) raf = requestAnimationFrame(tick)
+  if (!raf) raf = requestAnimationFrame(tick)
 }
 function maybeStop() {
   if (raf && !frameListeners.size && !padsListeners.size) {

@@ -111,7 +111,7 @@ export const useStore = create<Store>()(
         hids.forEach((h, k) => {
           get().addHid(h)
           const outs = [...get().hidOuts]
-          outs[k] = hidOuts[k] ?? EMPTY_OUTPUT
+          outs[k] = hidOuts[k]!
           set({ hidOuts: outs })
         })
         const active = Math.min(get().activeHid, hids.length - 1)
@@ -136,4 +136,4 @@ export const useStore = create<Store>()(
   ),
 )
 
-export const useActivePad = () => useStore((s) => s.pads.find((p) => p.index === s.activeIndex) ?? null)
+export const selectActivePad = (s: Pick<Store, 'pads' | 'activeIndex'>): PadInfo | null => s.pads.find((p) => p.index === s.activeIndex) ?? null

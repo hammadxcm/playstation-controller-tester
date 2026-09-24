@@ -143,7 +143,7 @@ export abstract class SonyDevice {
 
   private handle(e: HIDInputReportEvent): void {
     const { reportId, data } = e
-    if (reportId === this.ids.inputBt) {
+    if (reportId === this.ids.inputBt && data.byteLength >= 60) {
       if (this.transport !== 'bt') {
         this.transport = 'bt'
         this.note('info', 'transport confirmed: bt (full report seen)')
@@ -224,10 +224,15 @@ export abstract class SonyDevice {
     } finally {
       this.inFlight = false
     }
-    if (this.transport === 'bt' && !this.keepalive) {
-      this.keepalive = setInterval(() => {
-        if (!this.inFlight) void this.sendPayload(this.encode(), 'keepalive').catch(() => undefined)
-      }, BT_KEEPALIVE_MS)
+    if (this.transport === 'bt' && !this.keepalive) this.keepalive = setInterval(() => void this.keepaliveTick(), BT_KEEPALIVE_MS)
+  }
+
+  private async keepaliveTick(): Promise<void> {
+    if (this.inFlight) return
+    try {
+      await this.sendPayload(this.encode(), 'keepalive')
+    } catch {
+      // already logged by sendPayload; the next tick retries
     }
   }
 

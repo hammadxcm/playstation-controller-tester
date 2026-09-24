@@ -22,8 +22,8 @@ export interface WizardStep {
 }
 
 const timed = (maxMs: number) => {
-  let t0 = 0
-  return { tick: (t: number) => { if (!t0) t0 = t; return Math.min(1, (t - t0) / maxMs) }, elapsed: () => t0 }
+  let t0: number | null = null
+  return { tick: (t: number) => { if (t0 === null) t0 = t; return Math.min(1, (t - t0) / maxMs) } }
 }
 
 function driftStep(): WizardStep {

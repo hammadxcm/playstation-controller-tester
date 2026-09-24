@@ -5,7 +5,8 @@ import { PROFILES } from '@/core/gamepad/profiles'
 import { STD_AXES, STD_BUTTONS, type Frame } from '@/core/gamepad/types'
 import { Badge, Button, Card } from '@/components/ui'
 import { useRawFrame } from '@/state/hooks'
-import { useActivePad, useStore } from '@/state/store'
+import { useStore } from '@/state/store'
+import { useActivePad } from '@/state/hooks'
 
 type Target = { kind: 'button'; key: (typeof STD_BUTTONS)[number] } | { kind: 'axis'; key: (typeof STD_AXES)[number] }
 const TARGETS: Target[] = [...STD_BUTTONS.map((key) => ({ kind: 'button', key }) as Target), ...STD_AXES.map((key) => ({ kind: 'axis', key }) as Target)]

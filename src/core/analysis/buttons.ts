@@ -22,11 +22,11 @@ export class ButtonTracker {
       if (t - (this.upAt[i] ?? -Infinity) < CHATTER_MS) s.chatter++
       this.downAt[i] = t
     } else if (!pressed && s.down) {
-      s.longestHoldMs = Math.max(s.longestHoldMs, t - (this.downAt[i] ?? t))
+      s.longestHoldMs = Math.max(s.longestHoldMs, t - this.downAt[i]!)
       this.upAt[i] = t
       s.stuck = false
     }
-    if (pressed && t - (this.downAt[i] ?? t) > STUCK_MS) s.stuck = true
+    if (pressed && t - this.downAt[i]! > STUCK_MS) s.stuck = true
     s.down = pressed
   }
 

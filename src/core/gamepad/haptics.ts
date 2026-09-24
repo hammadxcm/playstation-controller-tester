@@ -38,7 +38,8 @@ export async function rumble(gp: Gamepad | null, p: RumbleParams): Promise<strin
         : {}),
     })
   } catch (e) {
-    return e instanceof Error ? e.name : 'error'
+    const name = (e as { name?: unknown } | null)?.name
+    return typeof name === 'string' ? name : 'error'
   }
 }
 

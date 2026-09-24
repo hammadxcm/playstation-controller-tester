@@ -56,7 +56,7 @@ export const perf = {
     const out: Record<string, unknown> = Object.fromEntries(counters)
     for (const [name, arr] of samples) {
       const s = [...arr].sort((a, b) => a - b)
-      out[name] = { n: s.length, p50: s[Math.floor(s.length * 0.5)] ?? 0, p95: s[Math.floor(s.length * 0.95)] ?? 0 }
+      out[name] = { n: s.length, p50: s[Math.floor(s.length * 0.5)]!, p95: s[Math.floor(s.length * 0.95)]! }
     }
     return out
   },

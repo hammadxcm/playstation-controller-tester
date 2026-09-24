@@ -1,3 +1,5 @@
+const toBytes = (data: BufferSource): Uint8Array => (data instanceof ArrayBuffer ? new Uint8Array(data.slice(0)) : new Uint8Array((data as Uint8Array).buffer.slice((data as Uint8Array).byteOffset, (data as Uint8Array).byteOffset + data.byteLength) as ArrayBuffer))
+
 /** Minimal HIDDevice stand-in for unit tests: records sends, serves canned feature reports, injects input reports. */
 export class FakeHidDevice extends EventTarget {
   opened = false
@@ -41,11 +43,11 @@ export class FakeHidDevice extends EventTarget {
   async sendReport(id: number, data: BufferSource) {
     if (this.failSend) throw this.failSend
     if (this.sendDelayMs) await new Promise((r) => setTimeout(r, this.sendDelayMs))
-    this.sent.push({ id, data: new Uint8Array(data as ArrayBuffer instanceof ArrayBuffer ? (data as ArrayBuffer) : (data as Uint8Array).buffer as ArrayBuffer, (data as Uint8Array).byteOffset ?? 0, data.byteLength) })
+    this.sent.push({ id, data: toBytes(data) })
   }
   async sendFeatureReport(id: number, data: BufferSource) {
     if (this.failFeature) throw this.failFeature
-    this.featureSent.push({ id, data: new Uint8Array((data as Uint8Array).buffer as ArrayBuffer, (data as Uint8Array).byteOffset ?? 0, data.byteLength) })
+    this.featureSent.push({ id, data: toBytes(data) })
   }
   async receiveFeatureReport(id: number): Promise<DataView> {
     if (this.failFeature) throw this.failFeature

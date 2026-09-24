@@ -3,7 +3,7 @@ import { onFrames, onPads } from '@/core/gamepad/poller'
 import { applyLayout } from '@/core/gamepad/mapping'
 import type { Frame } from '@/core/gamepad/types'
 import type { HidState } from '@/core/hid/controller'
-import { useStore } from './store'
+import { selectActivePad, useStore } from './store'
 
 // ponytail: one applyLayout per raw frame even with several subscribers
 const shaped = new WeakMap<Frame, Frame>()
@@ -30,6 +30,7 @@ export function useFrame(cb: (frame: Frame) => void): void {
 }
 
 export const useHidOutput = () => useStore((s) => s.hidOut)
+export const useActivePad = () => useStore(selectActivePad)
 
 /** Raw frame without layout applied (for the learn wizard and raw views). */
 export function useRawFrame(cb: (frame: Frame) => void): void {

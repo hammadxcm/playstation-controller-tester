@@ -30,8 +30,8 @@ export function createMockHid(family: string): MockHid {
       : ['cross', 'circle', 'square', 'triangle', 'l1', 'r1', 'l2', 'r2', 'create', 'options', 'l3', 'r3', 'up', 'down', 'left', 'right', 'ps', 'touchpad', 'mute']
     const buttons = Object.fromEntries(names.map((n, i) => [n, !!b[i]?.pressed]))
     return {
-      sticks: { lx: to255(gp.axes[0] ?? 0), ly: to255(gp.axes[1] ?? 0), rx: to255(gp.axes[2] ?? 0), ry: to255(gp.axes[3] ?? 0) },
-      triggers: { l2: Math.round((b[6]?.value ?? 0) * 255), r2: Math.round((b[7]?.value ?? 0) * 255) },
+      sticks: { lx: to255(gp.axes[0]!), ly: to255(gp.axes[1]!), rx: to255(gp.axes[2]!), ry: to255(gp.axes[3]!) },
+      triggers: { l2: Math.round(b[6]!.value * 255), r2: Math.round(b[7]!.value * 255) },
       buttons,
       hat: 8,
       touches: [
@@ -65,7 +65,7 @@ export function createMockHid(family: string): MockHid {
     transport: 'usb',
     device: { opened: true, vendorId: 0x054c, productId: ds4 ? 0x09cc : 0x0ce6, productName: 'mock' } as unknown as HIDDevice,
     out,
-    state: () => last ?? state(),
+    state: () => state(),
     subscribe(cb) {
       listeners.add(cb)
       return () => listeners.delete(cb)

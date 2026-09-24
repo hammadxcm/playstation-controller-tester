@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck && pnpm lint && pnpm test
+      - run: pnpm typecheck && pnpm lint && pnpm test:coverage
       - run: pnpm build
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }

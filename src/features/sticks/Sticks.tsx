@@ -1,15 +1,16 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { circularity, deadzone as dz, drift, resolutionBits, type Point } from '@/core/analysis'
 import { Badge, Button, Card, Metric, Slider } from '@/components/ui'
 import { useFrame, useSampled } from '@/state/hooks'
 import { useStore } from '@/state/store'
 import { StickCanvas } from './StickCanvas'
-import { pushTrace, type StickTrace } from './trace'
+import { newTrace, pushTrace, resetTrace, type StickTrace } from './trace'
+import { animate } from '@/lib/motion'
 
 const CAP = 20000
 
 class Buf {
-  trace: StickTrace = { points: [], cur: { x: 0, y: 0 } }
+  trace: StickTrace = newTrace()
   all: Point[] = []
   rest: Point[] = []
   feed(x: number, y: number, mode: 'fade' | 'constant' | 'none') {
@@ -23,7 +24,7 @@ class Buf {
   reset() {
     this.all = []
     this.rest = []
-    this.trace.points = []
+    resetTrace(this.trace)
   }
 }
 
@@ -31,14 +32,24 @@ function StickPanel({ label, buf }: { label: string; buf: React.RefObject<Buf> }
   const { deadzone, trace } = useStore((s) => s.settings)
   const setSettings = useStore((s) => s.setSettings)
   const traceRef = useRef(buf.current.trace)
+  const panel = useRef<HTMLDivElement>(null)
   const m = useSampled(() => {
     const b = buf.current
     const d = drift(b.rest)
     const c = circularity(b.all)
     const r = resolutionBits(b.all.flatMap((p) => [p.x, p.y]))
     const z = dz(b.all)
-    return { d, c, r, z, cur: b.trace.cur, n: b.all.length }
+    return { d, c, r, z, cur: b.trace.cur, n: b.all.length, filled: b.trace.filled }
   }, 8)
+  const complete = m.filled >= 70
+  const wasComplete = useRef(false)
+  useEffect(() => {
+    if (complete && !wasComplete.current) {
+      const c = panel.current?.querySelector('canvas')
+      if (c) animate(c, [{ boxShadow: '0 0 0 0 var(--accent)' }, { boxShadow: '0 0 0 14px transparent' }], { duration: 700, easing: 'cubic-bezier(.16,1,.3,1)' })
+    }
+    wasComplete.current = complete
+  }, [complete])
   const reset = () => buf.current.reset()
   const faults = [
     m.c.incompleteRange && ['Incomplete range', 'bad'],
@@ -49,7 +60,7 @@ function StickPanel({ label, buf }: { label: string; buf: React.RefObject<Buf> }
   ].filter(Boolean) as [string, 'ok' | 'bad'][]
   return (
     <Card title={label} right={<Button small onClick={reset}>Reset</Button>}>
-      <StickCanvas trace={traceRef} deadzone={deadzone} mode={trace} />
+      <div ref={panel}><StickCanvas trace={traceRef} deadzone={deadzone} mode={trace} /></div>
       <div className="row small mono muted" style={{ justifyContent: 'center' }}>
         <span>x {m.cur.x.toFixed(4)}</span>
         <span>y {m.cur.y.toFixed(4)}</span>
@@ -63,7 +74,7 @@ function StickPanel({ label, buf }: { label: string; buf: React.RefObject<Buf> }
         <Metric label="Inner DZ" value={m.z.inner ? m.z.inner.toFixed(3) : '–'} />
       </div>
       <div className="row">
-        {faults.length ? faults.map(([f, tone]) => <Badge key={f} tone={tone}>{f}</Badge>) : <Badge tone="good">No faults detected</Badge>}
+        {faults.length ? faults.map(([f, tone]) => <span key={f} className="pop"><Badge tone={tone}>{f}</Badge></span>) : <Badge tone="good">No faults detected</Badge>}
         <span className="dim small">{m.n} samples</span>
       </div>
       <details className="small muted">

@@ -32,6 +32,13 @@ describe('prepareArtwork', () => {
     expect(ds4.inner).toContain('class="m-cap"')
     expect(ds4.inner).toContain('fill-rule="nonzero"')
   })
+  it('classifies plain Background shapes as ink and tolerates odd viewBoxes', () => {
+    const out = prepareArtwork('<svg><g id="Background"><path id="Frame"/></g></svg>', { ...SPECS.dualshock4, parts: { south: undefined }, sticks: { ls: { cap: 'x' }, rs: { cap: 'x' } } })
+    expect(out.inner).toContain('class="m-ink"')
+    expect(out.viewBox).toBe('0 0 100 100')
+    const odd = prepareArtwork('<svg viewBox="0 0"><g id="Main"/></svg>', SPECS.dualshock4)
+    expect(odd.width).toBe(100)
+  })
   it('survives a missing element in the spec', () => {
     const out = prepareArtwork('<svg viewBox="0 0 10 10"><g id="Main"><path id="a"/></g></svg>', { ...SPECS.dualshock4, parts: { south: ['nope'] }, sticks: { ls: { cap: 'nope' }, rs: { cap: 'nope' } } })
     expect(out.tagged).toEqual({})

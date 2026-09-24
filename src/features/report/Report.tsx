@@ -2,7 +2,8 @@ import { useRef } from 'react'
 import { toPng } from 'html-to-image'
 import { identify } from '@/core/gamepad/identify'
 import { Badge, Button, Card } from '@/components/ui'
-import { useActivePad, useStore } from '@/state/store'
+import { useStore } from '@/state/store'
+import { useActivePad } from '@/state/hooks'
 
 function download(name: string, href: string) {
   const a = document.createElement('a')

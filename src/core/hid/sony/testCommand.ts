@@ -36,7 +36,7 @@ let chain: Promise<unknown> = Promise.resolve()
 /** Serialises commands per page; the controller has a single command slot. */
 function locked<T>(fn: () => Promise<T>): Promise<T> {
   const p = chain.then(fn, fn)
-  chain = p.catch(() => undefined)
+  chain = p
   return p
 }
 
