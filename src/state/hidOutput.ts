@@ -60,6 +60,7 @@ export function trackOutput(hid: HidController, set: (patch: Partial<HidOutput>)
       set({ trigger: { ...get().trigger, [side]: effect[0] ?? 0x05 } })
     },
     info: () => hid.info(),
+    factory: hid.factory ? () => hid.factory!() : undefined,
     close: () => hid.close(),
   }
 }

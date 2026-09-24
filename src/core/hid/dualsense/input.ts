@@ -42,6 +42,8 @@ export function parseDualSense(d: DataView, off: number, cal: Calibration | null
       r2Status: r2s >> 4, r2Stop: r2s & 0x0f, r2Engaged: !!(r2s & 0x10),
       l2Status: l2s >> 4, l2Stop: l2s & 0x0f, l2Engaged: !!(l2s & 0x10),
       micMuted: !!(plug & 0x04),
+      profile: u8(48) & 0x0f,
+      triggerLevel: u8(49),
     },
     reportId,
     raw: new Uint8Array(d.buffer, d.byteOffset, d.byteLength),

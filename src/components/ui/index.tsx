@@ -52,7 +52,7 @@ export function Metric({ label, value, tone, large }: { label: string; value: Re
   )
 }
 
-export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: { id: T; label: string }[]; value: T; onChange: (id: T) => void }) {
+export function Tabs<T extends string>({ tabs, value, onChange, ink = 'tab-ink' }: { tabs: { id: T; label: string }[]; value: T; onChange: (id: T) => void; ink?: string }) {
   const onKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
     const i = tabs.findIndex((t) => t.id === value)
@@ -65,7 +65,7 @@ export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: { id: 
     <div className="tabs" role="tablist" onKeyDown={onKey}>
       {tabs.map((t) => (
         <button key={t.id} id={`tab-${t.id}`} role="tab" aria-selected={t.id === value} aria-controls={`panel-${t.id}`} tabIndex={t.id === value ? 0 : -1} className="tab" onClick={() => onChange(t.id)}>
-          {t.id === value && <i className="tab-ink" style={{ viewTransitionName: 'tab-ink' }} aria-hidden />}
+          {t.id === value && <i className="tab-ink" style={{ viewTransitionName: ink }} aria-hidden />}
           <span>{t.label}</span>
         </button>
       ))}

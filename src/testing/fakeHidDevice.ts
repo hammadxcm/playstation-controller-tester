@@ -4,8 +4,11 @@ export class FakeHidDevice extends EventTarget {
   sent: { id: number; data: Uint8Array }[] = []
   featureSent: { id: number; data: Uint8Array }[] = []
   features = new Map<number, Uint8Array>()
+  /** scripted successive responses for a feature id (consumed first, before `features`) */
+  featureSequence = new Map<number, Uint8Array[]>()
   sendDelayMs = 0
   failSend: Error | null = null
+  failFeature: Error | null = null
   collections: HIDCollectionInfo[]
 
   constructor(
@@ -41,10 +44,13 @@ export class FakeHidDevice extends EventTarget {
     this.sent.push({ id, data: new Uint8Array(data as ArrayBuffer instanceof ArrayBuffer ? (data as ArrayBuffer) : (data as Uint8Array).buffer as ArrayBuffer, (data as Uint8Array).byteOffset ?? 0, data.byteLength) })
   }
   async sendFeatureReport(id: number, data: BufferSource) {
+    if (this.failFeature) throw this.failFeature
     this.featureSent.push({ id, data: new Uint8Array((data as Uint8Array).buffer as ArrayBuffer, (data as Uint8Array).byteOffset ?? 0, data.byteLength) })
   }
   async receiveFeatureReport(id: number): Promise<DataView> {
-    const b = this.features.get(id)
+    if (this.failFeature) throw this.failFeature
+    const seq = this.featureSequence.get(id)
+    const b = seq?.length ? seq.shift() : this.features.get(id)
     if (!b) throw new Error(`feature 0x${id.toString(16)} not available`)
     return new DataView(b.buffer as ArrayBuffer, b.byteOffset, b.byteLength)
   }

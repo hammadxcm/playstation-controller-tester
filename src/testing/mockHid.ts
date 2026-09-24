@@ -82,6 +82,9 @@ export function createMockHid(family: string): MockHid {
     async info() {
       return { firmware: '0x00010215', hardware: '0x00000001', updateVersion: '2.21' }
     },
+    async factory() {
+      return ds4 ? {} : { serial: 'MOCK00012345', pcbaId: '0123456789ab', btAddress: 'aa:bb:cc:dd:ee:ff', batteryMv: 4012, touchpadFirmware: '0000000100000002' }
+    },
     async close() {
       clearInterval(timer)
       listeners.clear()
@@ -99,6 +102,8 @@ export async function installMockHid(family: string, q: URLSearchParams): Promis
   }
   const mock = createMockHid(family)
   useStore.getState().setHid(mock)
+  if (q.get('hid') === '2') useStore.getState().addHid(createMockHid(family === 'dualsense' ? 'dualshock4' : 'dualsense'))
+  useStore.getState().setActiveHid(0)
   const hid = useStore.getState().hid!
   const lb = q.get('lb')
   if (lb) await hid.setLightbar([parseInt(lb.slice(0, 2), 16), parseInt(lb.slice(2, 4), 16), parseInt(lb.slice(4, 6), 16)])

@@ -1,0 +1,6 @@
+.pro { display: grid; gap: 16px; grid-template-columns: minmax(280px, 340px) 1fr; align-items: start; }
+@media (max-width: 900px) { .pro { grid-template-columns: 1fr; } }
+.device { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-elev); cursor: pointer; transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.device.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 30%, transparent); }
+table.out td { vertical-align: middle; padding: 10px 6px; }
+table.out td.label { width: 120px; color: var(--fg-muted); font-size: 0.85rem; }

@@ -54,6 +54,8 @@ export interface HidController {
   setMicLed(mode: MicLedMode): Promise<void>
   setTrigger(side: 'left' | 'right', effect: Uint8Array): Promise<void>
   info(): Promise<Record<string, string>>
+  /** factory data over the vendor command channel (DualSense family) */
+  factory?(): Promise<Record<string, string | number | undefined>>
   close(): Promise<void>
 }
 

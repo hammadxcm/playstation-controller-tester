@@ -7,6 +7,7 @@ import { parseDualSense } from './input'
 import { emptyOutput, encodeOutput, type DualSenseOutput } from './output'
 import * as fx from './triggerEffects'
 import { PID } from '../../gamepad/identify'
+import { readFactoryInfo } from '../sony/factory'
 
 const CAPS: HidCaps = {
   touchpad: true, motion: true, battery: true, rumble: true, lightbar: true,
@@ -129,5 +130,8 @@ export class DualSenseDevice extends SonyDevice implements HidController {
   }
   async info(): Promise<Record<string, string>> {
     return this.cachedInfo ?? this.readInfo()
+  }
+  async factory(): Promise<Record<string, string | number | undefined>> {
+    return readFactoryInfo({ device: this.device, transport: this.transport, log: this.log }) as Promise<Record<string, string | number | undefined>>
   }
 }
