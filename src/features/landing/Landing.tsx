@@ -65,6 +65,13 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
         >
           {t('footer.licences')}
         </a>
+        <a
+          className="version"
+          href="https://github.com/hammadxcm/playstation-controller-tester/blob/main/CHANGELOG.md"
+          rel="noopener"
+        >
+          v{__APP_VERSION__}
+        </a>
       </footer>
     </div>
   )

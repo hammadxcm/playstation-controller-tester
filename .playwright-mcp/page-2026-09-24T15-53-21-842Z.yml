@@ -1,162 +1,162 @@
 - generic [ref=e2]:
-  - link "Skip to content" [ref=e3] [cursor=pointer]:
-    - /url: "#content"
-  - generic [ref=e5]:
-    - banner [ref=e6]:
-      - generic [ref=e7]: Controller Tester
-      - navigation "Controller Tester" [ref=e8]:
-        - button "Pro Mode" [ref=e9] [cursor=pointer]
-        - button "Report" [ref=e10] [cursor=pointer]
-        - combobox "Language" [ref=e11]:
-          - option "Auto" [selected]
-          - option "English"
-          - option "Español"
-          - option "Português"
-          - option "Français"
-          - option "Deutsch"
-          - option "Русский"
-          - option "日本語"
-          - option "中文"
-          - option "한국어"
-        - button "Toggle theme" [ref=e12] [cursor=pointer]: ☾
-    - main [ref=e13]:
-      - region [ref=e14]:
-        - generic [ref=e15]:
-          - paragraph [ref=e16]: Free · in-browser · nothing uploaded
-          - heading "Every button, stick and trigger. Tested in seconds." [level=1] [ref=e17]
-          - paragraph [ref=e18]: Drift, dead zones, circularity, polling rate, rumble and adaptive triggers for DualSense, DualSense Edge, DualShock 4, Xbox and any gamepad. No install, no account.
-          - generic [ref=e19]:
-            - link "Add a device" [ref=e20] [cursor=pointer]:
-              - /url: "#add-device"
-            - button "Open Pro Mode" [ref=e21] [cursor=pointer]
-        - img "DualSense controller, demo" [ref=e26]
-      - region [ref=e72]:
-        - heading "Add a device" [level=2] [ref=e73]
-        - generic [ref=e74]:
-          - article [ref=e75]:
-            - generic [ref=e76]:
-              - generic [aria-hidden] [ref=e77]: "1"
-              - heading "Press any button" [level=3] [ref=e78]
-            - paragraph [ref=e79]: Plug in over USB or pair over Bluetooth, then press any button. Browsers only reveal a gamepad after its first input. Works with DualSense, DualShock 4, Xbox and generic pads.
-            - generic [ref=e80]: Listening for a controller…
-          - article [ref=e82]:
-            - generic [ref=e83]:
-              - generic [aria-hidden] [ref=e84]: "2"
-              - heading "Pair for Pro Mode" [level=3] [ref=e85]
-            - paragraph [ref=e86]: "WebHID talks to the controller directly: adaptive triggers, lightbar, player LEDs, mic LED, touchpad, gyro, battery and firmware. DualSense, DualSense Edge and DualShock 4."
-            - button "Pair over USB or Bluetooth" [ref=e88] [cursor=pointer]
-        - table [ref=e89]:
-          - caption [ref=e90]: Feature
-          - rowgroup [ref=e91]:
-            - row [ref=e92]:
-              - columnheader "Feature" [ref=e93]
-              - columnheader "Chrome / Edge" [ref=e94]
-              - columnheader "Firefox" [ref=e95]
-              - columnheader "Safari" [ref=e96]
-          - rowgroup [ref=e97]:
-            - row [ref=e98]:
-              - rowheader "Buttons, sticks, triggers" [ref=e99]
-              - cell "✓" [ref=e100]
-              - cell "✓" [ref=e101]
-              - cell "✓" [ref=e102]
-            - row [ref=e103]:
-              - rowheader "Rumble" [ref=e104]
-              - cell "✓" [ref=e105]
-              - cell "partial" [ref=e106]
-              - cell "–" [ref=e107]
-            - row [ref=e108]:
-              - rowheader "Trigger rumble (Xbox)" [ref=e109]
-              - cell "✓ Win/mac" [ref=e110]
-              - cell "–" [ref=e111]
-              - cell "–" [ref=e112]
-            - row [ref=e113]:
-              - rowheader "Pro Mode (PS4/PS5 via WebHID)" [ref=e114]
-              - cell "✓ desktop" [ref=e115]
-              - cell "–" [ref=e116]
-              - cell "–" [ref=e117]
-      - region [ref=e118]:
-        - heading "Built for PlayStation controllers" [level=2] [ref=e119]
-        - paragraph [ref=e120]: Accurate drawings of each pad light up as you press. Hover a card to see what Pro Mode can reach.
-        - generic [ref=e121]:
-          - 'article "DualSense: Adaptive trigger effects, Lightbar + player LEDs, Haptic rumble, Gyro, accel, battery" [ref=e123]':
-            - generic [ref=e124]:
-              - generic: Adaptive triggers
-              - generic: Touchpad + lightbar
-              - generic: Mic mute
-            - generic [ref=e126]:
-              - heading "DualSense" [level=3] [ref=e127]
-              - paragraph [ref=e128]: PS5 wireless controller
-              - list [ref=e129]:
-                - listitem [ref=e130]: ·Adaptive trigger effects
-                - listitem [ref=e131]: ·Lightbar + player LEDs
-                - listitem [ref=e132]: ·Haptic rumble
-                - listitem [ref=e133]: ·Gyro, accel, battery
-          - 'article "DualSense Edge: Everything DualSense does, Back paddles + Fn keys, Trigger stops, Swappable stick modules" [ref=e135]':
-            - generic [ref=e136]:
-              - generic: Back paddles
-              - generic: Fn keys
-              - generic: Stick modules
-            - generic [ref=e138]:
-              - heading "DualSense Edge" [level=3] [ref=e139]
-              - paragraph [ref=e140]: PS5 pro controller
-              - list [ref=e141]:
-                - listitem [ref=e142]: ·Everything DualSense does
-                - listitem [ref=e143]: ·Back paddles + Fn keys
-                - listitem [ref=e144]: ·Trigger stops
-                - listitem [ref=e145]: ·Swappable stick modules
-          - 'article "DualShock 4: Lightbar colour + flash, Touchpad, gyro, accel, Rumble, USB, Bluetooth or dongle" [ref=e147]':
-            - generic [ref=e148]:
-              - generic: Lightbar
-              - generic: Touchpad
-              - generic: Share / Options
-            - generic [ref=e150]:
-              - heading "DualShock 4" [level=3] [ref=e151]
-              - paragraph [ref=e152]: PS4 wireless controller
-              - list [ref=e153]:
-                - listitem [ref=e154]: ·Lightbar colour + flash
-                - listitem [ref=e155]: ·Touchpad, gyro, accel
-                - listitem [ref=e156]: ·Rumble
-                - listitem [ref=e157]: ·USB, Bluetooth or dongle
-      - region [ref=e158]:
-        - heading "Everything the app can test" [level=2] [ref=e159]
-        - generic [ref=e160]:
-          - button "Sticks Drift, dead zone, circularity and resolution with a live trace." [ref=e161] [cursor=pointer]:
-            - generic [aria-hidden] [ref=e162]: ◎
-            - generic [ref=e163]: Sticks
-            - generic [ref=e164]: Drift, dead zone, circularity and resolution with a live trace.
-          - button "Triggers Travel curves, latency and adaptive-trigger effects." [ref=e165] [cursor=pointer]:
-            - generic [aria-hidden] [ref=e166]: ⌒
-            - generic [ref=e167]: Triggers
-            - generic [ref=e168]: Travel curves, latency and adaptive-trigger effects.
-          - button "Buttons Every input with chatter and stuck-button detection." [ref=e169] [cursor=pointer]:
-            - generic [aria-hidden] [ref=e170]: ✕
-            - generic [ref=e171]: Buttons
-            - generic [ref=e172]: Every input with chatter and stuck-button detection.
-          - button "Rumble Dual-rumble and trigger-rumble patterns, on demand." [ref=e173] [cursor=pointer]:
-            - generic [aria-hidden] [ref=e174]: ∿
-            - generic [ref=e175]: Rumble
-            - generic [ref=e176]: Dual-rumble and trigger-rumble patterns, on demand.
-          - button "Health check Six guided steps to a 0–100 score you can export." [ref=e177] [cursor=pointer]:
-            - generic [aria-hidden] [ref=e178]: ✓
-            - generic [ref=e179]: Health check
-            - generic [ref=e180]: Six guided steps to a 0–100 score you can export.
-          - 'button "Pro Mode WebHID: lightbar, LEDs, mic, touchpad, gyro, battery. No pad needed" [ref=e181] [cursor=pointer]':
-            - generic [aria-hidden] [ref=e182]: ⚡
-            - generic [ref=e183]: Pro Mode
-            - generic [ref=e184]: "WebHID: lightbar, LEDs, mic, touchpad, gyro, battery."
-            - generic [ref=e185]: No pad needed
-          - button "Learn mapping Teach the app a pad without a standard layout." [ref=e186] [cursor=pointer]:
-            - generic [aria-hidden] [ref=e187]: ⌘
-            - generic [ref=e188]: Learn mapping
-            - generic [ref=e189]: Teach the app a pad without a standard layout.
-          - button "Report Your last health check as a shareable image. No pad needed" [ref=e190] [cursor=pointer]:
-            - generic [aria-hidden] [ref=e191]: ▤
-            - generic [ref=e192]: Report
-            - generic [ref=e193]: Your last health check as a shareable image.
-            - generic [ref=e194]: No pad needed
-    - contentinfo [ref=e195]:
-      - generic [ref=e196]: Everything runs in your browser; nothing is uploaded.
-      - link "GitHub" [ref=e197] [cursor=pointer]:
-        - /url: https://github.com/hammadxcm/playstation-controller-tester
-      - link "Licences" [ref=e198] [cursor=pointer]:
-        - /url: https://github.com/hammadxcm/playstation-controller-tester/blob/main/LICENSES.md
+    - link "Skip to content" [ref=e3] [cursor=pointer]:
+        - /url: '#content'
+    - generic [ref=e5]:
+        - banner [ref=e6]:
+            - generic [ref=e7]: Controller Tester
+            - navigation "Controller Tester" [ref=e8]:
+                - button "Pro Mode" [ref=e9] [cursor=pointer]
+                - button "Report" [ref=e10] [cursor=pointer]
+                - combobox "Language" [ref=e11]:
+                    - option "Auto" [selected]
+                    - option "English"
+                    - option "Español"
+                    - option "Português"
+                    - option "Français"
+                    - option "Deutsch"
+                    - option "Русский"
+                    - option "日本語"
+                    - option "中文"
+                    - option "한국어"
+                - button "Toggle theme" [ref=e12] [cursor=pointer]: ☾
+        - main [ref=e13]:
+            - region [ref=e14]:
+                - generic [ref=e15]:
+                    - paragraph [ref=e16]: Free · in-browser · nothing uploaded
+                    - heading "Every button, stick and trigger. Tested in seconds." [level=1] [ref=e17]
+                    - paragraph [ref=e18]: Drift, dead zones, circularity, polling rate, rumble and adaptive triggers for DualSense, DualSense Edge, DualShock 4, Xbox and any gamepad. No install, no account.
+                    - generic [ref=e19]:
+                        - link "Add a device" [ref=e20] [cursor=pointer]:
+                            - /url: '#add-device'
+                        - button "Open Pro Mode" [ref=e21] [cursor=pointer]
+                - img "DualSense controller, demo" [ref=e26]
+            - region [ref=e72]:
+                - heading "Add a device" [level=2] [ref=e73]
+                - generic [ref=e74]:
+                    - article [ref=e75]:
+                        - generic [ref=e76]:
+                            - generic [aria-hidden] [ref=e77]: '1'
+                            - heading "Press any button" [level=3] [ref=e78]
+                        - paragraph [ref=e79]: Plug in over USB or pair over Bluetooth, then press any button. Browsers only reveal a gamepad after its first input. Works with DualSense, DualShock 4, Xbox and generic pads.
+                        - generic [ref=e80]: Listening for a controller…
+                    - article [ref=e82]:
+                        - generic [ref=e83]:
+                            - generic [aria-hidden] [ref=e84]: '2'
+                            - heading "Pair for Pro Mode" [level=3] [ref=e85]
+                        - paragraph [ref=e86]: 'WebHID talks to the controller directly: adaptive triggers, lightbar, player LEDs, mic LED, touchpad, gyro, battery and firmware. DualSense, DualSense Edge and DualShock 4.'
+                        - button "Pair over USB or Bluetooth" [ref=e88] [cursor=pointer]
+                - table [ref=e89]:
+                    - caption [ref=e90]: Feature
+                    - rowgroup [ref=e91]:
+                        - row [ref=e92]:
+                            - columnheader "Feature" [ref=e93]
+                            - columnheader "Chrome / Edge" [ref=e94]
+                            - columnheader "Firefox" [ref=e95]
+                            - columnheader "Safari" [ref=e96]
+                    - rowgroup [ref=e97]:
+                        - row [ref=e98]:
+                            - rowheader "Buttons, sticks, triggers" [ref=e99]
+                            - cell "✓" [ref=e100]
+                            - cell "✓" [ref=e101]
+                            - cell "✓" [ref=e102]
+                        - row [ref=e103]:
+                            - rowheader "Rumble" [ref=e104]
+                            - cell "✓" [ref=e105]
+                            - cell "partial" [ref=e106]
+                            - cell "–" [ref=e107]
+                        - row [ref=e108]:
+                            - rowheader "Trigger rumble (Xbox)" [ref=e109]
+                            - cell "✓ Win/mac" [ref=e110]
+                            - cell "–" [ref=e111]
+                            - cell "–" [ref=e112]
+                        - row [ref=e113]:
+                            - rowheader "Pro Mode (PS4/PS5 via WebHID)" [ref=e114]
+                            - cell "✓ desktop" [ref=e115]
+                            - cell "–" [ref=e116]
+                            - cell "–" [ref=e117]
+            - region [ref=e118]:
+                - heading "Built for PlayStation controllers" [level=2] [ref=e119]
+                - paragraph [ref=e120]: Accurate drawings of each pad light up as you press. Hover a card to see what Pro Mode can reach.
+                - generic [ref=e121]:
+                    - 'article "DualSense: Adaptive trigger effects, Lightbar + player LEDs, Haptic rumble, Gyro, accel, battery" [ref=e123]':
+                        - generic [ref=e124]:
+                            - generic: Adaptive triggers
+                            - generic: Touchpad + lightbar
+                            - generic: Mic mute
+                        - generic [ref=e126]:
+                            - heading "DualSense" [level=3] [ref=e127]
+                            - paragraph [ref=e128]: PS5 wireless controller
+                            - list [ref=e129]:
+                                - listitem [ref=e130]: ·Adaptive trigger effects
+                                - listitem [ref=e131]: ·Lightbar + player LEDs
+                                - listitem [ref=e132]: ·Haptic rumble
+                                - listitem [ref=e133]: ·Gyro, accel, battery
+                    - 'article "DualSense Edge: Everything DualSense does, Back paddles + Fn keys, Trigger stops, Swappable stick modules" [ref=e135]':
+                        - generic [ref=e136]:
+                            - generic: Back paddles
+                            - generic: Fn keys
+                            - generic: Stick modules
+                        - generic [ref=e138]:
+                            - heading "DualSense Edge" [level=3] [ref=e139]
+                            - paragraph [ref=e140]: PS5 pro controller
+                            - list [ref=e141]:
+                                - listitem [ref=e142]: ·Everything DualSense does
+                                - listitem [ref=e143]: ·Back paddles + Fn keys
+                                - listitem [ref=e144]: ·Trigger stops
+                                - listitem [ref=e145]: ·Swappable stick modules
+                    - 'article "DualShock 4: Lightbar colour + flash, Touchpad, gyro, accel, Rumble, USB, Bluetooth or dongle" [ref=e147]':
+                        - generic [ref=e148]:
+                            - generic: Lightbar
+                            - generic: Touchpad
+                            - generic: Share / Options
+                        - generic [ref=e150]:
+                            - heading "DualShock 4" [level=3] [ref=e151]
+                            - paragraph [ref=e152]: PS4 wireless controller
+                            - list [ref=e153]:
+                                - listitem [ref=e154]: ·Lightbar colour + flash
+                                - listitem [ref=e155]: ·Touchpad, gyro, accel
+                                - listitem [ref=e156]: ·Rumble
+                                - listitem [ref=e157]: ·USB, Bluetooth or dongle
+            - region [ref=e158]:
+                - heading "Everything the app can test" [level=2] [ref=e159]
+                - generic [ref=e160]:
+                    - button "Sticks Drift, dead zone, circularity and resolution with a live trace." [ref=e161] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e162]: ◎
+                        - generic [ref=e163]: Sticks
+                        - generic [ref=e164]: Drift, dead zone, circularity and resolution with a live trace.
+                    - button "Triggers Travel curves, latency and adaptive-trigger effects." [ref=e165] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e166]: ⌒
+                        - generic [ref=e167]: Triggers
+                        - generic [ref=e168]: Travel curves, latency and adaptive-trigger effects.
+                    - button "Buttons Every input with chatter and stuck-button detection." [ref=e169] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e170]: ✕
+                        - generic [ref=e171]: Buttons
+                        - generic [ref=e172]: Every input with chatter and stuck-button detection.
+                    - button "Rumble Dual-rumble and trigger-rumble patterns, on demand." [ref=e173] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e174]: ∿
+                        - generic [ref=e175]: Rumble
+                        - generic [ref=e176]: Dual-rumble and trigger-rumble patterns, on demand.
+                    - button "Health check Six guided steps to a 0–100 score you can export." [ref=e177] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e178]: ✓
+                        - generic [ref=e179]: Health check
+                        - generic [ref=e180]: Six guided steps to a 0–100 score you can export.
+                    - 'button "Pro Mode WebHID: lightbar, LEDs, mic, touchpad, gyro, battery. No pad needed" [ref=e181] [cursor=pointer]':
+                        - generic [aria-hidden] [ref=e182]: ⚡
+                        - generic [ref=e183]: Pro Mode
+                        - generic [ref=e184]: 'WebHID: lightbar, LEDs, mic, touchpad, gyro, battery.'
+                        - generic [ref=e185]: No pad needed
+                    - button "Learn mapping Teach the app a pad without a standard layout." [ref=e186] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e187]: ⌘
+                        - generic [ref=e188]: Learn mapping
+                        - generic [ref=e189]: Teach the app a pad without a standard layout.
+                    - button "Report Your last health check as a shareable image. No pad needed" [ref=e190] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e191]: ▤
+                        - generic [ref=e192]: Report
+                        - generic [ref=e193]: Your last health check as a shareable image.
+                        - generic [ref=e194]: No pad needed
+        - contentinfo [ref=e195]:
+            - generic [ref=e196]: Everything runs in your browser; nothing is uploaded.
+            - link "GitHub" [ref=e197] [cursor=pointer]:
+                - /url: https://github.com/hammadxcm/playstation-controller-tester
+            - link "Licences" [ref=e198] [cursor=pointer]:
+                - /url: https://github.com/hammadxcm/playstation-controller-tester/blob/main/LICENSES.md

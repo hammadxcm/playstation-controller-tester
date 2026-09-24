@@ -455,6 +455,17 @@ html[data-dir='back']::view-transition-new(screen) {
   }
 }
 
+.version {
+  font-family: var(--mono);
+  color: inherit;
+  opacity: 0.8;
+  text-decoration: none;
+}
+.version:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 /* Accessibility helpers */
 .skip-link {
   position: absolute;

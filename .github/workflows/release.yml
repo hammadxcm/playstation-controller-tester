@@ -1,0 +1,40 @@
+name: Release
+# Tag-driven releases. Pushing `vX.Y.Z` checks the tag against package.json and CHANGELOG.md,
+# runs the full gate, builds, and publishes a GitHub Release whose notes are that version's changelog
+# section, with the built site attached. main keeps deploying continuously; tags mark milestones.
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with: { node-version: 22, cache: pnpm }
+      - name: Check tag matches package.json and CHANGELOG
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p "require('./package.json').version")"
+          [ "$tag" = "$pkg" ] || { echo "tag v$tag but package.json is $pkg"; exit 1; }
+          grep -q "^## \[$tag\] - " CHANGELOG.md || { echo "CHANGELOG.md has no '## [$tag] - YYYY-MM-DD' section"; exit 1; }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck && pnpm lint && pnpm test:coverage && pnpm build
+      - name: Extract release notes
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          awk -v v="$tag" '
+            $0 ~ "^## \\[" v "\\]" { on = 1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' > notes.md
+          printf '\n---\nLive: https://hammadxcm.github.io/playstation-controller-tester/\nFull changelog: https://github.com/%s/blob/%s/CHANGELOG.md\n' "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" >> notes.md
+          cat notes.md
+      - name: Package site
+        run: tar -czf "controller-tester-${GITHUB_REF_NAME}-site.tar.gz" -C dist .
+      - name: Publish GitHub Release
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: gh release create "$GITHUB_REF_NAME" --title "Controller Tester ${GITHUB_REF_NAME#v}" --notes-file notes.md --verify-tag "controller-tester-${GITHUB_REF_NAME}-site.tar.gz"

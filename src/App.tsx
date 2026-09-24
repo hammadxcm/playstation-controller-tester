@@ -149,7 +149,16 @@ export default function App() {
                 </Suspense>
               </m.div>
             </main>
-            <footer className="small dim">{t('shell.footer')}</footer>
+            <footer className="small dim">
+              {t('shell.footer')}{' '}
+              <a
+                className="version"
+                href="https://github.com/hammadxcm/playstation-controller-tester/blob/main/CHANGELOG.md"
+                rel="noopener"
+              >
+                v{__APP_VERSION__}
+              </a>
+            </footer>
           </m.div>
         )}
       </AnimatePresence>

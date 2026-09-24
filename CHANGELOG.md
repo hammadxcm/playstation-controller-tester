@@ -15,6 +15,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Nine languages (English, Spanish, Portuguese, French, German, Russian, Japanese, Chinese, Korean) for the landing page, app chrome, empty states and the connect flow, with a picker that persists and an `auto` mode that follows the browser; `<html lang>`, the title and the description follow along.
 - SEO and sharing: Open Graph and Twitter cards with a preview image, canonical URL, JSON-LD `WebApplication` data, a web manifest, `robots.txt` and a sitemap.
 - Accessibility: skip link, landmark `nav`/`main`, labelled language and theme controls, header cells in the support table, high-contrast and forced-colors fallbacks.
+- Release engineering: a CI workflow for pull requests and branches (gate plus Prettier check, build uploaded as an artifact), a tag-driven release workflow that publishes GitHub Releases with notes taken from this changelog and the built site attached, the version shown in the app footer, and [RELEASING.md](RELEASING.md) describing branching, versioning, cutting a release and rolling back.
 - `motion` (Motion for React) as the one animation dependency, loaded through `LazyMotion` with the small feature set and `reducedMotion="user"`; `?motion=reduce` reaches it too.
 
 ### Changed

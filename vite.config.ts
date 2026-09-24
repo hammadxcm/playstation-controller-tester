@@ -2,9 +2,15 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { fileURLToPath } from 'node:url'
+import { readFileSync } from 'node:fs'
+
+const { version } = JSON.parse(
+  readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
+) as { version: string }
 
 export default defineConfig({
   base: '/playstation-controller-tester/',
+  define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [react()],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   test: {
@@ -25,7 +31,8 @@ export default defineConfig({
         'src/features/wizard/steps.ts',
         'src/features/pro/triggerParams.ts',
         'src/features/landing/support.ts',
-        'src/features/landing/demoFrame.ts', 'src/i18n/index.ts',
+        'src/features/landing/demoFrame.ts',
+        'src/i18n/index.ts',
         'src/testing/**/*.ts',
       ],
       exclude: ['**/*.test.ts', 'src/state/hooks.ts', 'src/testing/mock.ts'],

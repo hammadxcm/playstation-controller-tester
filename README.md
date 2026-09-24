@@ -35,6 +35,7 @@ No install. No account. Nothing uploaded.
 - [Architecture](#architecture)
 - [Internationalisation](#internationalisation)
 - [Contributing](#contributing)
+- [Releases and versioning](#releases-and-versioning)
 - [Credits and inspiration](#credits-and-inspiration)
 - [License](#license)
 
@@ -192,7 +193,7 @@ Headless UI checks use a mock harness that exists only in dev builds; production
 | i18n    | `src/i18n`                     | Typed dictionaries, prefix-matched language negotiation, `{var}` interpolation. No dependency.                                                    |
 | Motion  | `src/lib/motion.ts` + `motion` | Shared reduced-motion source of truth, one rAF loop, Web Animations; Motion for React only for springs, presence and scroll values.               |
 
-Deployed to GitHub Pages by [`deploy.yml`](.github/workflows/deploy.yml) on every push to `main`, after typecheck, lint, the coverage gate and a build. Dependencies are pinned and updated by Dependabot; pnpm's release-age policy refuses packages younger than 24 hours.
+Deployed to GitHub Pages by [`deploy.yml`](.github/workflows/deploy.yml) on every push to `main`, after typecheck, lint, the coverage gate and a build. Pull requests run [`ci.yml`](.github/workflows/ci.yml) and get the build as a downloadable artifact; tags `vX.Y.Z` run [`release.yml`](.github/workflows/release.yml), which publishes a GitHub Release with notes from the changelog. See [RELEASING.md](RELEASING.md). Dependencies are pinned and updated by Dependabot; pnpm's release-age policy refuses packages younger than 24 hours.
 
 ## Internationalisation
 
@@ -201,6 +202,10 @@ The landing page, app chrome, empty states and both connect flows are available 
 ## Contributing
 
 Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, the test gate and how to verify changes with and without hardware, and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community expectations. Hardware problems have their own [issue template](https://github.com/hammadxcm/playstation-controller-tester/issues/new/choose) that asks for the Pro Mode console log. Changes are recorded in [CHANGELOG.md](CHANGELOG.md), which follows Keep a Changelog and semantic versioning.
+
+## Releases and versioning
+
+The project follows [Semantic Versioning](https://semver.org/) and [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Every version is a tag on `main`, a section in [CHANGELOG.md](CHANGELOG.md) and a [GitHub Release](https://github.com/hammadxcm/playstation-controller-tester/releases) with the built site attached; the running version is shown in the app footer. `main` deploys continuously; tags mark milestones. The process is in [RELEASING.md](RELEASING.md).
 
 ## Credits and inspiration
 

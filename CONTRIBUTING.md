@@ -20,7 +20,9 @@ Node 22 and pnpm 12 are what CI uses (`packageManager` in package.json picks the
    pnpm typecheck && pnpm lint && pnpm test:coverage && pnpm build
    ```
    Coverage is enforced at 100 % lines, branches, functions and statements on the logic layers (`src/core`, `src/state`, `src/lib`, the model rig, analysis and wizard steps). New logic needs tests; React screens are verified headlessly instead (see below).
-4. Fill in the pull request template, including how you verified the change.
+4. Fill in the pull request template, including how you verified the change. CI runs the same gate plus a Prettier check on the pull request and attaches the built site as an artifact.
+
+Releases are cut by maintainers from `main` by tag; see [RELEASING.md](RELEASING.md).
 
 ## Verifying UI without hardware
 
