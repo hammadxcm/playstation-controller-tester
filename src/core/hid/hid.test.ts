@@ -78,7 +78,7 @@ describe('DualSense output', () => {
     expect(p[2]).toBe(128)
     expect(p[3]).toBe(255)
     expect(p[10]).toBe(0x21)
-    expect(p[38] & 0b10).toBe(0b10)
+    expect(p[38]! & 0b10).toBe(0b10)
     expect(p[41]).toBe(2)
   })
 })

@@ -20,36 +20,36 @@ export function emptyOutput(): DualSenseOutput {
 export function encodeOutput(o: DualSenseOutput): Uint8Array {
   const p = new Uint8Array(SIZE.outputPayload)
   if (o.rumble) {
-    p[0] |= FLAG0.haptics | (o.vibrationV2 ? 0 : FLAG0.compatVibration)
-    if (o.vibrationV2) p[38] |= FLAG2.compatVibration2
+    p[0] = p[0]! | (FLAG0.haptics | (o.vibrationV2 ? 0 : FLAG0.compatVibration))
+    if (o.vibrationV2) p[38] = p[38]! | (FLAG2.compatVibration2)
     p[2] = Math.round(Math.max(0, Math.min(1, o.rumble.weak)) * 255)
     p[3] = Math.round(Math.max(0, Math.min(1, o.rumble.strong)) * 255)
   }
   if (o.trigger.right) {
-    p[0] |= FLAG0.rightTrigger
+    p[0] = p[0]! | (FLAG0.rightTrigger)
     p.set(o.trigger.right.subarray(0, 11), 10)
   }
   if (o.trigger.left) {
-    p[0] |= FLAG0.leftTrigger
+    p[0] = p[0]! | (FLAG0.leftTrigger)
     p.set(o.trigger.left.subarray(0, 11), 21)
   }
   if (o.micLed !== null) {
-    p[1] |= FLAG1.micLed
+    p[1] = p[1]! | (FLAG1.micLed)
     p[8] = o.micLed
   }
   if (o.lightbar) {
-    p[1] |= FLAG1.lightbar
+    p[1] = p[1]! | (FLAG1.lightbar)
     p[44] = o.lightbar[0]
     p[45] = o.lightbar[1]
     p[46] = o.lightbar[2]
   }
   if (o.playerLeds) {
-    p[1] |= FLAG1.playerLeds
+    p[1] = p[1]! | (FLAG1.playerLeds)
     p[42] = o.playerLeds.brightness
     p[43] = o.playerLeds.mask & 0x1f
   }
   if (o.lightbarSetup) {
-    p[38] |= FLAG2.lightbarSetup
+    p[38] = p[38]! | (FLAG2.lightbarSetup)
     p[41] = 0x02
   }
   return p
