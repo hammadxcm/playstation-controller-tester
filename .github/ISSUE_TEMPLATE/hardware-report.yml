@@ -1,0 +1,40 @@
+name: Hardware report
+description: Something in Pro Mode does not work with a real controller
+labels: [hardware]
+body:
+  - type: input
+    id: controller
+    attributes:
+      label: Controller
+      placeholder: DualSense (CFI-ZCT1W), firmware 2.21
+    validations:
+      required: true
+  - type: dropdown
+    id: transport
+    attributes:
+      label: Connection
+      options: [USB, Bluetooth]
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Browser and OS
+      placeholder: Chrome 131 on macOS 15.1
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What did you try and what happened?
+      description: Which control in Pro Mode, what the controller did, what the drawing showed.
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: HID console log
+      description: Pro Mode → Console tab → Copy. Paste the whole thing.
+      render: text
+    validations:
+      required: true

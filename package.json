@@ -1,8 +1,33 @@
 {
   "name": "playstation-controller-tester",
+  "version": "1.0.0",
+  "description": "Test PS5 DualSense, PS4 DualShock 4, Xbox and any gamepad in the browser: drift, circularity, rumble, adaptive triggers, lightbar, touchpad, gyro, audio.",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "license": "MIT",
+  "author": "Hammad Khan <hammadkhanxcm@gmail.com>",
+  "homepage": "https://hammadxcm.github.io/playstation-controller-tester/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hammadxcm/playstation-controller-tester.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hammadxcm/playstation-controller-tester/issues"
+  },
+  "keywords": [
+    "gamepad",
+    "dualsense",
+    "dualshock",
+    "xbox",
+    "webhid",
+    "controller-tester",
+    "stick-drift",
+    "adaptive-triggers"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.8.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

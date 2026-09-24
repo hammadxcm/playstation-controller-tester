@@ -1,8 +1,24 @@
 # Controller Tester
 
-Test PS5 DualSense / DualSense Edge, PS4 DualShock 4, Xbox and any other gamepad in the browser. No install, nothing uploaded.
+[![Deploy](https://github.com/hammadxcm/playstation-controller-tester/actions/workflows/deploy.yml/badge.svg)](https://github.com/hammadxcm/playstation-controller-tester/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Coverage gate](https://img.shields.io/badge/coverage-100%25%20gated-brightgreen.svg)](CONTRIBUTING.md)
+[![Live](https://img.shields.io/badge/live-github.io-2f7bff.svg)](https://hammadxcm.github.io/playstation-controller-tester/)
+
+Test PS5 DualSense / DualSense Edge, PS4 DualShock 4, Xbox and any other gamepad in the browser. No install, no account, nothing uploaded.
 
 **Live:** https://hammadxcm.github.io/playstation-controller-tester/
+
+## Contents
+
+- [What it does](#what-it-does)
+- [Browser support](#browser-support)
+- [Hardware test checklist](#hardware-test-checklist)
+- [Privacy](#privacy)
+- [Development](#development)
+- [Contributing](#contributing)
+- [Security](#security)
+- [License and credits](#license-and-credits)
 
 ## What it does
 
@@ -61,6 +77,10 @@ Open Pro Mode, add the controller, then for each item check the drawing reacts a
 
 Anything that fails: Console tab → Copy, and paste the log into an issue.
 
+## Privacy
+
+Everything runs in your browser. The page makes no requests after loading, has no analytics, and stores only your preferences and learned button layouts in `localStorage`. Pro Mode can only reach a controller you pick in the browser's device chooser, and controller data never leaves the page. Audio tests ask for microphone permission solely so device names become visible; the stream is released immediately.
+
 ## Development
 
 ```
@@ -85,6 +105,16 @@ Headless UI checks use a mock harness that never ships in the bundle:
 
 Layout: `src/core` is framework-free (Gamepad helpers, WebHID drivers with a fake device for tests, factory command protocol, USB audio graph, analysis); `src/features` holds one folder per screen; `src/features/model` is the rig that animates any drawing; `src/state` is a small zustand store. Hot-path frames never touch React state.
 
-## Credits
+## Contributing
 
-Controller drawings from [daidr/dualsense-tester](https://github.com/daidr/dualsense-tester) (MIT, © Xuezhou Dai); see `LICENSES.md`. Protocol references: Linux `hid-playstation`, SDL `SDL_hidapi_ps5/ps4`, Nielk1's TriggerEffectGenerator, nondebug/dualsense.
+Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, the test gate and how to verify changes with and without hardware, and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community expectations. Hardware problems have their own issue template that asks for the Pro Mode console log. Changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+
+## Security
+
+Please report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+## License and credits
+
+This project is released under the [MIT License](LICENSE).
+
+Controller drawings come from [daidr/dualsense-tester](https://github.com/daidr/dualsense-tester) (MIT, © Xuezhou Dai); third-party notices are in [LICENSES.md](LICENSES.md). Protocol references: Linux `hid-playstation`, SDL `SDL_hidapi_ps5/ps4`, Nielk1's TriggerEffectGenerator, nondebug/dualsense. "PlayStation", "DualSense", "DualShock" and "Xbox" are trademarks of their respective owners; this project is not affiliated with or endorsed by Sony Interactive Entertainment or Microsoft.
