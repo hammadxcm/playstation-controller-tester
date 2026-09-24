@@ -120,6 +120,9 @@ export const ko: Dict = {
     privacy: '모든 것이 브라우저에서 실행되며 아무것도 업로드되지 않습니다.',
     github: 'GitHub',
     licences: '라이선스',
+    portfolio: '포트폴리오',
+    site: '웹사이트',
+    by: '제작',
   },
   pro: {
     title: '프로 모드 (WebHID)',

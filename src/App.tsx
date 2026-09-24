@@ -4,7 +4,15 @@ import * as m from 'motion/react-m'
 import { identify } from '@/core/gamepad/identify'
 import { PROFILES } from '@/core/gamepad/profiles'
 import { Badge, Button, Card, Tabs } from '@/components/ui'
-import { Ambient, LangPicker, SkipLink, ThemeButton, TopBarMenu } from '@/components/Chrome'
+import {
+  Ambient,
+  LangPicker,
+  RepoLink,
+  SiteLinks,
+  SkipLink,
+  ThemeButton,
+  TopBarMenu,
+} from '@/components/Chrome'
 import { useDocumentLang } from '@/i18n/useT'
 import { useT } from '@/i18n/useT'
 import {
@@ -128,6 +136,7 @@ export default function App() {
                     {t('nav.home')}
                   </Button>
                 )}
+                <RepoLink />
                 <LangPicker />
                 <ThemeButton />
               </TopBarMenu>
@@ -158,6 +167,7 @@ export default function App() {
               >
                 v{__APP_VERSION__}
               </a>
+              <SiteLinks />
             </footer>
           </m.div>
         )}

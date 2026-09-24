@@ -126,6 +126,9 @@ export const en = {
     privacy: 'Everything runs in your browser; nothing is uploaded.',
     github: 'GitHub',
     licences: 'Licences',
+    portfolio: 'Portfolio',
+    site: 'Website',
+    by: 'Made by',
   },
   pro: {
     title: 'Pro Mode (WebHID)',

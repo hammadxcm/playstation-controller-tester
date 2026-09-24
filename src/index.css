@@ -466,6 +466,36 @@ html[data-dir='back']::view-transition-new(screen) {
   text-decoration: underline;
 }
 
+.repo-link {
+  text-decoration: none;
+  color: inherit;
+}
+.site-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: auto;
+}
+.site-links a {
+  color: inherit;
+  padding: 4px 0;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+}
+.app > footer.small {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .site-links {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
 /* Accessibility helpers */
 .skip-link {
   position: absolute;

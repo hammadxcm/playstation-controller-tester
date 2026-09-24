@@ -104,7 +104,14 @@ export const zh: Dict = {
     unmapped: '未映射',
     pro: '专业',
   },
-  footer: { privacy: '一切都在浏览器中运行，不上传任何数据。', github: 'GitHub', licences: '许可' },
+  footer: {
+    privacy: '一切都在浏览器中运行，不上传任何数据。',
+    github: 'GitHub',
+    licences: '许可',
+    portfolio: '作品集',
+    site: '网站',
+    by: '作者',
+  },
   pro: {
     title: '专业模式（WebHID）',
     body: '直接与手柄通信，触及 Gamepad API 无法到达的部分：自适应扳机、灯条、玩家指示灯、麦克风指示灯、触摸板、陀螺仪与加速度计、电量、固件和出厂数据。在 Chrome 和 Edge 中通过 USB 或蓝牙连接 DualSense、DualSense Edge 和 DualShock 4。',

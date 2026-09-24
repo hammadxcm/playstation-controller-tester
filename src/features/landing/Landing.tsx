@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui'
-import { LangPicker, ThemeButton, TopBarMenu } from '@/components/Chrome'
+import { LangPicker, REPO, RepoLink, SiteLinks, ThemeButton, TopBarMenu } from '@/components/Chrome'
 import { useT } from '@/i18n/useT'
 import type { Tab } from '@/features/screens'
 import { HeroArtwork } from './HeroArtwork'
@@ -26,6 +26,7 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
             <Button small onClick={() => onEnter('report')}>
               {t('nav.report')}
             </Button>
+            <RepoLink />
             <LangPicker />
             <ThemeButton />
           </TopBarMenu>
@@ -56,7 +57,7 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
       </main>
       <footer className="landing-footer small dim">
         <span>{t('footer.privacy')}</span>
-        <a href="https://github.com/hammadxcm/playstation-controller-tester" rel="noopener">
+        <a href={REPO} rel="noopener">
           {t('footer.github')}
         </a>
         <a
@@ -72,6 +73,7 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
         >
           v{__APP_VERSION__}
         </a>
+        <SiteLinks />
       </footer>
     </div>
   )

@@ -138,6 +138,9 @@ export const ru: Dict = {
     privacy: 'Всё работает в браузере; ничего не отправляется.',
     github: 'GitHub',
     licences: 'Лицензии',
+    portfolio: 'Портфолио',
+    site: 'Сайт',
+    by: 'Автор',
   },
   pro: {
     title: 'Pro-режим (WebHID)',

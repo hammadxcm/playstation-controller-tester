@@ -134,6 +134,9 @@ export const ja: Dict = {
     privacy: 'すべてブラウザ内で動作し、何も送信されません。',
     github: 'GitHub',
     licences: 'ライセンス',
+    portfolio: 'ポートフォリオ',
+    site: 'ウェブサイト',
+    by: '制作',
   },
   pro: {
     title: 'Pro モード（WebHID）',

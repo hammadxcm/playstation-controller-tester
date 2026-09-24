@@ -141,6 +141,9 @@ export const fr: Dict = {
     privacy: 'Tout s’exécute dans votre navigateur ; rien n’est envoyé.',
     github: 'GitHub',
     licences: 'Licences',
+    portfolio: 'Portfolio',
+    site: 'Site web',
+    by: 'Créé par',
   },
   pro: {
     title: 'Mode Pro (WebHID)',

@@ -133,6 +133,9 @@ export const de: Dict = {
     privacy: 'Alles läuft im Browser; nichts wird hochgeladen.',
     github: 'GitHub',
     licences: 'Lizenzen',
+    portfolio: 'Portfolio',
+    site: 'Website',
+    by: 'Erstellt von',
   },
   pro: {
     title: 'Pro-Modus (WebHID)',
