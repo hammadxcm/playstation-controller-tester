@@ -5,6 +5,9 @@ import type { Frame } from '@/core/gamepad/types'
 import type { HidState } from '@/core/hid/controller'
 import { useStore } from './store'
 
+// ponytail: one applyLayout per raw frame even with several subscribers
+const shaped = new WeakMap<Frame, Frame>()
+
 /** Hot path: called every animation frame with the active pad's frame (layout applied). Keep cb cheap. */
 export function useFrame(cb: (frame: Frame) => void): void {
   const active = useStore((s) => s.activeIndex)
@@ -15,10 +18,18 @@ export function useFrame(cb: (frame: Frame) => void): void {
     if (active === null) return
     return onFrames((frames) => {
       const f = frames.find((x) => x.index === active)
-      if (f) ref.current(applyLayout(f, layout))
+      if (!f) return
+      let out = shaped.get(f)
+      if (!out) {
+        out = applyLayout(f, layout)
+        shaped.set(f, out)
+      }
+      ref.current(out)
     })
   }, [active, layout])
 }
+
+export const useHidOutput = () => useStore((s) => s.hidOut)
 
 /** Raw frame without layout applied (for the learn wizard and raw views). */
 export function useRawFrame(cb: (frame: Frame) => void): void {

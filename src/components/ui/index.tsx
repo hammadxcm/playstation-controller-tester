@@ -43,9 +43,9 @@ export function Toggle({ label, checked, onChange }: { label: string; checked: b
   )
 }
 
-export function Metric({ label, value, tone }: { label: string; value: ReactNode; tone?: 'good' | 'ok' | 'bad' }) {
+export function Metric({ label, value, tone, large }: { label: string; value: ReactNode; tone?: 'good' | 'ok' | 'bad'; large?: boolean }) {
   return (
-    <div className="metric">
+    <div className={`metric ${large ? 'lg' : ''}`}>
       <span className="value" style={tone ? { color: `var(--${tone})` } : undefined}>{value}</span>
       <span className="label">{label}</span>
     </div>
@@ -53,13 +53,24 @@ export function Metric({ label, value, tone }: { label: string; value: ReactNode
 }
 
 export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: { id: T; label: string }[]; value: T; onChange: (id: T) => void }) {
+  const onKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+    const i = tabs.findIndex((t) => t.id === value)
+    const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]!
+    onChange(next.id)
+    ;(e.currentTarget.children[tabs.indexOf(next)] as HTMLElement | undefined)?.focus()
+    e.preventDefault()
+  }
   return (
-    <div className="tabs" role="tablist">
+    <div className="tabs" role="tablist" onKeyDown={onKey}>
       {tabs.map((t) => (
-        <button key={t.id} role="tab" aria-selected={t.id === value} className="tab" onClick={() => onChange(t.id)}>
-          {t.label}
+        <button key={t.id} id={`tab-${t.id}`} role="tab" aria-selected={t.id === value} aria-controls={`panel-${t.id}`} tabIndex={t.id === value ? 0 : -1} className="tab" onClick={() => onChange(t.id)}>
+          {t.id === value && <i className="tab-ink" style={{ viewTransitionName: 'tab-ink' }} aria-hidden />}
+          <span>{t.label}</span>
         </button>
       ))}
     </div>
   )
 }
+
+export { ProgressRing, type ProgressRingHandle } from './ProgressRing'

@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 import type { HidController } from '@/core/hid/controller'
 import { getLayout, type Layout } from '@/core/gamepad/mapping'
 import type { ScoreResult } from '@/core/analysis'
+import { EMPTY_OUTPUT, trackOutput, type HidOutput } from './hidOutput'
 
 export interface PadInfo {
   index: number
@@ -28,12 +29,14 @@ interface Store {
   activeIndex: number | null
   layout: Layout | undefined
   hid: HidController | null
+  hidOut: HidOutput
   report: WizardReport | null
   settings: Settings
   setPads(pads: PadInfo[]): void
   setActive(index: number): void
   refreshLayout(): void
   setHid(h: HidController | null): void
+  setHidOut(patch: Partial<HidOutput>): void
   setReport(r: WizardReport | null): void
   setSettings(s: Partial<Settings>): void
 }
@@ -45,6 +48,7 @@ export const useStore = create<Store>()(
       activeIndex: null,
       layout: undefined,
       hid: null,
+      hidOut: EMPTY_OUTPUT,
       report: null,
       settings: { deadzone: 0.05, trace: 'fade', theme: 'dark' },
       setPads(pads) {
@@ -60,7 +64,8 @@ export const useStore = create<Store>()(
         const pad = get().pads.find((p) => p.index === get().activeIndex)
         set({ layout: pad ? getLayout(pad.id) : undefined })
       },
-      setHid: (hid) => set({ hid }),
+      setHid: (hid) => set({ hid: hid ? trackOutput(hid, (p) => get().setHidOut(p), () => get().hidOut) : null, hidOut: EMPTY_OUTPUT }),
+      setHidOut: (patch) => set({ hidOut: { ...get().hidOut, ...patch } }),
       setReport: (report) => set({ report }),
       setSettings: (s) => set({ settings: { ...get().settings, ...s } }),
     }),

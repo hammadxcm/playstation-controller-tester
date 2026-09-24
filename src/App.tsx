@@ -3,6 +3,7 @@ import { identify } from '@/core/gamepad/identify'
 import { PROFILES } from '@/core/gamepad/profiles'
 import { Badge, Button, Card, Tabs } from '@/components/ui'
 import { usePadRegistry } from '@/state/hooks'
+import { transition } from '@/lib/viewTransition'
 import { useActivePad, useStore } from '@/state/store'
 import { Overview } from '@/features/overview/Overview'
 import { Sticks } from '@/features/sticks/Sticks'
@@ -63,8 +64,13 @@ export default function App() {
   const profile = pad ? identify(pad.id) : null
   const Screen = SCREENS[tab]
   const needsPad = tab !== 'pro' && tab !== 'report'
+  const go = (next: Tab) => {
+    if (next === tab) return
+    const dir = TABS.findIndex((t) => t.id === next) > TABS.findIndex((t) => t.id === tab) ? 'fwd' : 'back'
+    void transition(() => setTab(next), dir)
+  }
   return (
-    <div className="app">
+    <div className="app" data-family={profile?.family ?? (hid ? hid.family : undefined)}>
       <header className="header">
         <h1>Controller Tester</h1>
         {profile && <Badge tone="accent">{PROFILES[profile.family].label}</Badge>}
@@ -78,8 +84,10 @@ export default function App() {
         )}
         <Button small onClick={() => setSettings({ theme: theme === 'dark' ? 'light' : 'dark' })} aria-label="Toggle theme">{theme === 'dark' ? '☀︎' : '☾'}</Button>
       </header>
-      <Tabs tabs={[...TABS]} value={tab} onChange={setTab} />
-      {needsPad && !pad ? <Empty /> : <Screen />}
+      <Tabs tabs={[...TABS]} value={tab} onChange={go} />
+      <main key={tab} id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="screen" style={{ viewTransitionName: 'screen' }}>
+        {needsPad && !pad ? <Empty /> : <Screen />}
+      </main>
       <footer className="small dim">Everything runs in your browser; nothing is uploaded. Report-rate and latency figures are what the browser observes, not what the hardware sends.</footer>
     </div>
   )
