@@ -124,6 +124,8 @@ Xbox models: One S (all Bluetooth firmware revisions), Series X|S, Elite Series 
 
 Report-rate and latency figures are what the browser observes, not what the hardware sends. If Pro Mode finds nothing, close Steam, PS Remote Play, DS4Windows or reWASD: they take the HID reports first.
 
+Pro Mode sends every output report at exactly the length the pad's HID descriptor declares (DualSense 47 bytes over USB and 77 over Bluetooth, DualShock 4 31 / 77, Xbox 8), because Chromium refuses longer writes on every OS. On Linux, Chrome opens `/dev/hidraw*` directly, so the chooser can list a pad that then fails with "Failed to open the device": give your user access with a udev rule such as `KERNEL=="hidraw*", ATTRS{idVendor}=="054c", TAG+="uaccess"` (and `045e` for Xbox), reload with `sudo udevadm control --reload && sudo udevadm trigger`, and re-plug the pad. Distributions that ship the Steam udev rules already cover Sony pads.
+
 ## Quick start
 
 **Use it:** open **https://dualsense.fyniti.co.uk/**, plug in or pair a controller, press any button.

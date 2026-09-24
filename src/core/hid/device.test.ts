@@ -82,7 +82,7 @@ describe('DualSense over USB', () => {
     expect(fake.sent.length).toBe(1)
     const init = fake.sent[0]!
     expect(init.id).toBe(0x02)
-    expect(init.data.length).toBe(62)
+    expect(init.data.length).toBe(47)
     expect(init.data[0]).toBe(0xff) // every flag0 path enabled
     expect(init.data[1]! & 0b10111).toBe(0b10111) // mic LED, power save, lightbar, player LEDs
     expect(init.data[38]! & 0b10).toBe(0b10)

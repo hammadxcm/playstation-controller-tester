@@ -7,7 +7,12 @@ export const REPORT = {
   featFirmware: 0x20,
 } as const
 
-export const SIZE = { state: 63, outputPayload: 47, outputUsb: 62, outputBt: 77 } as const
+/**
+ * USB output report 0x02 is 48 bytes on the wire (id + 47): that is what the descriptor declares and what
+ * macOS enforces (MaxOutputReportSize = 48). The Linux driver's 63-byte struct pads with reserved bytes
+ * that the descriptor never mentions; sending them makes IOKit refuse the write.
+ */
+export const SIZE = { state: 63, outputPayload: 47, outputUsb: 47, outputBt: 77 } as const
 
 export const FLAG0 = {
   compatVibration: 1 << 0,

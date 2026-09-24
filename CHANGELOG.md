@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Fixed
+
+- DualSense over USB never finished pairing in Pro Mode ("Failed to write the report"). The USB output report is 48 bytes on the wire (id + 47), which is what the descriptor declares and what macOS reports as the device's maximum; the app was sending 63, the Linux driver's struct size with padding the descriptor never mentions. Chromium refuses any output report longer than the descriptor's maximum on every operating system, so this affected macOS, Windows and Linux alike. DualSense USB frames are now 47 bytes; Bluetooth (77), DualShock 4 (31 / 77) and Xbox (8) were already within their limits.
+
 ### Changed
 
 - The site is now called **Deadzone**. The name replaces "Controller Tester" in the top bar, tab title, metadata, web manifest, README and release titles; the app's translations keep the brand untranslated. A gamepad mark (Iconoir, MIT) sits next to the wordmark in both top bars and replaces the old lightning-bolt favicon, following the light and dark themes. The share image is regenerated from the current landing page.
