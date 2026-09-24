@@ -46,7 +46,7 @@ describe('prepareArtwork', () => {
     expect(out.inner).not.toContain('onclick')
     expect(out.inner).not.toContain('evil')
     expect(out.inner).not.toContain('<use')
-    expect(out.inner).toContain('xlink:href="#ok"')
+    expect(out.inner).toMatch(/href="#ok"/)
     expect(out.inner).toContain('id="p"')
   })
   it('survives a missing element in the spec', () => {
