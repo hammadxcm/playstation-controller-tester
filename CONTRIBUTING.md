@@ -9,7 +9,7 @@ pnpm install
 pnpm dev        # http://localhost:5173/playstation-controller-tester/
 ```
 
-Node 22 and pnpm 10 are what CI uses. Chrome or Edge is needed for Pro Mode (WebHID); every other screen works in any modern browser.
+Node 22 and pnpm 12 are what CI uses (`packageManager` in package.json picks the exact version; `corepack enable` or `npx pnpm@12` both work). pnpm's release-age policy refuses packages published in the last 24 hours, so a brand-new release may need a day before it can be added. Chrome or Edge is needed for Pro Mode (WebHID); every other screen works in any modern browser.
 
 ## Workflow
 

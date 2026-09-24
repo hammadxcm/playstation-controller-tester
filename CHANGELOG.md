@@ -5,7 +5,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ## [Unreleased]
 
 ### Security
-- Pin every GitHub Action to a commit SHA; self-host fonts so visitors never contact Google; redact factory-command payloads (serial, Bluetooth address) from the HID console; ship the `?mock=` harness in dev builds only; add a Content-Security-Policy; namespace `localStorage` keys by deploy path (github.io projects share one origin); strip scripts, event handlers and external references from controller drawings before rendering.
+- Move to pnpm 12 with its minimum-release-age supply-chain policy (packages younger than 24 h are refused), TypeScript 7, and the latest major of every GitHub Action (checkout v7, setup-node v7, pnpm/action-setup v6, Pages artifact/deploy v5), all SHA-pinned; self-host fonts so visitors never contact Google; redact factory-command payloads (serial, Bluetooth address) from the HID console; ship the `?mock=` harness in dev builds only; add a Content-Security-Policy; namespace `localStorage` keys by deploy path (github.io projects share one origin); strip scripts, event handlers and external references from controller drawings before rendering.
 
 ## [1.0.0] - 2026-09-24
 
