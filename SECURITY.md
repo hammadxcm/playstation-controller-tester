@@ -4,6 +4,8 @@
 
 Controller Tester is a static site. It runs entirely in the browser, makes no network requests of its own after loading, stores only preferences and learned button layouts in `localStorage`, and never transmits controller data anywhere. Pro Mode talks to the controller through WebHID only after the user picks the device in the browser's own chooser.
 
+The HID console never records factory payloads (serial number, PCBA id, Bluetooth address); fonts and every other asset are served from the site itself, so no third party sees visitors' requests.
+
 Things we consider security-relevant:
 
 - Any way for a page to reach a controller without the browser's device prompt

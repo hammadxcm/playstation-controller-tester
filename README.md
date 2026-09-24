@@ -79,7 +79,7 @@ Anything that fails: Console tab → Copy, and paste the log into an issue.
 
 ## Privacy
 
-Everything runs in your browser. The page makes no requests after loading, has no analytics, and stores only your preferences and learned button layouts in `localStorage`. Pro Mode can only reach a controller you pick in the browser's device chooser, and controller data never leaves the page. Audio tests ask for microphone permission solely so device names become visible; the stream is released immediately.
+Everything runs in your browser. The page is fully self-hosted (fonts included), contacts no third party, has no analytics, and stores only your preferences and learned button layouts in `localStorage`. Pro Mode can only reach a controller you pick in the browser's device chooser, and controller data never leaves the page. Audio tests ask for microphone permission solely so device names become visible; the stream is released immediately.
 
 ## Development
 
@@ -91,7 +91,7 @@ pnpm test:coverage      # 100 % lines / branches / functions / statements enforc
 pnpm typecheck && pnpm lint && pnpm build
 ```
 
-Headless UI checks use a mock harness that never ships in the bundle:
+Headless UI checks use a mock harness that exists only in dev builds (`pnpm dev`); production bundles do not contain it:
 
 ```
 /?mock=dualsense&pose=all                       # families: dualsense dualshock4 xbox generic; poses: idle press-south sticks-diag triggers-half dpad-up all

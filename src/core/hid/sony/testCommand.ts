@@ -70,7 +70,8 @@ export function testCommand(t: CommandTarget, deviceId: number, actionId: number
         out.set(src.subarray(0, Math.max(0, remaining)), PAGE * page)
         page++
         if (status === STATUS.COMPLETE) {
-          t.log?.({ t: performance.now(), dir: 'feature-in', reportId: 0x81, bytes: out, note: `command ${deviceId}/${actionId}` })
+          // Factory replies carry serial numbers and the Bluetooth address; log the shape, never the bytes.
+          t.log?.({ t: performance.now(), dir: 'feature-in', reportId: 0x81, note: `command ${deviceId}/${actionId}: ${out.length} bytes (payload redacted, device identifiers)` })
           return out
         }
         continue

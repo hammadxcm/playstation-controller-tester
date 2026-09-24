@@ -34,7 +34,7 @@ body:
     id: console
     attributes:
       label: HID console log
-      description: Pro Mode → Console tab → Copy. Paste the whole thing.
+      description: Pro Mode → Console tab → Copy. Factory data (serial, Bluetooth address) is never written to the log, but please check the paste for anything you consider private.
       render: text
     validations:
       required: true

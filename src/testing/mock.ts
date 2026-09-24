@@ -1,5 +1,5 @@
 /**
- * Headless test harness. Loaded only with `?mock=<family>`; never part of the normal bundle.
+ * Headless test harness. Loaded only in dev builds (`pnpm dev`) with `?mock=<family>`; tree-shaken out of production.
  * Params: mock=dualsense|dualshock4|xbox|generic, pose=<name>, anim=1, hid=1, unmapped=1, theme=light,
  *         lb=rrggbb, leds=P1..P5|mask:N, mic=off|on|pulse, flash=on,off, trig=left:feedback
  */

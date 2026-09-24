@@ -4,6 +4,9 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Security
+- Pin every GitHub Action to a commit SHA; self-host fonts so visitors never contact Google; redact factory-command payloads (serial, Bluetooth address) from the HID console; ship the `?mock=` harness in dev builds only.
+
 ## [1.0.0] - 2026-09-24
 
 ### Added

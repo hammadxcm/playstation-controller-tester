@@ -24,7 +24,7 @@ Node 22 and pnpm 10 are what CI uses. Chrome or Edge is needed for Pro Mode (Web
 
 ## Verifying UI without hardware
 
-The app ships a mock harness that never enters the production bundle:
+Dev builds (`pnpm dev`) include a mock harness that is tree-shaken out of production:
 
 ```
 /?mock=dualsense&pose=all
