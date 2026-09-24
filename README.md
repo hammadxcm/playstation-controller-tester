@@ -18,6 +18,7 @@ Test PS5 DualSense / DualSense Edge, PS4 DualShock 4, Xbox and any other gamepad
 - [Development](#development)
 - [Contributing](#contributing)
 - [Security](#security)
+- [Credits and inspiration](#credits-and-inspiration)
 - [License and credits](#license-and-credits)
 
 ## What it does
@@ -119,6 +120,20 @@ Issues and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) fo
 ## Security
 
 Please report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+## Credits and inspiration
+
+This project stands on other people's work. Thank you to:
+
+- **[daidr/dualsense-tester](https://github.com/daidr/dualsense-tester)** by 戴兜 (Xuezhou Dai), live at [ds.daidr.me](https://ds.daidr.me). The idea of a browser-based DualSense, DualSense Edge and DualShock 4 tester over WebHID comes from here, and the accurate controller drawings used throughout this app are daidr's, under the MIT License.
+- **[nondebug/dualsense](https://github.com/nondebug/dualsense)**: the clearest public write-up of the DualSense HID report layout, used as the reference for input parsing and output framing.
+- **[Nielk1 (John Klein)](https://gist.github.com/Nielk1/6d54cc2c00d2201ccb8c2720ad7538db)**: TriggerEffectGenerator, the MIT-licensed factories for every DualSense adaptive-trigger effect. Our trigger effect bytes are a port of revision 6.
+- **Linux `hid-playstation`** by Roderick Colenbrander and the kernel community, and **SDL's `SDL_hidapi_ps5.c` / `SDL_hidapi_ps4.c`** by Sam Lantinga and contributors: the reference implementations for Bluetooth CRC framing, calibration and feature reports. Read, not copied.
+- **[nsfm/dualsense-ts](https://github.com/nsfm/dualsense-ts)**: a TypeScript-first DualSense interface that shaped how our controller API and capability flags are typed.
+- **[imtumbleweed/ps5.js](https://github.com/imtumbleweed/ps5.js)**: a vanilla JavaScript recreation of the PS5 home screen that informed the landing page's motion language (tile focus scale, soft halos, restrained ease-out timing).
+- **[Andy Merskin's parallax depth cards](https://codepen.io/andymerskin/full/XNMWvQ/)** and **[tilt.js](https://gijsroge.github.io/tilt.js/)** by Gijs Rogé: the pointer-tilt, layered-depth treatment behind the hero controller.
+
+If you recognise your work here and want the credit worded differently, open an issue.
 
 ## License and credits
 
