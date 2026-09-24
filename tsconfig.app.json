@@ -3,7 +3,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["vite/client", "w3c-web-hid"],
+    "types": ["vite/client", "w3c-web-hid", "node"],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",

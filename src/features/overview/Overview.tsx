@@ -3,12 +3,16 @@ import { PROFILES } from '@/core/gamepad/profiles'
 import { hapticCaps } from '@/core/gamepad/haptics'
 import { getGamepad } from '@/core/gamepad/poller'
 import { Badge, Card } from '@/components/ui'
-import { useActivePad } from '@/state/store'
+import { useActivePad, useStore } from '@/state/store'
+import { useState } from 'react'
+import { Toggle } from '@/components/ui'
 import { useSampled } from '@/state/hooks'
 import { ControllerModel } from '@/features/model/ControllerModel'
 
 export function Overview() {
   const pad = useActivePad()
+  const hid = useStore((s) => s.hid)
+  const [showValues, setShowValues] = useState(false)
   const gp = useSampled(() => (pad ? getGamepad(pad.index) : null), 2)
   if (!pad) return null
   const p = identify(pad.id)
@@ -16,8 +20,8 @@ export function Overview() {
   const isStd = pad.mapping === 'standard'
   return (
     <div className="grid-2">
-      <Card title="Live view">
-        <ControllerModel family={p.family} />
+      <Card title="Live view" right={(p.family === 'dualsense' || p.family === 'dualshock4') && <Toggle label="Show values" checked={showValues} onChange={setShowValues} />}>
+        <ControllerModel family={p.family} edge={!!hid?.caps.edge} showValues={showValues} />
         <p className="small muted">Press buttons and move sticks. Lightbar, player LEDs and mic light follow what Pro Mode sends.</p>
       </Card>
       <Card title="Device">

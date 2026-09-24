@@ -55,7 +55,8 @@ if (q.has('anim')) {
     })
   }, 4)
 }
-if (q.get('theme') === 'light') useStore.getState().setSettings({ theme: 'light' })
+const theme = q.get('theme')
+if (theme === 'light' || theme === 'dark') useStore.getState().setSettings({ theme })
 
 async function settle() {
   for (const a of document.getAnimations()) {

@@ -30,3 +30,32 @@
 .m-heat { opacity: 0; transition: opacity 220ms var(--ease); }
 .model[data-fx='trigger'] .m-trigger[data-fx='on'] .m-tbody { stroke: var(--accent); }
 :root[data-motion='reduce'] .model-parts *, :root[data-motion='reduce'] .m-mic { transition: none; animation: none; }
+
+/* ---- Artwork models (daidr's drawings) ---- */
+.model.art { --art-ink: rgba(255, 255, 255, 0.82); --art-soft: rgba(255, 255, 255, 0.5); }
+:root[data-theme='light'] .model.art { --art-ink: rgba(20, 24, 36, 0.85); --art-soft: rgba(20, 24, 36, 0.5); }
+.model.art .model-art, .model.art .model-overlay { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.model.art .model-overlay { pointer-events: none; }
+.model.art .model-loading { position: absolute; inset: 20%; border-radius: 40%; background: var(--bg-elev); opacity: 0.4; animation: soft-pulse 1.2s ease-in-out infinite; }
+.model-art * { transform-box: fill-box; transform-origin: center; }
+.m-line { fill: none; stroke: var(--art-ink); stroke-width: 2px; stroke-linecap: round; stroke-linejoin: round; transition: fill 180ms var(--ease), stroke 180ms var(--ease); }
+.m-icon { fill: none; stroke: var(--art-soft); stroke-width: 4px; stroke-linecap: round; }
+.m-icon-fill { fill: var(--art-soft); }
+.m-ps { fill: var(--art-soft); transition: fill 180ms var(--ease); }
+.m-ink { fill: var(--art-ink); transition: fill 180ms var(--ease); }
+.m-ink-soft { fill: var(--art-ink); fill-opacity: 0.3; }
+.m-cap { fill: var(--art-soft); fill-opacity: 0.45; }
+.m-active { fill: var(--accent); opacity: 0; transition: opacity 180ms var(--ease); }
+.m-active[data-on='true'] { opacity: 0.85; transition-duration: 60ms; }
+.art-stroke [data-on='true'] > .m-line, .art-stroke .m-line[data-on='true'], .art-stroke .m-ps[data-on='true'] { fill: color-mix(in srgb, var(--accent) 55%, transparent); stroke: var(--accent); transition-duration: 60ms; }
+.art-stroke [data-part='l2'], .art-stroke [data-part='r2'] { fill: var(--accent); fill-opacity: var(--v, 0); }
+.art-fill .m-active[data-part='l2'], .art-fill .m-active[data-part='r2'] { opacity: calc(var(--v, 0) * 0.85); }
+.art-stroke [data-part='ls'] .m-line[data-sub='cap'], .art-stroke [data-part='rs'] .m-line[data-sub='cap'] { fill: color-mix(in srgb, var(--art-ink) 12%, transparent); }
+.art-stroke [data-part='l3'][data-on='true'], .art-stroke [data-part='r3'][data-on='true'] { fill: color-mix(in srgb, var(--accent) 55%, transparent); stroke: var(--accent); }
+.art-fill .m-cap[data-on='true'] { fill: var(--accent); fill-opacity: 0.85; }
+.m-touch { opacity: 0; transition: opacity 120ms var(--ease); }
+.m-touch[data-on='true'] { opacity: 1; }
+.m-touch circle { fill: var(--accent); fill-opacity: 0.6; stroke: var(--accent); stroke-width: 2px; }
+.m-text { fill: var(--fg); font-family: var(--mono); user-select: none; }
+.m-dash { stroke: var(--art-soft); stroke-width: 2px; stroke-dasharray: 6 6; fill: none; }
+.model.art .m-lb-stroke { stroke-width: inherit; }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import type { HidController, HidState, MicLedMode } from '@/core/hid/controller'
 import { PLAYER_LED } from '@/core/hid/dualsense/output'
 import { reopenGranted, requestController, webHidSupported } from '@/core/hid/registry'
@@ -94,7 +94,7 @@ function Panel({ hid }: { hid: HidController }) {
         <Card title={hid.label} right={<Button small onClick={disconnect}>Disconnect</Button>}>
           <dl className="kv">
             <dt>Transport</dt><dd>{hid.transport === 'unknown' ? 'waiting for first report…' : hid.transport.toUpperCase()}</dd>
-            {Object.entries(info).filter(([k]) => k !== 'transport' && k !== 'product').map(([k, val]) => <><dt key={k}>{k}</dt><dd key={`${k}v`} className="mono">{val}</dd></>)}
+            {Object.entries(info).filter(([k]) => k !== 'transport' && k !== 'product').map(([k, val]) => <Fragment key={k}><dt>{k}</dt><dd className="mono">{val}</dd></Fragment>)}
             <dt>Report id</dt><dd className="mono">{v ? `0x${v.reportId.toString(16).padStart(2, '0')}` : '–'}</dd>
           </dl>
           {caps.battery && v && (

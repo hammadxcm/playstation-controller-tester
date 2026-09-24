@@ -6,17 +6,26 @@ import { Defs } from './defs'
 import { GEOMETRY } from './geometry'
 import { Parts } from './parts'
 import { useControllerRig } from './useControllerRig'
+import { ArtworkModel } from './ArtworkModel'
 import './model.css'
 
 const BODIES: Record<Family, () => React.JSX.Element> = { dualsense: DualSense, dualshock4: DualShock4, xbox: Xbox, generic: Generic }
 
-/** Realistic, animated controller. Body layer is static; parts layer is driven by the rig. */
-export function ControllerModel({ family, compact }: { family: Family; compact?: boolean }) {
+/** Sony families use the accurate line-art drawings; others use the generated parts model. */
+export function ControllerModel({ family, compact, edge, showValues }: { family: Family; compact?: boolean; edge?: boolean; showValues?: boolean }) {
+  if (family === 'dualsense' || family === 'dualshock4') {
+    return <ArtworkModel kind={family === 'dualshock4' ? 'dualshock4' : edge ? 'dualsenseEdge' : 'dualsense'} compact={compact} showValues={showValues} />
+  }
+  return <PartsModel family={family} compact={compact} />
+}
+
+/** Generated controller from geometry. Body layer is static; parts layer is driven by the rig. */
+export function PartsModel({ family, compact }: { family: Family; compact?: boolean }) {
   const wrapper = useRef<HTMLDivElement>(null)
   const parts = useRef<SVGSVGElement>(null)
   const g = GEOMETRY[family]
   const Body = BODIES[family]
-  useControllerRig(wrapper, parts, g)
+  useControllerRig(wrapper, { travel: 11, key: family })
   return (
     <div ref={wrapper} className={`model ${compact ? 'compact' : ''}`} data-family={family}>
       <div className="model-glow" />

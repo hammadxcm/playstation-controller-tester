@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { deleteLayout, emptyLayout, saveLayout, type Layout } from '@/core/gamepad/mapping'
 import { identify } from '@/core/gamepad/identify'
 import { PROFILES } from '@/core/gamepad/profiles'
@@ -68,8 +68,8 @@ export function Learn() {
       {existing && (
         <Card title="Current layout">
           <dl className="kv">
-            {STD_BUTTONS.map((b) => <><dt key={`${b}t`}>{labels[b]}</dt><dd key={`${b}d`} className="mono">{existing.buttons[b] >= 0 ? `button ${existing.buttons[b]}` : '–'}</dd></>)}
-            {STD_AXES.map((a) => <><dt key={`${a}t`}>{a}</dt><dd key={`${a}d`} className="mono">{existing.axes[a] >= 0 ? `axis ${existing.axes[a]}` : '–'}</dd></>)}
+            {STD_BUTTONS.map((b) => <Fragment key={b}><dt>{labels[b]}</dt><dd className="mono">{existing.buttons[b] >= 0 ? `button ${existing.buttons[b]}` : '–'}</dd></Fragment>)}
+            {STD_AXES.map((a) => <Fragment key={a}><dt>{a}</dt><dd className="mono">{existing.axes[a] >= 0 ? `axis ${existing.axes[a]}` : '–'}</dd></Fragment>)}
           </dl>
         </Card>
       )}

@@ -2,18 +2,23 @@ import { useEffect, useRef, type RefObject } from 'react'
 import { animate, onRaf, perf, reducedMotion, smooth } from '@/lib/motion'
 import { fx } from '@/state/fx'
 import { useFrame, useHidOutput } from '@/state/hooks'
-import type { ControllerGeometry } from './geometry'
 import { createRig } from './rig'
 
-const TRAVEL = 11
 const SHAKE = [[1, 0], [-1, 0.6], [0.4, -1], [-0.7, -0.3], [1, 0.5], [-0.5, 1], [0, -0.8], [0.8, 0.3], [-1, -0.5], [0.3, 1], [-0.4, -0.6], [0, 0]]
 
 function shakeFrames(amp: number, rot: number): Keyframe[] {
   return SHAKE.map(([x, y]) => ({ transform: `translate(${(x! * amp).toFixed(2)}px, ${(y! * amp).toFixed(2)}px) rotate(${(x! * rot).toFixed(2)}deg)` }))
 }
 
-/** Binds the pure rig to the DOM: frame diffs → attribute/var writes, hidOut → lightbar/LEDs, fx → shake. */
-export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, parts: RefObject<SVGSVGElement | null>, g: ControllerGeometry) {
+export interface RigOptions {
+  /** stick cap travel at full deflection, in the model's own units */
+  travel: number
+  /** re-collect nodes when this changes (e.g. artwork loaded) */
+  key?: unknown
+}
+
+/** Binds the pure rig to the DOM under `wrapper`: frame diffs → attribute/var writes, hidOut → lightbar/LEDs, fx → shake. */
+export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, { travel: TRAVEL, key }: RigOptions) {
   const nodes = useRef(new Map<string, Element>())
   const target = useRef({ l2: 0, r2: 0, lsx: 0, lsy: 0, rsx: 0, rsy: 0 })
   const cur = useRef({ l2: -1, r2: -1, lsx: 0, lsy: 0, rsx: 0, rsy: 0 })
@@ -21,22 +26,23 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, part
   const hidOut = useHidOutput()
 
   useEffect(() => {
+    const root = wrapper.current
     const m = new Map<string, Element>()
-    parts.current?.querySelectorAll('[data-part]').forEach((el) => m.set(el.getAttribute('data-part')!, el))
+    root?.querySelectorAll('[data-part]').forEach((el) => m.set(el.getAttribute('data-part')!, el))
     for (const s of ['ls', 'rs']) {
       const p = m.get(s)
       p?.querySelectorAll('[data-sub]').forEach((el) => m.set(`${s}:${el.getAttribute('data-sub')}`, el))
     }
-    parts.current?.querySelectorAll('.m-heat').forEach((el) => m.set(`heat:${el.getAttribute('data-heat')}`, el))
-    parts.current?.querySelectorAll('.m-led').forEach((el) => m.set(`led:${el.getAttribute('data-led')}`, el))
-    const mic = parts.current?.querySelector('.m-mic')
+    root?.querySelectorAll('.m-heat').forEach((el) => m.set(`heat:${el.getAttribute('data-heat')}`, el))
+    root?.querySelectorAll('.m-led').forEach((el) => m.set(`led:${el.getAttribute('data-led')}`, el))
+    const mic = root?.querySelector('.m-mic')
     if (mic) m.set('mic', mic)
-    const lb = parts.current?.querySelector('.m-lightbar')
+    const lb = root?.querySelector('.m-lightbar')
     if (lb) m.set('lightbar', lb)
     nodes.current = m
     rig.current = createRig()
     cur.current = { l2: -1, r2: -1, lsx: 0, lsy: 0, rsx: 0, rsy: 0 }
-  }, [g, parts])
+  }, [wrapper, key])
 
   useFrame((f) => {
     const t0 = performance.now()
@@ -88,7 +94,7 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, part
           }
         }
       }),
-    [],
+    [TRAVEL],
   )
 
   // Low-frequency: what Pro Mode told the pad → lightbar, LEDs, mic, trigger effect marker
@@ -119,7 +125,7 @@ export function useControllerRig(wrapper: RefObject<HTMLDivElement | null>, part
     }
     m.get('mic')?.setAttribute('data-mode', hidOut.micLed)
     for (const side of ['left', 'right'] as const) m.get(side === 'left' ? 'l2' : 'r2')?.setAttribute('data-fx', hidOut.trigger[side] !== 0x05 ? 'on' : 'off')
-  }, [hidOut])
+  }, [hidOut, key])
 
   // Transient: rumble → shake wrapper, heat grips, Xbox impulse rings
   useEffect(() => {
