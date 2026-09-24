@@ -2,7 +2,10 @@ import { useEffect, type ReactElement } from 'react'
 import { identify } from '@/core/gamepad/identify'
 import { PROFILES } from '@/core/gamepad/profiles'
 import { Badge, Button, Card, Tabs } from '@/components/ui'
-import { useHashTab, usePadRegistry, useResolvedTheme } from '@/state/hooks'
+import { useHashTab, useLandingVisible, usePadRegistry, useResolvedTheme } from '@/state/hooks'
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m'
+import { Landing } from '@/features/landing/Landing'
 import { applyTheme } from '@/lib/theme'
 import { transition } from '@/lib/viewTransition'
 import { useStore } from '@/state/store'
@@ -40,19 +43,13 @@ function Empty() {
         <span className="icon">🎮</span>
         <h2>Connect a controller and press any button</h2>
         <p className="muted">USB or Bluetooth. Browsers only reveal a gamepad after its first input. Pro Mode works without this step in Chrome and Edge.</p>
-        <table className="table" style={{ maxWidth: 560 }}>
-          <thead><tr><th></th><th>Chrome / Edge</th><th>Firefox</th><th>Safari</th></tr></thead>
-          <tbody>
-            <tr><td>Buttons, sticks, triggers</td><td>✓</td><td>✓</td><td>✓</td></tr>
-            <tr><td>Rumble</td><td>✓</td><td>partial</td><td>–</td></tr>
-            <tr><td>Trigger rumble (Xbox)</td><td>✓ Win/mac</td><td>–</td><td>–</td></tr>
-            <tr><td>Pro Mode (PS4/PS5 via WebHID)</td><td>✓ desktop</td><td>–</td><td>–</td></tr>
-          </tbody>
-        </table>
       </div>
     </Card>
   )
 }
+
+/** Landing ↔ shell crossfade. PS5-ish: short, ease-out, a hair of scale; reduced motion keeps only the fade. */
+const fade = { initial: { opacity: 0, scale: 0.985 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.985 }, transition: { duration: 0.42, ease: [0.33, 1, 0.68, 1] as const } }
 
 export default function App() {
   usePadRegistry()
@@ -63,6 +60,7 @@ export default function App() {
   const setSettings = useStore((s) => s.setSettings)
   const hid = useStore((s) => s.hid)
   const setEntered = useStore((s) => s.setEntered)
+  const landing = useLandingVisible()
   const [tab, setTab] = useHashTab<Tab>(TAB_IDS, 'overview')
   useEffect(() => applyTheme(theme), [theme])
   const profile = pad ? identify(pad.id) : null
@@ -75,26 +73,39 @@ export default function App() {
     const dir = TABS.findIndex((t) => t.id === next) > TABS.findIndex((t) => t.id === tab) ? 'fwd' : 'back'
     void transition(() => setTab(next), dir)
   }
+  const enter = (next: Tab) => {
+    setEntered(true)
+    setTab(next)
+  }
   return (
-    <div className="app" data-family={profile?.family ?? (hid ? hid.family : undefined)}>
-      <header className="header">
-        <h1>Controller Tester</h1>
-        {profile && <Badge tone="accent">{PROFILES[profile.family].label}</Badge>}
-        {pad && (pad.mapping === 'standard' ? <Badge tone="good">standard</Badge> : <Badge tone="ok">{pad.mapping || 'unmapped'}</Badge>)}
-        {hid && <Badge tone="good">Pro: {hid.label}</Badge>}
-        <span className="spacer" />
-        {pads.length > 1 && (
-          <select className="select" value={pad?.index ?? ''} onChange={(e) => setActive(Number(e.target.value))} aria-label="Active controller">
-            {pads.map((p) => <option key={p.index} value={p.index}>{p.index}: {identify(p.id).name}</option>)}
-          </select>
-        )}
-        <Button small onClick={() => setSettings({ theme: theme === 'dark' ? 'light' : 'dark' })} aria-label="Toggle theme">{theme === 'dark' ? '☀︎' : '☾'}</Button>
-      </header>
-      <Tabs tabs={[...TABS]} value={tab} onChange={go} />
-      <main key={tab} id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="screen" style={{ viewTransitionName: 'screen' }}>
-        {needsPad && !pad ? <Empty /> : <Screen />}
-      </main>
-      <footer className="small dim">Everything runs in your browser; nothing is uploaded. Report-rate and latency figures are what the browser observes, not what the hardware sends.</footer>
-    </div>
+    <AnimatePresence mode="wait" initial={false}>
+      {landing ? (
+        <m.div key="landing" {...fade}>
+          <Landing onEnter={enter} />
+        </m.div>
+      ) : (
+        <m.div key="shell" {...fade} className="app" data-family={profile?.family ?? (hid ? hid.family : undefined)}>
+          <header className="header">
+            <h1>Controller Tester</h1>
+            {profile && <Badge tone="accent">{PROFILES[profile.family].label}</Badge>}
+            {pad && (pad.mapping === 'standard' ? <Badge tone="good">standard</Badge> : <Badge tone="ok">{pad.mapping || 'unmapped'}</Badge>)}
+            {hid && <Badge tone="good">Pro: {hid.label}</Badge>}
+            <span className="spacer" />
+            {pads.length > 1 && (
+              <select className="select" value={pad?.index ?? ''} onChange={(e) => setActive(Number(e.target.value))} aria-label="Active controller">
+                {pads.map((p) => <option key={p.index} value={p.index}>{p.index}: {identify(p.id).name}</option>)}
+              </select>
+            )}
+            {!pad && !hid && <Button small onClick={() => setEntered(false)}>Home</Button>}
+            <Button small onClick={() => setSettings({ theme: theme === 'dark' ? 'light' : 'dark' })} aria-label="Toggle theme">{theme === 'dark' ? '☀︎' : '☾'}</Button>
+          </header>
+          <Tabs tabs={[...TABS]} value={tab} onChange={go} />
+          <main key={tab} id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="screen" style={{ viewTransitionName: 'screen' }}>
+            {needsPad && !pad ? <Empty /> : <Screen />}
+          </main>
+          <footer className="small dim">Everything runs in your browser; nothing is uploaded. Report-rate and latency figures are what the browser observes, not what the hardware sends.</footer>
+        </m.div>
+      )}
+    </AnimatePresence>
   )
 }

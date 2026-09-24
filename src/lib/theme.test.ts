@@ -30,7 +30,13 @@ describe('theme', () => {
   it('watches the media query and unsubscribes', () => {
     let listener: ((e: { matches: boolean }) => void) | null = null
     const remove = vi.fn()
-    vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener: (_: string, cb: (e: { matches: boolean }) => void) => { listener = cb }, removeEventListener: remove }))
+    vi.stubGlobal('matchMedia', () => ({
+      matches: false,
+      addEventListener: (_: string, cb: (e: { matches: boolean }) => void) => {
+        listener = cb
+      },
+      removeEventListener: remove,
+    }))
     const cb = vi.fn()
     const off = watchSystemTheme(cb)
     listener!({ matches: true })

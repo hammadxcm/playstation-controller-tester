@@ -11,7 +11,8 @@
   } catch {
     /* no storage: fall through to the OS preference */
   }
-  if (theme === 'system') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  if (theme === 'system')
+    theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   document.documentElement.dataset.theme = theme
   const meta = document.querySelector('meta[name="theme-color"]')
   if (meta) meta.content = theme === 'dark' ? '#0a0c11' : '#eef1f7'

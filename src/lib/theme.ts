@@ -6,9 +6,11 @@ export type Theme = 'light' | 'dark'
 export const THEME_COLOR: Record<Theme, string> = { dark: '#0a0c11', light: '#eef1f7' }
 const QUERY = '(prefers-color-scheme: dark)'
 
-export const resolveTheme = (s: ThemeSetting, prefersDark: boolean): Theme => (s === 'system' ? (prefersDark ? 'dark' : 'light') : s)
+export const resolveTheme = (s: ThemeSetting, prefersDark: boolean): Theme =>
+  s === 'system' ? (prefersDark ? 'dark' : 'light') : s
 
-export const prefersDark = (): boolean => typeof matchMedia === 'function' && matchMedia(QUERY).matches
+export const prefersDark = (): boolean =>
+  typeof matchMedia === 'function' && matchMedia(QUERY).matches
 
 export function applyTheme(t: Theme, doc: Document = document): void {
   doc.documentElement.dataset.theme = t

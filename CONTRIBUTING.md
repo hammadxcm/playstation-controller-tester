@@ -43,6 +43,7 @@ For anything touching `src/core/hid`, test on a real controller over USB and Blu
 - TypeScript strict, no `any`, `noUncheckedIndexedAccess` on.
 - Hot-path data (60–250 Hz frames, HID reports) is written to the DOM through refs and the shared frame loop, never React state.
 - No new runtime dependencies without a reason in the pull request; the bundle is deliberately small.
+- `motion` is the one animation dependency: spring-based pointer and scroll motion values, `AnimatePresence` exit transitions and a `reducedMotion="user"` switch that plain CSS/WAAPI cannot express without bespoke code. Import from `motion/react` and `motion/react-m` only, inside the `LazyMotion` boundary in `main.tsx`; never import `framer-motion` or the full `motion` component (it is 34 kB against ~20 kB for `m` + `domAnimation`).
 - Prettier formats, oxlint lints; both run in CI.
 
 ## Adding a controller family
