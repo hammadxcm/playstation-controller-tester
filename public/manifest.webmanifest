@@ -2,11 +2,9 @@
   "name": "Controller Tester",
   "short_name": "Controller Tester",
   "description": "Test PS5 DualSense, PS4 DualShock 4, Xbox and any gamepad in your browser.",
-  "start_url": "/playstation-controller-tester/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0c11",
   "theme_color": "#0a0c11",
-  "icons": [
-    { "src": "/playstation-controller-tester/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
-  ]
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
 }

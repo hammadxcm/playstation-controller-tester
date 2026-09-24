@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hammadxcm.github.io/playstation-controller-tester/sitemap.xml
+Sitemap: https://dualsense.fyniti.co.uk/sitemap.xml

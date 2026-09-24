@@ -9,7 +9,7 @@ const { version } = JSON.parse(
 ) as { version: string }
 
 export default defineConfig({
-  base: '/playstation-controller-tester/',
+  base: '/',
   define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [react()],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },

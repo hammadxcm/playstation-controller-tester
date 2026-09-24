@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- The site now lives at https://dualsense.fyniti.co.uk/ (GitHub Pages custom domain, served from the root path); the old github.io address redirects. Saved preferences are keyed by path, so they start fresh once.
+
 ## [1.1.0] - 2026-09-24
 
 ### Added

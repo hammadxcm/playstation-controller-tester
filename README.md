@@ -15,7 +15,7 @@ No install. No account. Nothing uploaded.
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-8a2be2.svg)](CONTRIBUTING.md)
 [![Languages](https://img.shields.io/badge/i18n-9%20languages-ff7a59.svg)](#internationalisation)
 
-**[Open the app](https://hammadxcm.github.io/playstation-controller-tester/)** · [Report a bug](https://github.com/hammadxcm/playstation-controller-tester/issues/new/choose) · [Changelog](CHANGELOG.md)
+**[Open the app](https://dualsense.fyniti.co.uk/)** · [Report a bug](https://github.com/hammadxcm/playstation-controller-tester/issues/new/choose) · [Changelog](CHANGELOG.md)
 
 <img src="docs/landing-dark.png" alt="Controller Tester landing page, dark theme, with a live DualSense render" width="880">
 
@@ -114,7 +114,7 @@ Report-rate and latency figures are what the browser observes, not what the hard
 
 ## Quick start
 
-**Use it:** open **https://hammadxcm.github.io/playstation-controller-tester/**, plug in or pair a controller, press any button.
+**Use it:** open **https://dualsense.fyniti.co.uk/**, plug in or pair a controller, press any button.
 
 **Run it locally:**
 
@@ -122,7 +122,7 @@ Report-rate and latency figures are what the browser observes, not what the hard
 git clone https://github.com/hammadxcm/playstation-controller-tester.git
 cd playstation-controller-tester
 pnpm install
-pnpm dev        # http://localhost:5173/playstation-controller-tester/
+pnpm dev        # http://localhost:5173/
 ```
 
 Node 22 and pnpm 12 (`corepack enable` picks the pinned version). Chrome or Edge is needed for Pro Mode; everything else works in any modern browser.
