@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-25
+
 ### Fixed
 
 - DualSense over USB never finished pairing in Pro Mode ("Failed to write the report"). The USB output report is 48 bytes on the wire (id + 47), which is what the descriptor declares and what macOS reports as the device's maximum; the app was sending 63, the Linux driver's struct size with padding the descriptor never mentions. Chromium refuses any output report longer than the descriptor's maximum on every operating system, so this affected macOS, Windows and Linux alike. DualSense USB frames are now 47 bytes; Bluetooth (77), DualShock 4 (31 / 77) and Xbox (8) were already within their limits.
@@ -71,7 +73,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 - Bluetooth transport detection and output framing for DualSense and DualShock 4; player-LED brightness flag; first lightbar colour being overridden by the boot-glow reset; overlapping output reports during slider drags.
 
-[Unreleased]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/hammadxcm/playstation-controller-tester/releases/tag/v1.0.0
