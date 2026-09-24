@@ -1,3 +1,6 @@
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { AnimatePresence } from 'motion/react'
+import * as m from 'motion/react-m'
 import { Button } from '@/components/ui'
 import { LANG_NAMES, LANGS, type LangSetting } from '@/i18n'
 import { useT } from '@/i18n/useT'
@@ -58,5 +61,80 @@ export function SkipLink() {
     <a className="skip-link" href="#content">
       {t('nav.skip')}
     </a>
+  )
+}
+
+const sheet = {
+  initial: { opacity: 0, y: -8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+  transition: { duration: 0.22, ease: [0.33, 1, 0.68, 1] as const },
+}
+
+/**
+ * Top-bar items: inline on wide screens, behind a hamburger in a slide-down sheet on phones.
+ * One set of children, no duplication: CSS switches the panel between `display: contents` and a sheet.
+ */
+export function TopBarMenu({ children }: { children: ReactNode }) {
+  const t = useT()
+  const [open, setOpen] = useState(false)
+  const id = useId()
+  const btn = useRef<HTMLButtonElement>(null)
+  const panel = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!open) return
+    panel.current?.querySelector<HTMLElement>('button, select, a')?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setOpen(false)
+      btn.current?.focus()
+    }
+    const onDown = (e: PointerEvent) => {
+      if (!panel.current?.contains(e.target as Node) && !btn.current?.contains(e.target as Node))
+        setOpen(false)
+    }
+    addEventListener('keydown', onKey)
+    addEventListener('pointerdown', onDown)
+    return () => {
+      removeEventListener('keydown', onKey)
+      removeEventListener('pointerdown', onDown)
+    }
+  }, [open])
+  return (
+    <>
+      <button
+        ref={btn}
+        type="button"
+        className="btn btn-sm menu-btn"
+        aria-expanded={open}
+        aria-controls={id}
+        aria-label={t('nav.menu')}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span className="menu-icon" data-open={open} aria-hidden>
+          <i />
+          <i />
+          <i />
+        </span>
+      </button>
+      {/* wide: always rendered inline; narrow: the sheet, animated */}
+      <div className="menu-inline">{children}</div>
+      <AnimatePresence>
+        {open && (
+          <m.div
+            key="sheet"
+            ref={panel}
+            id={id}
+            className="menu-sheet"
+            {...sheet}
+            onClick={(e) => {
+              if ((e.target as HTMLElement).closest('button:not([aria-haspopup])')) setOpen(false)
+            }}
+          >
+            {children}
+          </m.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }

@@ -4,7 +4,7 @@ import * as m from 'motion/react-m'
 import { identify } from '@/core/gamepad/identify'
 import { PROFILES } from '@/core/gamepad/profiles'
 import { Badge, Button, Card, Tabs } from '@/components/ui'
-import { Ambient, LangPicker, SkipLink, ThemeButton } from '@/components/Chrome'
+import { Ambient, LangPicker, SkipLink, ThemeButton, TopBarMenu } from '@/components/Chrome'
 import { useDocumentLang } from '@/i18n/useT'
 import { useT } from '@/i18n/useT'
 import {
@@ -108,27 +108,29 @@ export default function App() {
                 </Badge>
               )}
               <span className="spacer" />
-              {pads.length > 1 && (
-                <select
-                  className="select"
-                  value={pad?.index ?? ''}
-                  onChange={(e) => setActive(Number(e.target.value))}
-                  aria-label={t('nav.activePad')}
-                >
-                  {pads.map((p) => (
-                    <option key={p.index} value={p.index}>
-                      {p.index}: {identify(p.id).name}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {!pad && !hid && (
-                <Button small onClick={() => setEntered(false)}>
-                  {t('nav.home')}
-                </Button>
-              )}
-              <LangPicker />
-              <ThemeButton />
+              <TopBarMenu>
+                {pads.length > 1 && (
+                  <select
+                    className="select select-sm"
+                    value={pad?.index ?? ''}
+                    onChange={(e) => setActive(Number(e.target.value))}
+                    aria-label={t('nav.activePad')}
+                  >
+                    {pads.map((p) => (
+                      <option key={p.index} value={p.index}>
+                        {p.index}: {identify(p.id).name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {!pad && !hid && (
+                  <Button small onClick={() => setEntered(false)}>
+                    {t('nav.home')}
+                  </Button>
+                )}
+                <LangPicker />
+                <ThemeButton />
+              </TopBarMenu>
             </header>
             <nav aria-label={t('app.title')}>
               <Tabs tabs={tabs} value={tab} onChange={go} />

@@ -14,6 +14,7 @@ export const zh: Dict = {
     auto: '自动',
     activePad: '当前手柄',
     skip: '跳到内容',
+    menu: '菜单',
   },
   hero: {
     eyebrow: '免费 · 浏览器内运行 · 不上传任何数据',

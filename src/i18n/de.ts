@@ -14,6 +14,7 @@ export const de: Dict = {
     auto: 'Automatisch',
     activePad: 'Aktiver Controller',
     skip: 'Zum Inhalt springen',
+    menu: 'Menü',
   },
   hero: {
     eyebrow: 'Kostenlos · im Browser · nichts wird hochgeladen',

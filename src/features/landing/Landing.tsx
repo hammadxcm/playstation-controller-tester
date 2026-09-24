@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui'
-import { LangPicker, ThemeButton } from '@/components/Chrome'
+import { LangPicker, ThemeButton, TopBarMenu } from '@/components/Chrome'
 import { useT } from '@/i18n/useT'
 import type { Tab } from '@/features/screens'
 import { HeroArtwork } from './HeroArtwork'
@@ -18,15 +18,17 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
       <header className="landing-nav topbar">
         <span className="brand">{t('app.title')}</span>
         <span className="spacer" />
-        <nav className="row" aria-label={t('app.title')}>
-          <Button small onClick={() => onEnter('pro')}>
-            {t('nav.proMode')}
-          </Button>
-          <Button small onClick={() => onEnter('report')}>
-            {t('nav.report')}
-          </Button>
-          <LangPicker />
-          <ThemeButton />
+        <nav aria-label={t('app.title')}>
+          <TopBarMenu>
+            <Button small onClick={() => onEnter('pro')}>
+              {t('nav.proMode')}
+            </Button>
+            <Button small onClick={() => onEnter('report')}>
+              {t('nav.report')}
+            </Button>
+            <LangPicker />
+            <ThemeButton />
+          </TopBarMenu>
         </nav>
       </header>
       <main id="content" className="landing-main">

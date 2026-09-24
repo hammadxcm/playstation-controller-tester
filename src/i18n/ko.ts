@@ -14,6 +14,7 @@ export const ko: Dict = {
     auto: '자동',
     activePad: '활성 컨트롤러',
     skip: '본문으로 건너뛰기',
+    menu: '메뉴',
   },
   hero: {
     eyebrow: '무료 · 브라우저에서 실행 · 업로드 없음',

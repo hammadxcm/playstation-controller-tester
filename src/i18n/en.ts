@@ -14,6 +14,7 @@ export const en = {
     auto: 'Auto',
     activePad: 'Active controller',
     skip: 'Skip to content',
+    menu: 'Menu',
   },
   hero: {
     eyebrow: 'Free · in-browser · nothing uploaded',

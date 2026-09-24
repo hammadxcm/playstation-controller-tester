@@ -14,6 +14,7 @@ export const ja: Dict = {
     auto: '自動',
     activePad: '使用中のコントローラー',
     skip: 'コンテンツへ移動',
+    menu: 'メニュー',
   },
   hero: {
     eyebrow: '無料 · ブラウザ内で完結 · データ送信なし',

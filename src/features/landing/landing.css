@@ -334,8 +334,6 @@
   will-change: auto;
 }
 
-@media (max-width: 480px) {
-  .landing-nav nav .btn:not([aria-label]) {
-    display: none;
-  }
+.landing-nav nav {
+  display: contents;
 }
