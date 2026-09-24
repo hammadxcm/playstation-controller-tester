@@ -1,4 +1,4 @@
-import type { HidCaps, HidController, HidState, MicLedMode } from '../controller'
+import type { AudioSettings, HidCaps, HidController, HidState, MicLedMode } from '../controller'
 import type { HidLogger } from '../log'
 import { parseCalibration, type Calibration } from '../sony/calibration'
 import { SonyDevice, type SonyIds } from '../sony/device'
@@ -126,6 +126,10 @@ export class DualSenseDevice extends SonyDevice implements HidController {
   }
   async setTrigger(side: 'left' | 'right', effect: Uint8Array): Promise<void> {
     this.out.trigger[side] = effect
+    await this.flush()
+  }
+  async setAudio(a: AudioSettings): Promise<void> {
+    this.out.audio = a
     await this.flush()
   }
   async info(): Promise<Record<string, string>> {

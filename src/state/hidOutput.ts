@@ -1,4 +1,4 @@
-import type { HidController, MicLedMode } from '@/core/hid/controller'
+import type { AudioSettings, HidController, MicLedMode } from '@/core/hid/controller'
 import { fx } from './fx'
 
 export type RGB = [number, number, number]
@@ -11,6 +11,7 @@ export interface HidOutput {
   micLed: MicLedMode
   trigger: { left: number; right: number } // effect mode byte, 0x05 = off
   rumble: { strong: number; weak: number }
+  audio: AudioSettings | null
 }
 
 export const EMPTY_OUTPUT: HidOutput = {
@@ -20,6 +21,7 @@ export const EMPTY_OUTPUT: HidOutput = {
   micLed: 'off',
   trigger: { left: 0x05, right: 0x05 },
   rumble: { strong: 0, weak: 0 },
+  audio: null,
 }
 
 /** Wrap a controller so every command is mirrored into `set` after the device accepted it. */
@@ -59,6 +61,7 @@ export function trackOutput(hid: HidController, set: (patch: Partial<HidOutput>)
       await hid.setTrigger(side, effect)
       set({ trigger: { ...get().trigger, [side]: effect[0] ?? 0x05 } })
     },
+    setAudio: hid.setAudio ? async (a) => { await hid.setAudio!(a); set({ audio: a }) } : undefined,
     info: () => hid.info(),
     factory: hid.factory ? () => hid.factory!() : undefined,
     close: () => hid.close(),

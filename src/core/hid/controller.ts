@@ -39,6 +39,13 @@ export interface HidState {
 }
 
 export type MicLedMode = 'off' | 'on' | 'pulse'
+export type AudioPath = 'headphones' | 'headphonesMono' | 'both' | 'speaker'
+export interface AudioSettings {
+  path: AudioPath
+  headphoneVolume: number
+  speakerVolume: number
+  micVolume: number
+}
 
 export interface HidController {
   readonly family: 'dualsense' | 'dualshock4'
@@ -54,6 +61,8 @@ export interface HidController {
   setMicLed(mode: MicLedMode): Promise<void>
   setTrigger(side: 'left' | 'right', effect: Uint8Array): Promise<void>
   info(): Promise<Record<string, string>>
+  /** USB sound-card routing and volumes (DualSense family) */
+  setAudio?(a: AudioSettings): Promise<void>
   /** factory data over the vendor command channel (DualSense family) */
   factory?(): Promise<Record<string, string | number | undefined>>
   close(): Promise<void>

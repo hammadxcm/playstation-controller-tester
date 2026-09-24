@@ -9,6 +9,7 @@ import { smooth, onRaf } from '@/lib/motion'
 import { useHidState, useSampled } from '@/state/hooks'
 import { useStore } from '@/state/store'
 import { build, defaults, PARAMS, type Mode } from './triggerParams'
+import { Audio } from './Audio'
 import './pro.css'
 
 const logTo = () => useStore.getState().pushHidLog
@@ -359,6 +360,7 @@ function Workspace({ hid }: { hid: HidController }) {
         </Card>
         {hid.caps.motion && <Motion hid={hid} />}
         <Output hid={hid} />
+        {hid.family === 'dualsense' && <Audio hid={hid} />}
       </section>
     </div>
   )

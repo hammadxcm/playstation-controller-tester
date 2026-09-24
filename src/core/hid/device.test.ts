@@ -146,6 +146,14 @@ describe('DualSense over USB', () => {
     expect(off[10]).toBe(0x05)
     expect(fake.opened).toBe(false)
   })
+  it('encodes audio routing and volumes', async () => {
+    const { fake, dev } = ds()
+    await dev.open()
+    await dev.setAudio({ path: 'speaker', headphoneVolume: 0, speakerVolume: 1, micVolume: 0.5 })
+    const p = fake.sent.at(-1)!.data
+    expect(p[0]! & 0xf0).toBe(0xf0)
+    expect([p[4], p[5], p[6], p[7]]).toEqual([0, 0x7f, 0x40, 0x30])
+  })
   it('reports Edge capability from the product id', () => {
     expect(ds({}, PID.dualsenseEdge).dev.caps.edge).toBe(true)
     expect(ds({}, PID.dualsenseEdge).dev.label).toBe('DualSense Edge')
