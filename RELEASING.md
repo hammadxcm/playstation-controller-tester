@@ -13,6 +13,8 @@ Pull requests and feature branches run [`ci.yml`](.github/workflows/ci.yml): the
 
 Trunk-based. Branch from `main`, open a pull request, squash or rebase-merge once CI is green. No long-lived release branches: a release is a tag on `main`.
 
+`main` is protected by a repository ruleset: no deletion, no force pushes, linear history, changes arrive through a pull request with every review thread resolved and the `gate` check green on the latest commit. Merge commits are disabled (squash or rebase only) and merged branches are deleted. Repository admins can bypass the pull-request requirement, which is what the release step below relies on; everyone else goes through a pull request. Tags matching `v*` are immutable: they can be created but not moved or deleted.
+
 ## Versioning
 
 [Semantic Versioning](https://semver.org/). For a site rather than a library, read it as:
