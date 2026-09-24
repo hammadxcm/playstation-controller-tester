@@ -34,13 +34,21 @@ Dev builds (`pnpm dev`) include a mock harness that is tree-shaken out of produc
 /?mock=xbox&theme=light&motion=reduce
 /?mock=none&theme=dark            # landing page
 /?mock=dualsense&hid=1&edge=1     # DualSense Edge mock
+/?mock=xbox&hid=1#pro             # Pro Mode with a mock Xbox pad (Bluetooth, impulse triggers)
 ```
 
 `window.__ct` exposes `pose()`, `fx`, `hid`, `settle()` and `stats()`. Screenshots of every screen for every family, both themes and both motion modes should show no console errors.
 
+Drive these checks with Playwright (the Playwright MCP tools or a script; `.playwright-mcp/` output is ignored). The Xbox work was verified this way and the same checks apply to any family:
+
+- Landing at 1280×800 and 390×844: the section renders, `document.documentElement.scrollWidth` equals `innerWidth`, no console errors.
+- Hover and keyboard focus on a showcase card set `data-hot="true"` and flip `data-on="true"` on the parts named in the card (Xbox: `l2`, `r2`, `home` and the `touchpad` slot that draws Share); leaving resets them.
+- Every language via `window.__ct.store.getState().setSettings({ lang })`: same heading, callout, fact and table-row counts, no raw `a.b.c` keys.
+- Pro Mode with the mock (`?mock=<family>&hid=1#pro`): the family badge, transport badge and battery show, Sony-only cards are absent for Xbox, and clicking the rumble buttons lands in `window.__ct.hid.out.rumble` with the expected `[strong, weak, left, right]`, then `[0, 0, 0, 0]` after the duration.
+
 ## Verifying with hardware
 
-For anything touching `src/core/hid`, test on a real controller over USB and Bluetooth and include the Pro Mode Console log (Console tab → Copy) in the pull request. The README's hardware checklist lists what to exercise.
+For anything touching `src/core/hid`, test on a real controller over USB and Bluetooth (Xbox: Bluetooth only, USB is GIP) and include the Pro Mode Console log (Console tab → Copy) in the pull request. The README's hardware checklist lists what to exercise. The Xbox driver reads its field layout from the report descriptor, so a wrong button on new firmware is a table edit in `src/core/hid/xbox/input.ts`; paste the Console's `open:` line (layout and report ids) and the raw report from _Show raw report_ with the issue.
 
 ## Code style
 
@@ -52,7 +60,7 @@ For anything touching `src/core/hid`, test on a real controller over USB and Blu
 
 ## README screenshots
 
-`docs/*.png` are 1280×800 (phones: 390×844) captures of the dev server with the mock harness (`?mock=none`, `?mock=dualsense&anim=1`, `?mock=dualsense&hid=1&…`). Retake them after visual changes so the README matches the app.
+`docs/*.png` are 1280×800 (phones: 390×844) captures of the dev server with the mock harness (`?mock=none`, `?mock=dualsense&anim=1`, `?mock=dualsense&hid=1&…`, `?mock=xbox&anim=1`, `?mock=xbox&hid=1#pro`). Retake them after visual changes so the README matches the app.
 
 ## Adding a language
 
@@ -60,7 +68,7 @@ Copy `src/i18n/en.ts` to `src/i18n/<code>.ts`, translate the values (keep the `{
 
 ## Adding a controller family
 
-1. Driver under `src/core/hid/<family>/` implementing `HidController`, built on `SonyDevice` if it is a Sony pad.
+1. Driver under `src/core/hid/<family>/` implementing `HidController`: built on `SonyDevice` for a Sony pad, or standalone like `src/core/hid/xbox/device.ts` (which reads fields from the report descriptor through `xbox/descriptor.ts`). Methods the pad lacks return `noop` and are switched off in `caps`.
 2. Register it in `src/core/hid/registry.ts`.
 3. Tests using `src/testing/fakeHidDevice.ts` for framing, transport detection and every output.
 4. Drawing: either an artwork spec in `src/features/model/artwork/specs.ts` (with a compatible license recorded in `LICENSES.md`) or geometry in `src/features/model/geometry.ts`.

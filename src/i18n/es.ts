@@ -2,8 +2,9 @@ import type { Dict } from './index'
 export const es: Dict = {
   app: {
     title: 'Controller Tester',
+    tabTitle: 'Controller Tester · ¿Tu mando está listo para GTA VI?',
     description:
-      'Prueba tu DualSense de PS5, DualShock 4 de PS4, Xbox o cualquier mando en el navegador: botones, deriva de sticks, circularidad, vibración, gatillos adaptativos, barra de luz, panel táctil y giroscopio.',
+      '¿Tu mando está listo para GTA VI? Prueba DualSense de PS5, DualShock 4, Xbox y cualquier mando en el navegador: deriva del stick, zonas muertas, botones, vibración, gatillos adaptativos, batería. Gratis, nada se sube.',
   },
   nav: {
     proMode: 'Modo Pro',
@@ -18,10 +19,11 @@ export const es: Dict = {
   },
   hero: {
     eyebrow: 'Gratis · en el navegador · nada se sube',
-    title: 'Cada botón, stick y gatillo. Probado en segundos.',
-    lead: 'Deriva, zonas muertas, circularidad, frecuencia de sondeo, vibración y gatillos adaptativos para DualSense, DualSense Edge, DualShock 4, Xbox y cualquier mando. Sin instalar nada, sin cuenta.',
+    title: '¿Tu mando está listo para GTA VI?',
+    lead: 'Detecta deriva, zonas muertas y botones gastados antes de que te cuesten una misión. Cada botón, stick y gatillo probado en segundos. DualSense, DualSense Edge, DualShock 4, Xbox y cualquier mando. Sin instalar nada, sin cuenta.',
     add: 'Añadir un dispositivo',
     pro: 'Abrir Modo Pro',
+    xbox: 'Mandos Xbox',
     art: 'Mando DualSense, demostración',
   },
   add: {
@@ -33,7 +35,7 @@ export const es: Dict = {
     noGamepad: '{engine} no tiene Gamepad API. Prueba Chrome, Edge, Firefox o Safari.',
     step2: 'Emparejar para el Modo Pro',
     step2Body:
-      'WebHID habla directamente con el mando: gatillos adaptativos, barra de luz, LED de jugador, LED del micrófono, panel táctil, giroscopio, batería y firmware. DualSense, DualSense Edge y DualShock 4.',
+      'WebHID habla directamente con el mando: gatillos adaptativos, barra de luz, LED de jugador, LED del micrófono, panel táctil, giroscopio, batería y firmware. DualSense, DualSense Edge y DualShock 4 por USB o Bluetooth; mandos Xbox por Bluetooth.',
     pair: 'Emparejar por USB o Bluetooth',
     pairing: 'Esperando el selector…',
     noWebHid: 'No disponible en {engine}. El Modo Pro necesita Chrome o Edge de escritorio.',
@@ -43,7 +45,7 @@ export const es: Dict = {
       buttons: 'Botones, sticks, gatillos',
       rumble: 'Vibración',
       triggerRumble: 'Vibración en gatillos (Xbox)',
-      pro: 'Modo Pro (PS4/PS5 vía WebHID)',
+      pro: 'Modo Pro (WebHID)',
       partial: 'parcial',
       winmac: 'Win/mac',
       desktop: 'escritorio',
@@ -86,6 +88,32 @@ export const es: Dict = {
       ],
     },
   },
+  xbox: {
+    title: 'Xbox también',
+    lead: 'Xbox One S, Series X|S, Elite Series 2 y Adaptive. Todas las pantallas funcionan con la Gamepad API; el Modo Pro lee el mando directamente por Bluetooth.',
+    name: 'Mando inalámbrico Xbox',
+    tagline: 'One S · Series X|S · Elite Series 2 · Adaptive',
+    callouts: ['Gatillos de impulso', 'Botón Xbox', 'Compartir', 'Palancas Elite 2'],
+    facts: [
+      'Gatillos de impulso: un motor en cada gatillo',
+      'Vibración por Bluetooth vía WebHID',
+      'Batería y estado de carga',
+      'Palancas y perfil del Elite 2',
+    ],
+    matrix: {
+      feature: 'Función',
+      gamepad: 'Gamepad API',
+      pro: 'Modo Pro (Bluetooth)',
+      buttons: 'Botones, sticks, gatillos',
+      triggerRumble: 'Gatillos de impulso',
+      battery: 'Batería',
+      paddles: 'Palancas y perfil del Elite 2',
+      raw: 'Informe HID en bruto',
+      chrome: 'Chrome / Edge',
+      hires: 'sticks de 16 bits',
+    },
+    note: 'Por USB un mando Xbox habla GIP, no HID, así que el Modo Pro necesita Bluetooth. Chrome o Edge en escritorio; en Windows el controlador de Xbox puede quedarse con el dispositivo.',
+  },
   tour: {
     title: 'Todo lo que la app puede probar',
     noPad: 'Sin mando',
@@ -108,7 +136,7 @@ export const es: Dict = {
     },
     pro: {
       title: 'Modo Pro',
-      blurb: 'WebHID: barra de luz, LED, micro, panel táctil, giroscopio, batería.',
+      blurb: 'WebHID: barra de luz, LED, micro, panel táctil, giroscopio, batería, vibración Xbox.',
     },
     learn: {
       title: 'Aprender mapeo',
@@ -147,9 +175,9 @@ export const es: Dict = {
   },
   pro: {
     title: 'Modo Pro (WebHID)',
-    body: 'Habla directamente con el mando para lo que la Gamepad API no alcanza: gatillos adaptativos, barra de luz, LED de jugador, LED del micro, panel táctil, giroscopio y acelerómetro, batería, firmware y datos de fábrica. DualSense, DualSense Edge y DualShock 4 por USB o Bluetooth en Chrome y Edge.',
+    body: 'Habla directamente con el mando para lo que la Gamepad API no alcanza: gatillos adaptativos, barra de luz, LED de jugador, LED del micro, panel táctil, giroscopio y acelerómetro, batería, firmware y datos de fábrica. DualSense, DualSense Edge y DualShock 4 por USB o Bluetooth, mandos Xbox por Bluetooth, en Chrome y Edge.',
     add: 'Añadir dispositivo',
-    hint: 'Si no aparece nada, cierra Steam, PS Remote Play, DS4Windows o reWASD: capturan los informes HID antes. Los mandos Bluetooth arrancan en modo reducido; la app los pasa a informes completos automáticamente.',
+    hint: 'Si no aparece nada, cierra Steam, PS Remote Play, DS4Windows, reWASD o la app Accesorios de Xbox: capturan los informes HID antes. Los mandos Bluetooth arrancan en modo reducido; la app los pasa a informes completos automáticamente.',
     noWebHid:
       'Este navegador no tiene WebHID. El Modo Pro necesita Chrome o Edge de escritorio. Todo lo demás funciona aquí.',
     noneSelected: 'No se seleccionó ningún mando.',

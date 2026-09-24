@@ -2,7 +2,7 @@
 
 # Controller Tester
 
-**Test any gamepad in your browser. PS5 DualSense and DualSense Edge, PS4 DualShock 4, Xbox, and everything else the Gamepad API can see.**
+**Is your controller GTA VI ready? Test any gamepad in your browser: PS5 DualSense and DualSense Edge, PS4 DualShock 4, Xbox, and everything else the Gamepad API can see.**
 
 No install. No account. Nothing uploaded.
 
@@ -41,14 +41,14 @@ No install. No account. Nothing uploaded.
 
 ## Highlights
 
-- **Every controller, every browser.** Live drawing of the pad (accurate DualSense, Edge and DualShock 4 outlines; drawn Xbox and generic models) with pressed buttons, stick travel, trigger fill, lightbar, player LEDs, mic light and touch points.
+- **Every controller, every browser.** Live drawing of the pad (accurate DualSense, Edge, DualShock 4 and Xbox Series line art; a generated model for generic pads) with pressed buttons, stick travel, trigger fill, impulse-trigger and grip glow on rumble, lightbar, player LEDs, mic light and touch points.
 - **Stick lab.** Glow trace, coverage ring, drift, circularity error, resolution bits, dead zone and fault badges.
 - **Trigger and button labs.** Animated lever gauges, press counts, hold time, chatter and stuck-button detection, raw axes.
 - **Rumble.** Dual-rumble and Xbox trigger-rumble with the model shaking.
 - **Health check.** Six guided steps to a 0–100 score with a grade and JSON / PNG export.
 - **Learn mapping.** Teach the app a pad the browser does not recognise.
-- **Pro Mode over WebHID** (desktop Chrome / Edge, USB or Bluetooth). Adaptive triggers with engaged read-back, lightbar and rainbow, player and mic LEDs, touchpad, calibrated gyro and accelerometer, battery, firmware and factory data, controller audio, several pads side by side, and a HID console that logs every report.
-- **PS5-style landing page.** Pointer-tilted hero render running an idle demo, an Add Device flow for both ways in, a showcase with hover callouts, and a tile for every screen. Crossfades into the app the moment a pad appears.
+- **Pro Mode over WebHID** (desktop Chrome / Edge, USB or Bluetooth). Adaptive triggers with engaged read-back, lightbar and rainbow, player and mic LEDs, touchpad, calibrated gyro and accelerometer, battery, firmware and factory data, controller audio, several pads side by side, and a HID console that logs every report. Xbox pads over Bluetooth: 16-bit sticks, battery, rumble with impulse triggers, Elite 2 paddles.
+- **PS5-style landing page.** Pointer-tilted hero render running an idle demo, an Add Device flow for both ways in, a showcase with hover callouts, an Xbox section with its own support matrix, and a tile for every screen. Crossfades into the app the moment a pad appears.
 - **Light and dark, reduced motion, nine languages, keyboard-first.** Theme follows the OS with no flash, motion respects your preference, and the whole page works from the keyboard.
 - **Private by construction.** Self-hosted fonts, a strict Content-Security-Policy, no analytics, no network calls after load.
 
@@ -71,6 +71,14 @@ No install. No account. Nothing uploaded.
     <td align="center"><img src="docs/pro-mode.png" alt="Pro Mode workspace with a mock DualSense over WebHID"><br><sub>Pro Mode: WebHID bench with touch points and show-values overlay</sub></td>
     <td align="center"><img src="docs/health-check.png" alt="Health check wizard"><br><sub>Health check: six steps to a score</sub></td>
   </tr>
+  <tr>
+    <td align="center"><img src="docs/xbox-section.png" alt="Xbox section on the landing page with the line-art drawing lit on hover and the support matrix"><br><sub>Xbox section: hover lights impulse triggers, Xbox button, Share and paddles</sub></td>
+    <td align="center"><img src="docs/overview-xbox.png" alt="Overview with the live Xbox drawing and the Show values overlay"><br><sub>Overview: live Xbox drawing with stick and trigger values</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/pro-xbox.png" alt="Pro Mode with a mock Xbox pad over WebHID"><br><sub>Pro Mode with an Xbox pad: raw input, battery, impulse-trigger rumble</sub></td>
+    <td align="center"><img src="docs/mobile-xbox.png" alt="Xbox section on a phone" width="45%"><br><sub>Phone: Xbox section</sub></td>
+  </tr>
 </table>
 
 <p align="center">
@@ -82,23 +90,25 @@ No install. No account. Nothing uploaded.
 
 ## Supported controllers
 
-Anything the browser exposes through the Gamepad API works on every screen except Pro Mode. Pro Mode talks to Sony pads directly over WebHID:
+Anything the browser exposes through the Gamepad API works on every screen except Pro Mode. Pro Mode talks to Sony pads (USB or Bluetooth) and Xbox pads (Bluetooth only: over USB they speak GIP, which is not HID) directly over WebHID:
 
-|                                                                                                 | DualSense / Edge | DualShock 4        |
-| ----------------------------------------------------------------------------------------------- | ---------------- | ------------------ |
-| Raw sticks, triggers, buttons, Edge Fn / paddles / profile                                      | ✓                | ✓ (no Edge fields) |
-| Touchpad (two fingers, on the drawing)                                                          | ✓                | ✓                  |
-| Gyro / accelerometer, factory calibration, 3D cube                                              | ✓                | ✓                  |
-| Battery, charging, USB / headset flags                                                          | ✓                | ✓                  |
-| Rumble over HID (works on Bluetooth)                                                            | ✓                | ✓                  |
-| Lightbar, rainbow effect                                                                        | ✓                | ✓ + flash          |
-| Player LEDs + brightness, mic LED                                                               | ✓                | –                  |
-| Adaptive triggers (feedback, weapon, vibration, bow, galloping, machine) with engaged read-back | ✓                | –                  |
-| Firmware / hardware version                                                                     | ✓                | –                  |
-| Factory data (serial, PCBA id, MCU id, BT address, battery voltage, touchpad firmware)          | ✓                | –                  |
-| Speaker / headphone tone and file playback, haptic channels, mic level meter (USB only)         | ✓                | –                  |
-| Several controllers at once, side-by-side compare                                               | ✓                | ✓                  |
-| HID console: every report sent / received with bytes and errors                                 | ✓                | ✓                  |
+|                                                                                                 | DualSense / Edge | DualShock 4        | Xbox (Bluetooth)                                            |
+| ----------------------------------------------------------------------------------------------- | ---------------- | ------------------ | ----------------------------------------------------------- |
+| Raw sticks, triggers, buttons, Edge Fn / paddles / profile                                      | ✓                | ✓ (no Edge fields) | ✓ 16-bit sticks, 10-bit triggers, Elite 2 paddles / profile |
+| Touchpad (two fingers, on the drawing)                                                          | ✓                | ✓                  | –                                                           |
+| Gyro / accelerometer, factory calibration, 3D cube                                              | ✓                | ✓                  | –                                                           |
+| Battery, charging, USB / headset flags                                                          | ✓                | ✓                  | ✓ four levels, charging, source                             |
+| Rumble over HID (works on Bluetooth)                                                            | ✓                | ✓                  | ✓ + impulse triggers                                        |
+| Lightbar, rainbow effect                                                                        | ✓                | ✓ + flash          | –                                                           |
+| Player LEDs + brightness, mic LED                                                               | ✓                | –                  | –                                                           |
+| Adaptive triggers (feedback, weapon, vibration, bow, galloping, machine) with engaged read-back | ✓                | –                  | –                                                           |
+| Firmware / hardware version                                                                     | ✓                | –                  | –                                                           |
+| Factory data (serial, PCBA id, MCU id, BT address, battery voltage, touchpad firmware)          | ✓                | –                  | –                                                           |
+| Speaker / headphone tone and file playback, haptic channels, mic level meter (USB only)         | ✓                | –                  | –                                                           |
+| Several controllers at once, side-by-side compare                                               | ✓                | ✓                  | ✓                                                           |
+| HID console: every report sent / received with bytes and errors                                 | ✓                | ✓                  | ✓                                                           |
+
+Xbox models: One S (all Bluetooth firmware revisions), Series X|S, Elite Series 2, Adaptive Controller. The driver reads the pad's HID report descriptor instead of fixed byte offsets, so the firmware variants (old 10-button layouts, the 5.x Linux-style layout, the Elite's duplicated fields) decode the same way. Windows may keep the Bluetooth interface for its own Xbox driver; macOS, Linux and ChromeOS hand it to Chrome.
 
 ## Browser support
 
@@ -107,7 +117,7 @@ Anything the browser exposes through the Gamepad API works on every screen excep
 | Gamepad API       | ✓                       | ✓              | ✓ (no timestamps) | ✓ (no vendor ids) |
 | dual-rumble       | ✓                       | ✓              | partial           | –                 |
 | trigger-rumble    | ✓ Win / macOS, Linux BT | –              | –                 | –                 |
-| Pro Mode (WebHID) | ✓                       | –              | –                 | –                 |
+| Pro Mode (WebHID) | ✓ (Xbox: Bluetooth)     | –              | –                 | –                 |
 | Controller audio  | ✓ (USB)                 | –              | –                 | –                 |
 
 Report-rate and latency figures are what the browser observes, not what the hardware sends. If Pro Mode finds nothing, close Steam, PS Remote Play, DS4Windows or reWASD: they take the HID reports first.
@@ -130,7 +140,7 @@ Node 22 and pnpm 12 (`corepack enable` picks the pinned version). Chrome or Edge
 ## How to use
 
 1. **Add a device.** The landing page listens for a controller. Plug in over USB or pair over Bluetooth, then press any button; browsers only reveal a gamepad after its first input. The page crossfades into the app.
-2. **Pair for Pro Mode.** In Chrome or Edge, choose _Pair over USB or Bluetooth_ on the landing (or _Add device_ in Pro Mode) and pick the pad in the browser's device chooser. Bluetooth pads start in a reduced report mode; the app switches them to full reports automatically.
+2. **Pair for Pro Mode.** In Chrome or Edge, choose _Pair over USB or Bluetooth_ on the landing (or _Add device_ in Pro Mode) and pick the pad in the browser's device chooser. Sony pads over Bluetooth start in a reduced report mode; the app switches them to full reports automatically. Xbox pads must be on Bluetooth: over USB they are not a HID device and will not appear in the chooser.
 3. **Pick a screen.** Overview, Sticks, Triggers, Buttons, Rumble, Health check, Pro Mode, Learn mapping and Report. `#pro` and `#report` are deep links that need no pad.
 4. **Theme and language** live in the top bar (a hamburger on phones). The theme follows your OS until you choose one; the language follows your browser until you choose one.
 
@@ -148,6 +158,8 @@ Open Pro Mode, add the controller, then for each item check the drawing reacts a
 6. Motion: cube follows tilt; gyro values are calibrated
 7. Battery and charging state match the OS; Factory tab reads serial and firmware
 8. Audio (USB): find the sound card, 440 Hz tone, file playback, haptic channels, mic meter
+
+Xbox pads (Bluetooth): the Console tab's first line reads `open: … layout=dense|sparse reports=[…]`; then check every button lights the right cell (Share and the Xbox button included), sticks read 0–255 with no jump at centre, triggers reach 255, rumble Strong / Weak / Play triggers / All four each move the right motors, and the battery percent changes when you plug the cable in. Elite Series 2: the four paddles light `p1`–`p4` and Profile follows the slider switch.
 
 Anything that fails: Console tab → Copy, and paste the log into an issue.
 
@@ -176,6 +188,7 @@ Headless UI checks use a mock harness that exists only in dev builds; production
 /?mock=xbox&theme=light&motion=reduce           # theme and reduced-motion overrides
 /?mock=none&theme=dark                          # landing page (no fake pad) with the same overrides
 /?mock=dualsense&hid=1&edge=1                   # mock WebHID pad reports as a DualSense Edge
+/?mock=xbox&hid=1#pro                           # Pro Mode with a mock Xbox pad (impulse-trigger rumble, battery)
 /#pro   /#report                                # deep links straight into a screen (no pad needed)
 ```
 
@@ -183,15 +196,15 @@ Headless UI checks use a mock harness that exists only in dev builds; production
 
 ## Architecture
 
-| Layer   | Path                           | Notes                                                                                                                                             |
-| ------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Core    | `src/core`                     | Framework-free: Gamepad helpers, WebHID drivers with a fake device for tests, factory command protocol, USB audio graph, analysis. 100 % covered. |
-| State   | `src/state`                    | A small zustand store plus hooks. Hot-path frames never touch React state.                                                                        |
-| Model   | `src/features/model`           | The rig that animates any drawing: pure frame diff → DOM attribute writes on one shared animation frame.                                          |
-| Screens | `src/features/*`               | One folder per screen, each its own lazy chunk.                                                                                                   |
-| Landing | `src/features/landing`         | Hero render layer, Add Device, showcase, feature tour.                                                                                            |
-| i18n    | `src/i18n`                     | Typed dictionaries, prefix-matched language negotiation, `{var}` interpolation. No dependency.                                                    |
-| Motion  | `src/lib/motion.ts` + `motion` | Shared reduced-motion source of truth, one rAF loop, Web Animations; Motion for React only for springs, presence and scroll values.               |
+| Layer   | Path                           | Notes                                                                                                                                                            |
+| ------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core    | `src/core`                     | Framework-free: Gamepad helpers, WebHID drivers with a fake device for tests, factory command protocol, USB audio graph, analysis. 100 % covered.                |
+| State   | `src/state`                    | A small zustand store plus hooks. Hot-path frames never touch React state.                                                                                       |
+| Model   | `src/features/model`           | The rig that animates any drawing: pure frame diff → DOM attribute writes on one shared animation frame. Line art for Sony and Xbox pads, geometry for the rest. |
+| Screens | `src/features/*`               | One folder per screen, each its own lazy chunk.                                                                                                                  |
+| Landing | `src/features/landing`         | Hero render layer, Add Device, showcase, feature tour.                                                                                                           |
+| i18n    | `src/i18n`                     | Typed dictionaries, prefix-matched language negotiation, `{var}` interpolation. No dependency.                                                                   |
+| Motion  | `src/lib/motion.ts` + `motion` | Shared reduced-motion source of truth, one rAF loop, Web Animations; Motion for React only for springs, presence and scroll values.                              |
 
 Deployed to GitHub Pages by [`deploy.yml`](.github/workflows/deploy.yml) on every push to `main`, after typecheck, lint, the coverage gate and a build. Pull requests run [`ci.yml`](.github/workflows/ci.yml) and get the build as a downloadable artifact; tags `vX.Y.Z` run [`release.yml`](.github/workflows/release.yml), which publishes a GitHub Release with notes from the changelog. See [RELEASING.md](RELEASING.md). Dependencies are pinned and updated by Dependabot; pnpm's release-age policy refuses packages younger than 24 hours.
 
@@ -218,6 +231,15 @@ This project stands on other people's work. Thank you to:
 - **[nsfm/dualsense-ts](https://github.com/nsfm/dualsense-ts)**: a TypeScript-first DualSense interface that shaped how our controller API and capability flags are typed.
 - **[imtumbleweed/ps5.js](https://github.com/imtumbleweed/ps5.js)**: a vanilla JavaScript recreation of the PS5 home screen that informed the landing page's motion language (tile focus scale, soft halos, restrained ease-out timing).
 - **[Andy Merskin's parallax depth cards](https://codepen.io/andymerskin/full/XNMWvQ/)** and **[tilt.js](https://gijsroge.github.io/tilt.js/)** by Gijs Rogé: the pointer-tilt, layered-depth treatment behind the hero controller.
+
+Xbox support leans on these references (read for byte meanings, not copied):
+
+- **[atar-axis/xpadneo](https://github.com/atar-axis/xpadneo)** by Florian Dollinger, Kai Krakow and contributors: the most complete public account of the Xbox Bluetooth HID protocol. Its `mappings.c`, `power.c`, `rumble.c` and `device.c` gave us the two button layouts, the battery byte, the rumble report and the per-firmware descriptor quirks.
+- **Chromium's gamepad service** (`device/gamepad/xbox_hid_controller.cc`, `gamepad_id_list.cc`, `gamepad_standard_mappings_mac.mm`) by the Chromium authors: the Bluetooth product-id list, the trigger-rumble report and how the browser's standard mapping places the Xbox and Share buttons.
+- **Linux `hid-microsoft`** by Andrey Smirnov and the kernel community: the original Xbox One S rumble packet with its 10 ms timing units.
+- **[SDL's `SDL_hidapi_xboxone.c`](https://github.com/libsdl-org/SDL)** by Sam Lantinga and contributors: Share-button and paddle handling across firmware revisions, and the 50 ms Bluetooth rumble cadence.
+- **[Microsoft Edge's Gamepad Trigger-Rumble explainer](https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/GamepadHapticsActuatorTriggerRumble/explainer.md)** and the [W3C Gamepad](https://w3c.github.io/gamepad/) editors: the `trigger-rumble` effect used on the Rumble screen.
+- **[icculus/ControllerImage](https://github.com/icculus/ControllerImage)** by Ryan C. Gordon, with art from Nicolae Berbece (Xelu), Paul Paun and Bekoha: checked as a public-domain art source; our Xbox drawing ended up original, but their button prompts were the reference for proportions.
 
 If you recognise your work here and want the credit worded differently, open an issue.
 

@@ -2,8 +2,9 @@ import type { Dict } from './index'
 export const fr: Dict = {
   app: {
     title: 'Controller Tester',
+    tabTitle: 'Controller Tester · Votre manette est-elle prête pour GTA VI ?',
     description:
-      'Testez la DualSense PS5, la DualShock 4 PS4, la manette Xbox ou n’importe quelle manette dans le navigateur : boutons, dérive des sticks, circularité, vibration, gâchettes adaptatives, barre lumineuse, pavé tactile, gyroscope.',
+      'Votre manette est-elle prête pour GTA VI ? Testez la DualSense PS5, la DualShock 4, les manettes Xbox et toute manette dans le navigateur : dérive des sticks, zones mortes, boutons, vibration, gâchettes adaptatives, batterie. Gratuit, rien n’est envoyé.',
   },
   nav: {
     proMode: 'Mode Pro',
@@ -18,10 +19,11 @@ export const fr: Dict = {
   },
   hero: {
     eyebrow: 'Gratuit · dans le navigateur · rien n’est envoyé',
-    title: 'Chaque bouton, stick et gâchette. Testés en quelques secondes.',
-    lead: 'Dérive, zones mortes, circularité, fréquence de lecture, vibration et gâchettes adaptatives pour DualSense, DualSense Edge, DualShock 4, Xbox et toute manette. Sans installation, sans compte.',
+    title: 'Votre manette est-elle prête pour GTA VI ?',
+    lead: 'Repérez la dérive, les zones mortes et les boutons usés avant qu’ils ne vous coûtent une mission. Chaque bouton, stick et gâchette testés en quelques secondes. DualSense, DualSense Edge, DualShock 4, Xbox et toute manette. Sans installation, sans compte.',
     add: 'Ajouter un appareil',
     pro: 'Ouvrir le Mode Pro',
+    xbox: 'Manettes Xbox',
     art: 'Manette DualSense, démonstration',
   },
   add: {
@@ -33,7 +35,7 @@ export const fr: Dict = {
     noGamepad: '{engine} n’a pas de Gamepad API. Essayez Chrome, Edge, Firefox ou Safari.',
     step2: 'Appairer pour le Mode Pro',
     step2Body:
-      'WebHID parle directement à la manette : gâchettes adaptatives, barre lumineuse, LED joueur, LED micro, pavé tactile, gyroscope, batterie et firmware. DualSense, DualSense Edge et DualShock 4.',
+      'WebHID parle directement à la manette : gâchettes adaptatives, barre lumineuse, LED joueur, LED micro, pavé tactile, gyroscope, batterie et firmware. DualSense, DualSense Edge et DualShock 4 en USB ou Bluetooth ; manettes Xbox en Bluetooth.',
     pair: 'Appairer en USB ou Bluetooth',
     pairing: 'En attente du sélecteur…',
     noWebHid: 'Indisponible dans {engine}. Le Mode Pro nécessite Chrome ou Edge sur ordinateur.',
@@ -43,7 +45,7 @@ export const fr: Dict = {
       buttons: 'Boutons, sticks, gâchettes',
       rumble: 'Vibration',
       triggerRumble: 'Vibration des gâchettes (Xbox)',
-      pro: 'Mode Pro (PS4/PS5 via WebHID)',
+      pro: 'Mode Pro (WebHID)',
       partial: 'partiel',
       winmac: 'Win/mac',
       desktop: 'ordinateur',
@@ -86,6 +88,32 @@ export const fr: Dict = {
       ],
     },
   },
+  xbox: {
+    title: 'Xbox aussi',
+    lead: 'Xbox One S, Series X|S, Elite Series 2 et Adaptive. Tous les écrans passent par la Gamepad API ; le Mode Pro lit la manette directement en Bluetooth.',
+    name: 'Manette sans fil Xbox',
+    tagline: 'One S · Series X|S · Elite Series 2 · Adaptive',
+    callouts: ['Gâchettes à impulsion', 'Bouton Xbox', 'Partager', 'Palettes Elite 2'],
+    facts: [
+      'Gâchettes à impulsion : un moteur dans chaque gâchette',
+      'Vibration en Bluetooth via WebHID',
+      'Batterie et état de charge',
+      'Palettes et profil de l’Elite 2',
+    ],
+    matrix: {
+      feature: 'Fonction',
+      gamepad: 'Gamepad API',
+      pro: 'Mode Pro (Bluetooth)',
+      buttons: 'Boutons, sticks, gâchettes',
+      triggerRumble: 'Gâchettes à impulsion',
+      battery: 'Batterie',
+      paddles: 'Palettes et profil de l’Elite 2',
+      raw: 'Rapport HID brut',
+      chrome: 'Chrome / Edge',
+      hires: 'sticks 16 bits',
+    },
+    note: 'En USB une manette Xbox parle GIP, pas HID : le Mode Pro exige donc le Bluetooth. Chrome ou Edge sur ordinateur ; sous Windows le pilote Xbox peut garder le périphérique pour lui.',
+  },
   tour: {
     title: 'Tout ce que l’app peut tester',
     noPad: 'Sans manette',
@@ -108,7 +136,8 @@ export const fr: Dict = {
     wizard: { title: 'Bilan', blurb: 'Six étapes guidées vers un score de 0 à 100 exportable.' },
     pro: {
       title: 'Mode Pro',
-      blurb: 'WebHID : barre lumineuse, LED, micro, pavé tactile, gyroscope, batterie.',
+      blurb:
+        'WebHID : barre lumineuse, LED, micro, pavé tactile, gyroscope, batterie, vibration Xbox.',
     },
     learn: {
       title: 'Apprendre le mappage',
@@ -147,9 +176,9 @@ export const fr: Dict = {
   },
   pro: {
     title: 'Mode Pro (WebHID)',
-    body: 'Parlez directement à la manette pour ce que la Gamepad API n’atteint pas : gâchettes adaptatives, barre lumineuse, LED joueur, LED micro, pavé tactile, gyroscope et accéléromètre, batterie, firmware et données d’usine. DualSense, DualSense Edge et DualShock 4 en USB ou Bluetooth dans Chrome et Edge.',
+    body: 'Parlez directement à la manette pour ce que la Gamepad API n’atteint pas : gâchettes adaptatives, barre lumineuse, LED joueur, LED micro, pavé tactile, gyroscope et accéléromètre, batterie, firmware et données d’usine. DualSense, DualSense Edge et DualShock 4 en USB ou Bluetooth, manettes Xbox en Bluetooth, dans Chrome et Edge.',
     add: 'Ajouter un appareil',
-    hint: 'Si rien n’apparaît, fermez Steam, PS Remote Play, DS4Windows ou reWASD : ils captent les rapports HID en premier. Les manettes Bluetooth démarrent en mode réduit ; l’app passe automatiquement aux rapports complets.',
+    hint: 'Si rien n’apparaît, fermez Steam, PS Remote Play, DS4Windows, reWASD ou l’app Accessoires Xbox : ils captent les rapports HID en premier. Les manettes Bluetooth démarrent en mode réduit ; l’app passe automatiquement aux rapports complets.',
     noWebHid:
       'Ce navigateur n’a pas WebHID. Le Mode Pro nécessite Chrome ou Edge sur ordinateur. Tout le reste fonctionne ici.',
     noneSelected: 'Aucune manette sélectionnée.',

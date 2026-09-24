@@ -2,8 +2,9 @@ import type { Dict } from './index'
 export const zh: Dict = {
   app: {
     title: 'Controller Tester',
+    tabTitle: 'Controller Tester · 你的手柄准备好迎接 GTA VI 了吗？',
     description:
-      '在浏览器中测试 PS5 DualSense、PS4 DualShock 4、Xbox 以及任何手柄：按键、摇杆漂移、圆度、震动、自适应扳机、灯条、触摸板、陀螺仪。',
+      '你的手柄准备好迎接 GTA VI 了吗？在浏览器中测试 PS5 DualSense、DualShock 4、Xbox 及任何手柄：摇杆漂移、死区、按键、震动、自适应扳机、电量。免费，不上传任何数据。',
   },
   nav: {
     proMode: '专业模式',
@@ -18,10 +19,11 @@ export const zh: Dict = {
   },
   hero: {
     eyebrow: '免费 · 浏览器内运行 · 不上传任何数据',
-    title: '每个按键、摇杆和扳机，几秒钟测完。',
-    lead: '为 DualSense、DualSense Edge、DualShock 4、Xbox 及任何手柄检测漂移、死区、圆度、轮询率、震动和自适应扳机。无需安装，无需账号。',
+    title: '你的手柄准备好迎接 GTA VI 了吗？',
+    lead: '在漂移、死区和磨损的按键让你搞砸任务之前，先把它们找出来。每个按键、摇杆和扳机几秒钟测完。支持 DualSense、DualSense Edge、DualShock 4、Xbox 及任何手柄。无需安装，无需账号。',
     add: '添加设备',
     pro: '打开专业模式',
+    xbox: 'Xbox 手柄',
     art: 'DualSense 手柄，演示',
   },
   add: {
@@ -33,7 +35,7 @@ export const zh: Dict = {
     noGamepad: '{engine} 没有 Gamepad API。请尝试 Chrome、Edge、Firefox 或 Safari。',
     step2: '为专业模式配对',
     step2Body:
-      'WebHID 直接与手柄通信：自适应扳机、灯条、玩家指示灯、麦克风指示灯、触摸板、陀螺仪、电量和固件。支持 DualSense、DualSense Edge 和 DualShock 4。',
+      'WebHID 直接与手柄通信：自适应扳机、灯条、玩家指示灯、麦克风指示灯、触摸板、陀螺仪、电量和固件。支持通过 USB 或蓝牙连接的 DualSense、DualSense Edge 和 DualShock 4，以及通过蓝牙连接的 Xbox 手柄。',
     pair: '通过 USB 或蓝牙配对',
     pairing: '正在等待选择…',
     noWebHid: '{engine} 不支持。专业模式需要桌面版 Chrome 或 Edge。',
@@ -43,7 +45,7 @@ export const zh: Dict = {
       buttons: '按键、摇杆、扳机',
       rumble: '震动',
       triggerRumble: '扳机震动（Xbox）',
-      pro: '专业模式（PS4/PS5，经 WebHID）',
+      pro: '专业模式（WebHID）',
       partial: '部分',
       winmac: 'Win/mac',
       desktop: '桌面版',
@@ -71,6 +73,32 @@ export const zh: Dict = {
       facts: ['灯条颜色与闪烁', '触摸板、陀螺仪、加速度计', '震动', 'USB、蓝牙或适配器'],
     },
   },
+  xbox: {
+    title: '也支持 Xbox',
+    lead: 'Xbox One S、Series X|S、Elite Series 2 和 Adaptive。所有页面通过 Gamepad API 工作；专业模式经蓝牙直接读取手柄。',
+    name: 'Xbox 无线手柄',
+    tagline: 'One S · Series X|S · Elite Series 2 · Adaptive',
+    callouts: ['脉冲扳机', 'Xbox 键', '分享', 'Elite 2 拨片'],
+    facts: [
+      '脉冲扳机：每个扳机内置马达',
+      '通过 WebHID 在蓝牙上震动',
+      '电量与充电状态',
+      'Elite 2 拨片与配置文件',
+    ],
+    matrix: {
+      feature: '功能',
+      gamepad: 'Gamepad API',
+      pro: '专业模式（蓝牙）',
+      buttons: '按键、摇杆、扳机',
+      triggerRumble: '脉冲扳机',
+      battery: '电量',
+      paddles: 'Elite 2 拨片、配置文件',
+      raw: '原始 HID 报告',
+      chrome: 'Chrome / Edge',
+      hires: '16 位摇杆',
+    },
+    note: 'Xbox 手柄通过 USB 使用 GIP 而非 HID，因此专业模式需要蓝牙。桌面版 Chrome 或 Edge；在 Windows 上 Xbox 驱动可能会独占设备。',
+  },
   tour: {
     title: '这个应用能测的一切',
     noPad: '无需手柄',
@@ -79,7 +107,10 @@ export const zh: Dict = {
     buttons: { title: '按键', blurb: '每个输入，含抖动和卡键检测。' },
     haptics: { title: '震动', blurb: '双马达与扳机震动模式，随时触发。' },
     wizard: { title: '健康检查', blurb: '六个引导步骤，得出可导出的 0–100 分。' },
-    pro: { title: '专业模式', blurb: 'WebHID：灯条、指示灯、麦克风、触摸板、陀螺仪、电量。' },
+    pro: {
+      title: '专业模式',
+      blurb: 'WebHID：灯条、指示灯、麦克风、触摸板、陀螺仪、电量、Xbox 震动。',
+    },
     learn: { title: '学习映射', blurb: '让应用学会没有标准布局的手柄。' },
     report: { title: '报告', blurb: '把上次健康检查导出为可分享的图片。' },
   },
@@ -114,9 +145,9 @@ export const zh: Dict = {
   },
   pro: {
     title: '专业模式（WebHID）',
-    body: '直接与手柄通信，触及 Gamepad API 无法到达的部分：自适应扳机、灯条、玩家指示灯、麦克风指示灯、触摸板、陀螺仪与加速度计、电量、固件和出厂数据。在 Chrome 和 Edge 中通过 USB 或蓝牙连接 DualSense、DualSense Edge 和 DualShock 4。',
+    body: '直接与手柄通信，触及 Gamepad API 无法到达的部分：自适应扳机、灯条、玩家指示灯、麦克风指示灯、触摸板、陀螺仪与加速度计、电量、固件和出厂数据。在 Chrome 和 Edge 中通过 USB 或蓝牙连接 DualSense、DualSense Edge 和 DualShock 4，通过蓝牙连接 Xbox 手柄。',
     add: '添加设备',
-    hint: '如果没有显示，请关闭 Steam、PS Remote Play、DS4Windows 或 reWASD：它们会先抢占 HID 报告。蓝牙手柄以精简模式启动，应用会自动切换为完整报告。',
+    hint: '如果没有显示，请关闭 Steam、PS Remote Play、DS4Windows、reWASD 或 Xbox 配件应用：它们会先抢占 HID 报告。蓝牙手柄以精简模式启动，应用会自动切换为完整报告。',
     noWebHid: '此浏览器没有 WebHID。专业模式需要桌面版 Chrome 或 Edge。其他标签页在这里仍可使用。',
     noneSelected: '未选择手柄。',
   },

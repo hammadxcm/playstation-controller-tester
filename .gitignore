@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 .gstack/
 coverage
+
+# Playwright MCP snapshots and screenshots
+.playwright-mcp/

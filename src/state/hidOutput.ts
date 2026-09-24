@@ -10,7 +10,7 @@ export interface HidOutput {
   playerLeds: { mask: number; brightness: 0 | 1 | 2 }
   micLed: MicLedMode
   trigger: { left: number; right: number } // effect mode byte, 0x05 = off
-  rumble: { strong: number; weak: number }
+  rumble: { strong: number; weak: number; left: number; right: number }
   audio: AudioSettings | null
 }
 
@@ -20,7 +20,7 @@ export const EMPTY_OUTPUT: HidOutput = {
   playerLeds: { mask: 0, brightness: 0 },
   micLed: 'off',
   trigger: { left: 0x05, right: 0x05 },
-  rumble: { strong: 0, weak: 0 },
+  rumble: { strong: 0, weak: 0, left: 0, right: 0 },
   audio: null,
 }
 
@@ -39,10 +39,11 @@ export function trackOutput(
       return hid.transport
     },
     subscribe: (cb) => hid.subscribe(cb),
-    async rumble(strong, weak) {
-      await hid.rumble(strong, weak)
-      set({ rumble: { strong, weak } })
-      if (strong || weak) fx.emit('rumble', { strong, weak, lt: 0, rt: 0, durationMs: 0 })
+    async rumble(strong, weak, left = 0, right = 0) {
+      await hid.rumble(strong, weak, left, right)
+      set({ rumble: { strong, weak, left, right } })
+      if (strong || weak || left || right)
+        fx.emit('rumble', { strong, weak, lt: left, rt: right, durationMs: 0 })
       else fx.emit('stop', undefined)
     },
     async setLightbar(rgb) {

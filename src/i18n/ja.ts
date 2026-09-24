@@ -2,8 +2,9 @@ import type { Dict } from './index'
 export const ja: Dict = {
   app: {
     title: 'Controller Tester',
+    tabTitle: 'Controller Tester · あなたのコントローラー、GTA VI の準備はできていますか？',
     description:
-      'PS5 DualSense、PS4 DualShock 4、Xbox などあらゆるゲームパッドをブラウザでテスト。ボタン、スティックのドリフト、円形精度、振動、アダプティブトリガー、ライトバー、タッチパッド、ジャイロ。',
+      'あなたのコントローラーは GTA VI の準備ができていますか？PS5 DualSense、DualShock 4、Xbox などあらゆるゲームパッドをブラウザでテスト：スティックのドリフト、デッドゾーン、ボタン、振動、アダプティブトリガー、バッテリー。無料、データ送信なし。',
   },
   nav: {
     proMode: 'Pro モード',
@@ -18,10 +19,11 @@ export const ja: Dict = {
   },
   hero: {
     eyebrow: '無料 · ブラウザ内で完結 · データ送信なし',
-    title: 'すべてのボタン、スティック、トリガーを数秒でテスト。',
-    lead: 'DualSense、DualSense Edge、DualShock 4、Xbox などあらゆるゲームパッドのドリフト、デッドゾーン、円形精度、ポーリングレート、振動、アダプティブトリガーを確認。インストールもアカウントも不要。',
+    title: 'あなたのコントローラー、GTA VI の準備はできていますか？',
+    lead: 'ミッションを落とす前に、ドリフト、デッドゾーン、摩耗したボタンを見つけましょう。すべてのボタン、スティック、トリガーを数秒でテスト。DualSense、DualSense Edge、DualShock 4、Xbox などあらゆるゲームパッドに対応。インストールもアカウントも不要。',
     add: 'デバイスを追加',
     pro: 'Pro モードを開く',
+    xbox: 'Xbox コントローラー',
     art: 'DualSense コントローラー、デモ',
   },
   add: {
@@ -34,7 +36,7 @@ export const ja: Dict = {
       '{engine} には Gamepad API がありません。Chrome、Edge、Firefox、Safari をお試しください。',
     step2: 'Pro モード用にペアリング',
     step2Body:
-      'WebHID はコントローラーと直接通信します。アダプティブトリガー、ライトバー、プレイヤー LED、マイク LED、タッチパッド、ジャイロ、バッテリー、ファームウェア。DualSense、DualSense Edge、DualShock 4 に対応。',
+      'WebHID はコントローラーと直接通信します。アダプティブトリガー、ライトバー、プレイヤー LED、マイク LED、タッチパッド、ジャイロ、バッテリー、ファームウェア。USB または Bluetooth 経由の DualSense、DualSense Edge、DualShock 4、Bluetooth 経由の Xbox パッドに対応。',
     pair: 'USB または Bluetooth でペアリング',
     pairing: '選択画面を待機中…',
     noWebHid:
@@ -45,7 +47,7 @@ export const ja: Dict = {
       buttons: 'ボタン、スティック、トリガー',
       rumble: '振動',
       triggerRumble: 'トリガー振動（Xbox）',
-      pro: 'Pro モード（WebHID 経由の PS4/PS5）',
+      pro: 'Pro モード（WebHID）',
       partial: '一部',
       winmac: 'Win/mac',
       desktop: 'デスクトップ',
@@ -88,6 +90,32 @@ export const ja: Dict = {
       ],
     },
   },
+  xbox: {
+    title: 'Xbox にも対応',
+    lead: 'Xbox One S、Series X|S、Elite Series 2、Adaptive。すべての画面が Gamepad API で動作し、Pro モードは Bluetooth 経由でパッドを直接読み取ります。',
+    name: 'Xbox ワイヤレス コントローラー',
+    tagline: 'One S · Series X|S · Elite Series 2 · Adaptive',
+    callouts: ['インパルストリガー', 'Xbox ボタン', 'シェア', 'Elite 2 のパドル'],
+    facts: [
+      'インパルストリガー：各トリガーにモーター',
+      'WebHID で Bluetooth 振動',
+      'バッテリーと充電状態',
+      'Elite 2 のパドルとプロファイル',
+    ],
+    matrix: {
+      feature: '機能',
+      gamepad: 'Gamepad API',
+      pro: 'Pro モード（Bluetooth）',
+      buttons: 'ボタン、スティック、トリガー',
+      triggerRumble: 'インパルストリガー',
+      battery: 'バッテリー',
+      paddles: 'Elite 2 のパドル、プロファイル',
+      raw: '生の HID レポート',
+      chrome: 'Chrome / Edge',
+      hires: '16 ビットスティック',
+    },
+    note: 'USB 接続の Xbox パッドは HID ではなく GIP で通信するため、Pro モードには Bluetooth が必要です。デスクトップの Chrome または Edge で利用可能。Windows では Xbox ドライバーがデバイスを占有する場合があります。',
+  },
   tour: {
     title: 'このアプリでテストできること',
     noPad: 'パッド不要',
@@ -104,7 +132,7 @@ export const ja: Dict = {
     },
     pro: {
       title: 'Pro モード',
-      blurb: 'WebHID：ライトバー、LED、マイク、タッチパッド、ジャイロ、バッテリー。',
+      blurb: 'WebHID：ライトバー、LED、マイク、タッチパッド、ジャイロ、バッテリー、Xbox の振動。',
     },
     learn: { title: 'マッピング学習', blurb: '標準レイアウトのないパッドをアプリに覚えさせます。' },
     report: { title: 'レポート', blurb: '最後のヘルスチェックを共有用画像に。' },
@@ -140,9 +168,9 @@ export const ja: Dict = {
   },
   pro: {
     title: 'Pro モード（WebHID）',
-    body: 'Gamepad API では届かない部分をコントローラーと直接やり取りします。アダプティブトリガー、ライトバー、プレイヤー LED、マイク LED、タッチパッド、ジャイロと加速度センサー、バッテリー、ファームウェア、工場データ。Chrome と Edge で USB または Bluetooth 経由の DualSense、DualSense Edge、DualShock 4 に対応。',
+    body: 'Gamepad API では届かない部分をコントローラーと直接やり取りします。アダプティブトリガー、ライトバー、プレイヤー LED、マイク LED、タッチパッド、ジャイロと加速度センサー、バッテリー、ファームウェア、工場データ。Chrome と Edge で USB または Bluetooth 経由の DualSense、DualSense Edge、DualShock 4、Bluetooth 経由の Xbox パッドに対応。',
     add: 'デバイスを追加',
-    hint: '何も表示されない場合は Steam、PS Remote Play、DS4Windows、reWASD を終了してください。これらが先に HID レポートを取得します。Bluetooth パッドは縮小モードで起動しますが、アプリが自動的にフルレポートへ切り替えます。',
+    hint: '何も表示されない場合は Steam、PS Remote Play、DS4Windows、reWASD、Xbox アクセサリー アプリを終了してください。これらが先に HID レポートを取得します。Bluetooth パッドは縮小モードで起動しますが、アプリが自動的にフルレポートへ切り替えます。',
     noWebHid:
       'このブラウザには WebHID がありません。Pro モードにはデスクトップ版 Chrome または Edge が必要です。他のタブはここでも動作します。',
     noneSelected: 'コントローラーが選択されていません。',

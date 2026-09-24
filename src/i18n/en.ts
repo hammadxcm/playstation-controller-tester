@@ -2,8 +2,9 @@
 export const en = {
   app: {
     title: 'Controller Tester',
+    tabTitle: 'Controller Tester · Is your controller GTA VI ready?',
     description:
-      'Test PS5 DualSense, PS4 DualShock 4, Xbox and any gamepad in your browser: buttons, stick drift, circularity, rumble, adaptive triggers, lightbar, touchpad, gyro.',
+      'Is your controller GTA VI ready? Test PS5 DualSense, DualShock 4, Xbox and any gamepad in your browser: stick drift, dead zones, buttons, rumble, adaptive triggers, battery. Free, nothing uploaded.',
   },
   nav: {
     proMode: 'Pro Mode',
@@ -18,10 +19,11 @@ export const en = {
   },
   hero: {
     eyebrow: 'Free · in-browser · nothing uploaded',
-    title: 'Every button, stick and trigger. Tested in seconds.',
-    lead: 'Drift, dead zones, circularity, polling rate, rumble and adaptive triggers for DualSense, DualSense Edge, DualShock 4, Xbox and any gamepad. No install, no account.',
+    title: 'Is your controller GTA VI ready?',
+    lead: 'Find drift, dead zones and worn buttons before they cost you a mission. Every button, stick and trigger tested in seconds. DualSense, DualSense Edge, DualShock 4, Xbox and any gamepad. No install, no account.',
     add: 'Add a device',
     pro: 'Open Pro Mode',
+    xbox: 'Xbox controllers',
     art: 'DualSense controller, demo',
   },
   add: {
@@ -33,7 +35,7 @@ export const en = {
     noGamepad: '{engine} has no Gamepad API. Try Chrome, Edge, Firefox or Safari.',
     step2: 'Pair for Pro Mode',
     step2Body:
-      'WebHID talks to the controller directly: adaptive triggers, lightbar, player LEDs, mic LED, touchpad, gyro, battery and firmware. DualSense, DualSense Edge and DualShock 4.',
+      'WebHID talks to the controller directly: adaptive triggers, lightbar, player LEDs, mic LED, touchpad, gyro, battery and firmware. DualSense, DualSense Edge and DualShock 4 over USB or Bluetooth; Xbox pads over Bluetooth.',
     pair: 'Pair over USB or Bluetooth',
     pairing: 'Waiting for the picker…',
     noWebHid: 'Not available in {engine}. Pro Mode needs Chrome or Edge on desktop.',
@@ -43,7 +45,7 @@ export const en = {
       buttons: 'Buttons, sticks, triggers',
       rumble: 'Rumble',
       triggerRumble: 'Trigger rumble (Xbox)',
-      pro: 'Pro Mode (PS4/PS5 via WebHID)',
+      pro: 'Pro Mode (WebHID)',
       partial: 'partial',
       winmac: 'Win/mac',
       desktop: 'desktop',
@@ -86,6 +88,32 @@ export const en = {
       ],
     },
   },
+  xbox: {
+    title: 'Xbox, too',
+    lead: 'Xbox One S, Series X|S, Elite Series 2 and Adaptive. Every screen works through the Gamepad API; Pro Mode reads the pad directly over Bluetooth.',
+    name: 'Xbox Wireless Controller',
+    tagline: 'One S · Series X|S · Elite Series 2 · Adaptive',
+    callouts: ['Impulse triggers', 'Xbox button', 'Share', 'Elite 2 paddles'],
+    facts: [
+      'Impulse triggers: a motor in each trigger',
+      'Rumble over Bluetooth via WebHID',
+      'Battery and charging state',
+      'Elite 2 paddles and profile',
+    ],
+    matrix: {
+      feature: 'Feature',
+      gamepad: 'Gamepad API',
+      pro: 'Pro Mode (Bluetooth)',
+      buttons: 'Buttons, sticks, triggers',
+      triggerRumble: 'Impulse triggers',
+      battery: 'Battery',
+      paddles: 'Elite 2 paddles, profile',
+      raw: 'Raw HID report',
+      chrome: 'Chrome / Edge',
+      hires: '16-bit sticks',
+    },
+    note: 'Over USB an Xbox pad speaks GIP, not HID, so Pro Mode needs Bluetooth. Chrome or Edge on desktop; on Windows the Xbox driver may keep the device for itself.',
+  },
   tour: {
     title: 'Everything the app can test',
     noPad: 'No pad needed',
@@ -97,7 +125,10 @@ export const en = {
     buttons: { title: 'Buttons', blurb: 'Every input with chatter and stuck-button detection.' },
     haptics: { title: 'Rumble', blurb: 'Dual-rumble and trigger-rumble patterns, on demand.' },
     wizard: { title: 'Health check', blurb: 'Six guided steps to a 0–100 score you can export.' },
-    pro: { title: 'Pro Mode', blurb: 'WebHID: lightbar, LEDs, mic, touchpad, gyro, battery.' },
+    pro: {
+      title: 'Pro Mode',
+      blurb: 'WebHID: lightbar, LEDs, mic, touchpad, gyro, battery, Xbox rumble.',
+    },
     learn: { title: 'Learn mapping', blurb: 'Teach the app a pad without a standard layout.' },
     report: { title: 'Report', blurb: 'Your last health check as a shareable image.' },
   },
@@ -132,9 +163,9 @@ export const en = {
   },
   pro: {
     title: 'Pro Mode (WebHID)',
-    body: "Talk to the controller directly for what the Gamepad API can't reach: adaptive triggers, lightbar, player LEDs, mic LED, touchpad, gyro and accelerometer, battery, firmware and factory data. DualSense, DualSense Edge and DualShock 4 over USB or Bluetooth in Chrome and Edge.",
+    body: "Talk to the controller directly for what the Gamepad API can't reach: adaptive triggers, lightbar, player LEDs, mic LED, touchpad, gyro and accelerometer, battery, firmware and factory data. DualSense, DualSense Edge and DualShock 4 over USB or Bluetooth, Xbox pads over Bluetooth, in Chrome and Edge.",
     add: 'Add device',
-    hint: 'If nothing shows up, close Steam, PS Remote Play, DS4Windows or reWASD: they grab the HID reports first. Bluetooth pads start in a reduced mode; the app switches them to full reports automatically.',
+    hint: 'If nothing shows up, close Steam, PS Remote Play, DS4Windows, reWASD or the Xbox Accessories app: they grab the HID reports first. Bluetooth pads start in a reduced mode; the app switches them to full reports automatically.',
     noWebHid:
       'This browser has no WebHID. Pro Mode needs desktop Chrome or Edge. Everything on the other tabs still works here.',
     noneSelected: 'No controller selected.',

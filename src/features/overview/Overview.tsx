@@ -24,7 +24,7 @@ export function Overview() {
       <Card
         title="Live view"
         right={
-          (p.family === 'dualsense' || p.family === 'dualshock4') && (
+          p.family !== 'generic' && (
             <Toggle label="Show values" checked={showValues} onChange={setShowValues} />
           )
         }

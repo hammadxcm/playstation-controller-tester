@@ -32,7 +32,7 @@ export function useDocumentLang(): void {
   const t = useT()
   useEffect(() => {
     document.documentElement.lang = t.lang
-    document.title = t('app.title')
+    document.title = t('app.tabTitle')
     document
       .querySelector<HTMLMetaElement>('meta[name="description"]')
       ?.setAttribute('content', t('app.description'))

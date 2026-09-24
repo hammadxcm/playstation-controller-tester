@@ -107,6 +107,7 @@ function Devices() {
                     </span>
                   )}
                   {h.caps.edge && <Badge>Edge</Badge>}
+                  {h.caps.paddles && <Badge>Elite</Badge>}
                 </span>
               </div>
               <Button
@@ -157,7 +158,9 @@ function InputPanel({ hid }: { hid: HidController }) {
           <Metric label="RY" value={v.sticks.ry} />
           <Metric label="Hat" value={v.hat === 8 ? '–' : v.hat} />
           <Metric label="Seq" value={String(v.extra.seq ?? '–')} />
-          {hid.caps.edge && <Metric label="Profile" value={String(v.extra.profile ?? '–')} />}
+          {(hid.caps.edge || hid.caps.paddles) && (
+            <Metric label="Profile" value={String(v.extra.profile ?? '–')} />
+          )}
           {hid.caps.edge && (
             <Metric label="Trigger stops" value={String(v.extra.triggerLevel ?? '–')} />
           )}
@@ -216,11 +219,15 @@ function InputPanel({ hid }: { hid: HidController }) {
           />
           <Metric label="State" value={v.battery.state} />
           <Metric label="USB" value={v.flags.usb ? 'yes' : 'no'} />
-          <Metric label="Headset" value={v.flags.headphones ? 'yes' : 'no'} />
-          <Metric
-            label="Mic"
-            value={v.flags.mic ? 'plugged' : v.extra.micMuted ? 'muted' : 'built-in'}
-          />
+          {hid.family !== 'xbox' && (
+            <Metric label="Headset" value={v.flags.headphones ? 'yes' : 'no'} />
+          )}
+          {hid.family !== 'xbox' && (
+            <Metric
+              label="Mic"
+              value={v.flags.mic ? 'plugged' : v.extra.micMuted ? 'muted' : 'built-in'}
+            />
+          )}
         </div>
       )}
       <Toggle label="Show raw report" checked={showHex} onChange={setShowHex} />
@@ -553,52 +560,64 @@ function MicLed({ hid }: { hid: HidController }) {
 function Rumble({ hid }: { hid: HidController }) {
   const [strong, setStrong] = useState(1)
   const [weak, setWeak] = useState(0.5)
+  const [lt, setLt] = useState(0.6)
+  const [rt, setRt] = useState(0.6)
   const [duration, setDuration] = useState(800)
-  const play = (s: number, w: number) => {
-    run(hid.rumble(s, w))
+  const impulse = hid.caps.impulseTriggers
+  const play = (s: number, w: number, l = 0, r = 0) => {
+    run(hid.rumble(s, w, l, r))
     setTimeout(() => run(hid.rumble(0, 0)), duration)
   }
+  const pct = (v: number) => `${Math.round(v * 100)} %`
   return (
-    <div className="row" style={{ alignItems: 'flex-end' }}>
-      <div style={{ flex: 1, minWidth: 140 }}>
-        <Slider
-          label="Strong (left)"
-          value={strong}
-          onChange={setStrong}
-          format={(v) => `${Math.round(v * 100)} %`}
-        />
+    <div className="stack">
+      <div className="row" style={{ alignItems: 'flex-end' }}>
+        <div style={{ flex: 1, minWidth: 140 }}>
+          <Slider label="Strong (left)" value={strong} onChange={setStrong} format={pct} />
+        </div>
+        <div style={{ flex: 1, minWidth: 140 }}>
+          <Slider label="Weak (right)" value={weak} onChange={setWeak} format={pct} />
+        </div>
+        <div style={{ flex: 1, minWidth: 120 }}>
+          <Slider
+            label="Duration"
+            value={duration}
+            min={100}
+            max={3000}
+            step={100}
+            onChange={setDuration}
+            format={(v) => `${v} ms`}
+          />
+        </div>
+        <Button primary small onClick={() => play(strong, weak)}>
+          Play
+        </Button>
+        <Button small onClick={() => play(1, 0)}>
+          Strong
+        </Button>
+        <Button small onClick={() => play(0, 1)}>
+          Weak
+        </Button>
+        <Button small onClick={() => run(hid.rumble(0, 0))}>
+          Stop
+        </Button>
       </div>
-      <div style={{ flex: 1, minWidth: 140 }}>
-        <Slider
-          label="Weak (right)"
-          value={weak}
-          onChange={setWeak}
-          format={(v) => `${Math.round(v * 100)} %`}
-        />
-      </div>
-      <div style={{ flex: 1, minWidth: 120 }}>
-        <Slider
-          label="Duration"
-          value={duration}
-          min={100}
-          max={3000}
-          step={100}
-          onChange={setDuration}
-          format={(v) => `${v} ms`}
-        />
-      </div>
-      <Button primary small onClick={() => play(strong, weak)}>
-        Play
-      </Button>
-      <Button small onClick={() => play(1, 0)}>
-        Strong
-      </Button>
-      <Button small onClick={() => play(0, 1)}>
-        Weak
-      </Button>
-      <Button small onClick={() => run(hid.rumble(0, 0))}>
-        Stop
-      </Button>
+      {impulse && (
+        <div className="row" style={{ alignItems: 'flex-end' }}>
+          <div style={{ flex: 1, minWidth: 140 }}>
+            <Slider label="Left trigger" value={lt} onChange={setLt} format={pct} />
+          </div>
+          <div style={{ flex: 1, minWidth: 140 }}>
+            <Slider label="Right trigger" value={rt} onChange={setRt} format={pct} />
+          </div>
+          <Button primary small onClick={() => play(0, 0, lt, rt)}>
+            Play triggers
+          </Button>
+          <Button small onClick={() => play(strong, weak, lt, rt)}>
+            All four
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

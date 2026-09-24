@@ -5,7 +5,11 @@
 `src/features/model/artwork/dualsense.svg`, `dualsenseEdge.svg` and `dualshock4.svg` are the
 controller drawings from [daidr/dualsense-tester](https://github.com/daidr/dualsense-tester),
 used under the MIT License. The files are loaded as-is; colours, classes and the landing page's
-lighting and tilt are applied at runtime. No other artwork is bundled.
+lighting and tilt are applied at runtime.
+
+`src/features/model/artwork/xbox.svg` (Xbox Wireless Controller, Series X|S layout with Elite paddles)
+is original line art drawn for this project in the same stroke grammar, © the project authors, MIT
+License like the rest of the code. No other artwork is bundled.
 
 MIT License
 
@@ -34,6 +38,9 @@ SOFTWARE.
 Report layouts follow the Linux `hid-playstation` driver (GPL-2.0, not copied), SDL's
 `SDL_hidapi_ps5.c` / `SDL_hidapi_ps4.c` (zlib, not copied), Nielk1's TriggerEffectGenerator (MIT, byte
 tables re-implemented) and daidr/dualsense-tester (MIT, factory-info command ids re-implemented).
+The Xbox Bluetooth layout (rumble report 0x03, battery byte, button layouts) follows Chromium's
+`xbox_hid_controller.cc` (BSD-3), the Linux `hid-microsoft` driver (GPL-2.0) and atar-axis/xpadneo
+(GPL-2.0); none of their code is copied, only the byte meanings.
 
 ## Runtime dependencies
 

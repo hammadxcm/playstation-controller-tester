@@ -1,6 +1,6 @@
 import type { StdButton } from '@/core/gamepad/types'
 
-export type ArtworkKind = 'dualsense' | 'dualshock4' | 'dualsenseEdge'
+export type ArtworkKind = 'dualsense' | 'dualshock4' | 'dualsenseEdge' | 'xbox'
 
 /**
  * How to turn one of daidr's controller drawings (MIT, © Xuezhou Dai) into a rig-driven model.
@@ -22,6 +22,8 @@ export interface ArtworkSpec {
   anchors: { touchpad: string; mute?: string; gripL?: string; gripR?: string }
   lightbar: 'strips' | 'top' | 'none'
   leds: boolean
+  /** the pad has a touch surface: draw touch points and the touchpad frame in the values overlay */
+  touch: boolean
 }
 
 export const SPECS: Record<ArtworkKind, ArtworkSpec> = {
@@ -53,6 +55,7 @@ export const SPECS: Record<ArtworkKind, ArtworkSpec> = {
     anchors: { touchpad: 'touchpad', mute: 'mute', gripL: 'left-hat', gripR: 'right-hat' },
     lightbar: 'strips',
     leds: true,
+    touch: true,
   },
   dualshock4: {
     kind: 'dualshock4',
@@ -82,6 +85,7 @@ export const SPECS: Record<ArtworkKind, ArtworkSpec> = {
     anchors: { touchpad: 'Active_TouchPad', gripL: 'LeftBorder', gripR: 'RightBorder' },
     lightbar: 'top',
     leds: false,
+    touch: true,
   },
   dualsenseEdge: {
     kind: 'dualsenseEdge',
@@ -117,6 +121,44 @@ export const SPECS: Record<ArtworkKind, ArtworkSpec> = {
     anchors: { touchpad: 'Touchpad', mute: 'Active_Mute', gripL: 'Border', gripR: 'Border' },
     lightbar: 'strips',
     leds: true,
+    touch: true,
+  },
+  xbox: {
+    kind: 'xbox',
+    style: 'stroke',
+    parts: {
+      south: ['a'],
+      east: ['b'],
+      west: ['x'],
+      north: ['y'],
+      up: ['dpad-up'],
+      down: ['dpad-down'],
+      left: ['dpad-left'],
+      right: ['dpad-right'],
+      l1: ['l1'],
+      r1: ['r1'],
+      l2: ['l2'],
+      r2: ['r2'],
+      select: ['view'],
+      start: ['menu'],
+      home: ['xbox'],
+      // standard index 17 is Share on Xbox pads
+      touchpad: ['share'],
+    },
+    extra: {
+      p1: ['paddle-p1'],
+      p2: ['paddle-p2'],
+      p3: ['paddle-p3'],
+      p4: ['paddle-p4'],
+    },
+    sticks: { ls: { wrap: 'l3group', cap: 'l3cap' }, rs: { wrap: 'r3group', cap: 'r3cap' } },
+    travel: 60,
+    remove: ['board'],
+    // an invisible plate across the top of the face: L2 / R2 readouts hang off its corners
+    anchors: { touchpad: 'anchor-plate', gripL: 'grip-left', gripR: 'grip-right' },
+    lightbar: 'none',
+    leds: false,
+    touch: false,
   },
 }
 
@@ -124,4 +166,5 @@ export const ART_FILES: Record<ArtworkKind, () => Promise<{ default: string }>> 
   dualsense: () => import('./dualsense.svg?raw'),
   dualshock4: () => import('./dualshock4.svg?raw'),
   dualsenseEdge: () => import('./dualsenseEdge.svg?raw'),
+  xbox: () => import('./xbox.svg?raw'),
 }

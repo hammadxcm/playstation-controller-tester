@@ -1,7 +1,7 @@
 {
   "name": "Controller Tester",
   "short_name": "Controller Tester",
-  "description": "Test PS5 DualSense, PS4 DualShock 4, Xbox and any gamepad in your browser.",
+  "description": "Is your controller GTA VI ready? Test PS5 DualSense, DualShock 4, Xbox and any gamepad in your browser: stick drift, dead zones, buttons, rumble, adaptive triggers, battery. Free, nothing uploaded.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0c11",

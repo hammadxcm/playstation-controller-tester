@@ -25,11 +25,11 @@ export class FakeHidDevice extends EventTarget {
     public vendorId: number,
     public productId: number,
     public productName: string,
-    opts: { inputBits?: number; outputIds?: number[] } = {},
+    opts: { inputBits?: number; outputIds?: number[]; collections?: HIDCollectionInfo[] } = {},
   ) {
     super()
     const bits = opts.inputBits ?? 504
-    this.collections = [
+    this.collections = opts.collections ?? [
       {
         usagePage: 0x01,
         usage: 0x05,

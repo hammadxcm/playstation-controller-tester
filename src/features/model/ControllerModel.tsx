@@ -5,7 +5,7 @@ import { DualSense, DualShock4, Generic, Xbox } from './bodies'
 import { Defs } from './defs'
 import { GEOMETRY } from './geometry'
 import { Parts } from './parts'
-import { useControllerRig } from './useControllerRig'
+import { useControllerRig, type FrameSource } from './useControllerRig'
 import { ArtworkModel } from './ArtworkModel'
 import './model.css'
 
@@ -16,7 +16,7 @@ const BODIES: Record<Family, () => React.JSX.Element> = {
   generic: Generic,
 }
 
-/** Sony families use the accurate line-art drawings; others use the generated parts model. */
+/** Sony and Xbox families use the accurate line-art drawings; generic pads use the generated parts model. */
 export function ControllerModel({
   family,
   compact,
@@ -28,25 +28,36 @@ export function ControllerModel({
   edge?: boolean
   showValues?: boolean
 }) {
-  if (family === 'dualsense' || family === 'dualshock4') {
-    return (
-      <ArtworkModel
-        kind={family === 'dualshock4' ? 'dualshock4' : edge ? 'dualsenseEdge' : 'dualsense'}
-        compact={compact}
-        showValues={showValues}
-      />
-    )
+  if (family !== 'generic') {
+    const kind =
+      family === 'xbox'
+        ? 'xbox'
+        : family === 'dualshock4'
+          ? 'dualshock4'
+          : edge
+            ? 'dualsenseEdge'
+            : 'dualsense'
+    return <ArtworkModel kind={kind} compact={compact} showValues={showValues} />
   }
   return <PartsModel family={family} compact={compact} />
 }
 
 /** Generated controller from geometry. Body layer is static; parts layer is driven by the rig. */
-export function PartsModel({ family, compact }: { family: Family; compact?: boolean }) {
+export function PartsModel({
+  family,
+  compact,
+  source,
+}: {
+  family: Family
+  compact?: boolean
+  /** scripted frames instead of the active pad (landing cards) */
+  source?: FrameSource
+}) {
   const wrapper = useRef<HTMLDivElement>(null)
   const parts = useRef<SVGSVGElement>(null)
   const g = GEOMETRY[family]
   const Body = BODIES[family]
-  useControllerRig(wrapper, { travel: 11, key: family })
+  useControllerRig(wrapper, { travel: 11, key: family, source })
   return (
     <div ref={wrapper} className={`model ${compact ? 'compact' : ''}`} data-family={family}>
       <div className="model-glow" />

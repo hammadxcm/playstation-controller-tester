@@ -15,6 +15,10 @@ export interface HidCaps {
   adaptiveTriggers: boolean
   /** DualSense Edge: Fn buttons, back paddles, trigger stops, active profile */
   edge: boolean
+  /** Xbox impulse triggers: rumble motors inside LT / RT */
+  impulseTriggers: boolean
+  /** Xbox Elite Series 2: four back paddles and a profile selector */
+  paddles: boolean
 }
 
 export interface HidState {
@@ -48,13 +52,14 @@ export interface AudioSettings {
 }
 
 export interface HidController {
-  readonly family: 'dualsense' | 'dualshock4'
+  readonly family: 'dualsense' | 'dualshock4' | 'xbox'
   readonly label: string
   readonly caps: HidCaps
   readonly device: HIDDevice
   readonly transport: Transport
   subscribe(cb: (s: HidState) => void): () => void
-  rumble(strong: number, weak: number): Promise<void>
+  /** 0..1 each; the trigger motors only exist on pads with `caps.impulseTriggers` */
+  rumble(strong: number, weak: number, leftTrigger?: number, rightTrigger?: number): Promise<void>
   setLightbar(rgb: [number, number, number] | null): Promise<void>
   setLightbarFlash(onMs: number, offMs: number): Promise<void>
   setPlayerLeds(mask: number, brightness: 0 | 1 | 2): Promise<void>

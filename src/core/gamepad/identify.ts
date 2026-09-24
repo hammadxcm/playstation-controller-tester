@@ -9,6 +9,16 @@ export interface ControllerProfile {
 
 export const SONY = 0x054c
 export const MICROSOFT = 0x045e
+/** Bluetooth product ids of Xbox pads (USB uses GIP, not HID, so it never reaches WebHID). Sources: Chromium gamepad_id_list, xpadneo. */
+export const XBOX_BT_PID: Record<number, string> = {
+  0x02e0: 'Xbox One S',
+  0x02fd: 'Xbox One S',
+  0x0b05: 'Xbox Elite Series 2',
+  0x0b0c: 'Xbox Adaptive Controller',
+  0x0b13: 'Xbox Wireless Controller',
+  0x0b20: 'Xbox One S',
+  0x0b22: 'Xbox Elite Series 2',
+}
 export const PID = {
   dualsense: 0x0ce6,
   dualsenseEdge: 0x0df2,

@@ -18,6 +18,8 @@ const CAPS: HidCaps = {
   micLed: false,
   adaptiveTriggers: false,
   edge: false,
+  impulseTriggers: false,
+  paddles: false,
 }
 
 export class DualShock4Device extends SonyDevice implements HidController {

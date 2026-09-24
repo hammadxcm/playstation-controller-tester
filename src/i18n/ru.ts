@@ -2,8 +2,9 @@ import type { Dict } from './index'
 export const ru: Dict = {
   app: {
     title: 'Controller Tester',
+    tabTitle: 'Controller Tester · Ваш геймпад готов к GTA VI?',
     description:
-      'Проверьте DualSense для PS5, DualShock 4 для PS4, геймпад Xbox или любой другой прямо в браузере: кнопки, дрейф стиков, круговое отклонение, вибрация, адаптивные триггеры, световая панель, тачпад, гироскоп.',
+      'Ваш геймпад готов к GTA VI? Проверьте DualSense PS5, DualShock 4, Xbox и любой геймпад в браузере: дрейф стиков, мёртвые зоны, кнопки, вибрация, адаптивные триггеры, батарея. Бесплатно, ничего не отправляется.',
   },
   nav: {
     proMode: 'Pro-режим',
@@ -18,10 +19,11 @@ export const ru: Dict = {
   },
   hero: {
     eyebrow: 'Бесплатно · в браузере · ничего не отправляется',
-    title: 'Каждая кнопка, стик и триггер. Проверка за секунды.',
-    lead: 'Дрейф, мёртвые зоны, круговое отклонение, частота опроса, вибрация и адаптивные триггеры для DualSense, DualSense Edge, DualShock 4, Xbox и любого геймпада. Без установки и аккаунта.',
+    title: 'Ваш геймпад готов к GTA VI?',
+    lead: 'Найдите дрейф, мёртвые зоны и изношенные кнопки до того, как они будут стоить вам миссии. Каждая кнопка, стик и триггер проверяются за секунды. DualSense, DualSense Edge, DualShock 4, Xbox и любой геймпад. Без установки и аккаунта.',
     add: 'Добавить устройство',
     pro: 'Открыть Pro-режим',
+    xbox: 'Геймпады Xbox',
     art: 'Геймпад DualSense, демо',
   },
   add: {
@@ -33,7 +35,7 @@ export const ru: Dict = {
     noGamepad: 'В {engine} нет Gamepad API. Попробуйте Chrome, Edge, Firefox или Safari.',
     step2: 'Подключить для Pro-режима',
     step2Body:
-      'WebHID общается с геймпадом напрямую: адаптивные триггеры, световая панель, индикаторы игрока, индикатор микрофона, тачпад, гироскоп, батарея и прошивка. DualSense, DualSense Edge и DualShock 4.',
+      'WebHID общается с геймпадом напрямую: адаптивные триггеры, световая панель, индикаторы игрока, индикатор микрофона, тачпад, гироскоп, батарея и прошивка. DualSense, DualSense Edge и DualShock 4 по USB или Bluetooth; геймпады Xbox по Bluetooth.',
     pair: 'Подключить по USB или Bluetooth',
     pairing: 'Ожидание выбора…',
     noWebHid: 'Недоступно в {engine}. Pro-режиму нужен Chrome или Edge на компьютере.',
@@ -43,7 +45,7 @@ export const ru: Dict = {
       buttons: 'Кнопки, стики, триггеры',
       rumble: 'Вибрация',
       triggerRumble: 'Вибрация триггеров (Xbox)',
-      pro: 'Pro-режим (PS4/PS5 через WebHID)',
+      pro: 'Pro-режим (WebHID)',
       partial: 'частично',
       winmac: 'Win/mac',
       desktop: 'на ПК',
@@ -86,6 +88,32 @@ export const ru: Dict = {
       ],
     },
   },
+  xbox: {
+    title: 'И Xbox тоже',
+    lead: 'Xbox One S, Series X|S, Elite Series 2 и Adaptive. Все экраны работают через Gamepad API; Pro-режим читает геймпад напрямую по Bluetooth.',
+    name: 'Беспроводной геймпад Xbox',
+    tagline: 'One S · Series X|S · Elite Series 2 · Adaptive',
+    callouts: ['Импульсные триггеры', 'Кнопка Xbox', 'Поделиться', 'Лепестки Elite 2'],
+    facts: [
+      'Импульсные триггеры: мотор в каждом триггере',
+      'Вибрация по Bluetooth через WebHID',
+      'Батарея и состояние зарядки',
+      'Лепестки и профиль Elite 2',
+    ],
+    matrix: {
+      feature: 'Функция',
+      gamepad: 'Gamepad API',
+      pro: 'Pro-режим (Bluetooth)',
+      buttons: 'Кнопки, стики, триггеры',
+      triggerRumble: 'Импульсные триггеры',
+      battery: 'Батарея',
+      paddles: 'Лепестки и профиль Elite 2',
+      raw: 'Сырой HID-отчёт',
+      chrome: 'Chrome / Edge',
+      hires: '16-битные стики',
+    },
+    note: 'По USB геймпад Xbox говорит по GIP, а не HID, поэтому Pro-режиму нужен Bluetooth. Chrome или Edge на компьютере; в Windows драйвер Xbox может не отдать устройство.',
+  },
   tour: {
     title: 'Всё, что умеет проверять приложение',
     noPad: 'Без геймпада',
@@ -105,7 +133,8 @@ export const ru: Dict = {
     },
     pro: {
       title: 'Pro-режим',
-      blurb: 'WebHID: световая панель, индикаторы, микрофон, тачпад, гироскоп, батарея.',
+      blurb:
+        'WebHID: световая панель, индикаторы, микрофон, тачпад, гироскоп, батарея, вибрация Xbox.',
     },
     learn: {
       title: 'Обучить раскладке',
@@ -144,9 +173,9 @@ export const ru: Dict = {
   },
   pro: {
     title: 'Pro-режим (WebHID)',
-    body: 'Общайтесь с геймпадом напрямую там, где Gamepad API бессилен: адаптивные триггеры, световая панель, индикаторы игрока, индикатор микрофона, тачпад, гироскоп и акселерометр, батарея, прошивка и заводские данные. DualSense, DualSense Edge и DualShock 4 по USB или Bluetooth в Chrome и Edge.',
+    body: 'Общайтесь с геймпадом напрямую там, где Gamepad API бессилен: адаптивные триггеры, световая панель, индикаторы игрока, индикатор микрофона, тачпад, гироскоп и акселерометр, батарея, прошивка и заводские данные. DualSense, DualSense Edge и DualShock 4 по USB или Bluetooth, геймпады Xbox по Bluetooth, в Chrome и Edge.',
     add: 'Добавить устройство',
-    hint: 'Если ничего не появилось, закройте Steam, PS Remote Play, DS4Windows или reWASD: они перехватывают HID-отчёты первыми. Bluetooth-геймпады стартуют в урезанном режиме; приложение автоматически переключает их на полные отчёты.',
+    hint: 'Если ничего не появилось, закройте Steam, PS Remote Play, DS4Windows, reWASD или приложение «Аксессуары Xbox»: они перехватывают HID-отчёты первыми. Bluetooth-геймпады стартуют в урезанном режиме; приложение автоматически переключает их на полные отчёты.',
     noWebHid:
       'В этом браузере нет WebHID. Pro-режиму нужен Chrome или Edge на компьютере. Всё остальное здесь работает.',
     noneSelected: 'Геймпад не выбран.',

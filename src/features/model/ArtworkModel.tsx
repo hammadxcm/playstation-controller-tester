@@ -34,7 +34,7 @@ const box = (el: Element | null): Box | undefined => {
   }
 }
 
-/** Accurate DualSense / Edge / DualShock 4 drawing (artwork © Xuezhou Dai, MIT) driven by the shared rig. */
+/** Accurate DualSense / Edge / DualShock 4 (artwork © Xuezhou Dai, MIT) or Xbox (this project, MIT) drawing driven by the shared rig. */
 export function ArtworkModel({
   kind,
   compact,
@@ -294,19 +294,20 @@ export function ArtworkModel({
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </radialGradient>
             </defs>
-            {[0, 1].map((i) => (
-              <g key={i} data-touch={i} data-on="false" className="m-touch">
-                <circle r={fs * 0.7} />
-                <text y={-fs * 1.1} fontSize={fs * 0.9} textAnchor="middle" className="m-text">
-                  {values.touches[i]?.active
-                    ? `${Math.round(values.touches[i]!.x * 1920)},${Math.round(values.touches[i]!.y * 1080)}`
-                    : ''}
-                </text>
-                <text y={fs * 1.6} fontSize={fs * 0.9} textAnchor="middle" className="m-text">
-                  {values.touches[i]?.active ? `#${values.touches[i]!.id}` : ''}
-                </text>
-              </g>
-            ))}
+            {spec.touch &&
+              [0, 1].map((i) => (
+                <g key={i} data-touch={i} data-on="false" className="m-touch">
+                  <circle r={fs * 0.7} />
+                  <text y={-fs * 1.1} fontSize={fs * 0.9} textAnchor="middle" className="m-text">
+                    {values.touches[i]?.active
+                      ? `${Math.round(values.touches[i]!.x * 1920)},${Math.round(values.touches[i]!.y * 1080)}`
+                      : ''}
+                  </text>
+                  <text y={fs * 1.6} fontSize={fs * 0.9} textAnchor="middle" className="m-text">
+                    {values.touches[i]?.active ? `#${values.touches[i]!.id}` : ''}
+                  </text>
+                </g>
+              ))}
             {showValues && lsC && rsC && (
               <g className="m-values">
                 {[lsC, rsC].map(([cx, cy, r], i) => (
@@ -339,14 +340,16 @@ export function ArtworkModel({
                     </text>
                   </g>
                 ))}
-                <rect
-                  x={a.touchpad.x}
-                  y={a.touchpad.y}
-                  width={a.touchpad.w}
-                  height={a.touchpad.h}
-                  className="m-dash"
-                  fill="none"
-                />
+                {spec.touch && (
+                  <rect
+                    x={a.touchpad.x}
+                    y={a.touchpad.y}
+                    width={a.touchpad.w}
+                    height={a.touchpad.h}
+                    className="m-dash"
+                    fill="none"
+                  />
+                )}
                 <text
                   x={a.touchpad.x}
                   y={a.touchpad.y - fs * 0.3}

@@ -24,6 +24,10 @@
   align-items: center;
   gap: 8px;
 }
+/* the shell's `.header .spacer` rule does not reach the landing bar; without it the menu hugs the brand on phones */
+.landing-nav .spacer {
+  flex: 1 1 0;
+}
 .brand {
   font-family: var(--font-display);
   font-weight: 800;
@@ -63,6 +67,25 @@
 .hero-cta a.btn {
   text-decoration: none;
   color: var(--accent-fg);
+}
+.hero-cta a.btn-xbox {
+  --accent: var(--accent-xbox);
+  color: var(--fg);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-color: color-mix(in srgb, var(--accent-xbox) 45%, var(--line));
+}
+.hero-cta a.btn-xbox:hover,
+.hero-cta a.btn-xbox:focus-visible {
+  border-color: var(--accent-xbox);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-xbox) 25%, transparent);
+}
+.hero-cta a.btn-xbox .xbox-glyph {
+  color: var(--accent-xbox);
+}
+.xbox-section {
+  scroll-margin-top: 84px;
 }
 .hero-art {
   position: relative;
@@ -336,4 +359,32 @@
 
 .landing-nav nav {
   display: contents;
+}
+
+/* Xbox section */
+.xbox-section {
+  --accent: var(--accent-xbox);
+}
+.xbox-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  perspective: 1200px;
+}
+.xbox-card .show-art .model {
+  max-width: 460px;
+  margin: 0 auto;
+}
+.xbox-matrix {
+  display: grid;
+  gap: 12px;
+}
+.xbox-matrix .support-table {
+  max-width: none;
+}
+@media (max-width: 820px) {
+  .xbox-grid {
+    grid-template-columns: 1fr;
+  }
 }

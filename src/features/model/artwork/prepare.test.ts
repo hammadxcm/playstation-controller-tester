@@ -65,3 +65,18 @@ describe('prepareArtwork', () => {
     expect(out.inner).toContain('class="m-ink"')
   })
 })
+
+describe('xbox artwork', () => {
+  it('classifies impulse rings and tinted glyphs, wraps grouped caps and tags paddles', () => {
+    const svg = `<svg viewBox="0 0 10 10"><rect id="board"/><rect id="anchor-plate"/><g id="l2"><path id="l2-impulse" style="fill:#f00"/><path id="l2-outline" style="fill:none"/></g><text id="a-glyph">A</text><g id="l3group"><circle id="l3-border"/><g id="l3cap"><circle id="l3"/><circle/></g></g><rect id="paddle-p1"/></svg>`
+    const p = prepareArtwork(svg, SPECS.xbox)
+    expect(p.inner).toContain('class="m-impulse"')
+    expect(p.inner).toContain('class="m-glyph"')
+    expect(p.inner).toContain('id="anchor-plate" class="m-anchor"')
+    expect(p.inner).toContain('id="l2-outline" class="m-line"')
+    expect(p.inner).not.toContain('id="board"')
+    expect(p.tagged).toMatchObject({ l2: 'l2', 'paddle-p1': 'x:p1', l3cap: 'l3' })
+    expect(p.tagged['a-glyph']).toBeUndefined()
+    expect(p.inner).toMatch(/id="l3cap"[^>]*data-sub="cap"/)
+  })
+})

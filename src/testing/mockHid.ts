@@ -14,6 +14,8 @@ const DS_CAPS = {
   micLed: true,
   adaptiveTriggers: true,
   edge: false,
+  impulseTriggers: false,
+  paddles: false,
 }
 const DS4_CAPS = {
   ...DS_CAPS,
@@ -22,6 +24,34 @@ const DS4_CAPS = {
   micLed: false,
   adaptiveTriggers: false,
 }
+const XBOX_CAPS = {
+  ...DS4_CAPS,
+  touchpad: false,
+  motion: false,
+  lightbar: false,
+  lightbarFlash: false,
+  impulseTriggers: true,
+}
+const XBOX_NAMES = [
+  'a',
+  'b',
+  'x',
+  'y',
+  'lb',
+  'rb',
+  'lt',
+  'rt',
+  'back',
+  'menu',
+  'ls',
+  'rs',
+  'up',
+  'down',
+  'left',
+  'right',
+  'xbox',
+  'share',
+]
 const to255 = (v: number) => Math.round((v + 1) * 127.5)
 
 export interface MockHid extends HidController {
@@ -32,6 +62,7 @@ export interface MockHid extends HidController {
 /** In-memory HidController that produces synthetic state and records every command. */
 export function createMockHid(family: string, edge = false): MockHid {
   const ds4 = family === 'dualshock4'
+  const xbox = family === 'xbox'
   const listeners = new Set<(s: HidState) => void>()
   const out: Record<string, unknown> = {}
   let engaged = { left: false, right: false }
@@ -46,48 +77,50 @@ export function createMockHid(family: string, edge = false): MockHid {
     ).__ct.gp
     const t = (performance.now() - t0) / 1000
     const b = gp.buttons
-    const names = ds4
-      ? [
-          'cross',
-          'circle',
-          'square',
-          'triangle',
-          'l1',
-          'r1',
-          'l2',
-          'r2',
-          'share',
-          'options',
-          'l3',
-          'r3',
-          'up',
-          'down',
-          'left',
-          'right',
-          'ps',
-          'touchpad',
-        ]
-      : [
-          'cross',
-          'circle',
-          'square',
-          'triangle',
-          'l1',
-          'r1',
-          'l2',
-          'r2',
-          'create',
-          'options',
-          'l3',
-          'r3',
-          'up',
-          'down',
-          'left',
-          'right',
-          'ps',
-          'touchpad',
-          'mute',
-        ]
+    const names = xbox
+      ? XBOX_NAMES
+      : ds4
+        ? [
+            'cross',
+            'circle',
+            'square',
+            'triangle',
+            'l1',
+            'r1',
+            'l2',
+            'r2',
+            'share',
+            'options',
+            'l3',
+            'r3',
+            'up',
+            'down',
+            'left',
+            'right',
+            'ps',
+            'touchpad',
+          ]
+        : [
+            'cross',
+            'circle',
+            'square',
+            'triangle',
+            'l1',
+            'r1',
+            'l2',
+            'r2',
+            'create',
+            'options',
+            'l3',
+            'r3',
+            'up',
+            'down',
+            'left',
+            'right',
+            'ps',
+            'touchpad',
+            'mute',
+          ]
     const buttons = Object.fromEntries(names.map((n, i) => [n, !!b[i]?.pressed]))
     return {
       sticks: {
@@ -99,18 +132,21 @@ export function createMockHid(family: string, edge = false): MockHid {
       triggers: { l2: Math.round(b[6]!.value * 255), r2: Math.round(b[7]!.value * 255) },
       buttons,
       hat: 8,
-      touches: [
-        { id: 3, active: true, x: 0.5 + 0.3 * Math.cos(t), y: 0.5 + 0.3 * Math.sin(t) },
-        { id: 4, active: t % 4 < 2, x: 0.3, y: 0.6 },
-      ],
+      touches: xbox
+        ? []
+        : [
+            { id: 3, active: true, x: 0.5 + 0.3 * Math.cos(t), y: 0.5 + 0.3 * Math.sin(t) },
+            { id: 4, active: t % 4 < 2, x: 0.3, y: 0.6 },
+          ],
       gyro: [0, 0, 0],
       accel: [0, 8192, 0],
       gyroDps: [0, 0, 0],
       accelG: [0.25 * Math.sin(t * 0.7), 0.95, 0.2 * Math.cos(t * 0.5)],
       sensorTs: t * 1e6,
-      battery: { percent: 75, state: 'discharging' },
-      flags: { headphones: false, mic: false, usb: true },
+      battery: { percent: xbox ? 70 : 75, state: 'discharging' },
+      flags: { headphones: false, mic: false, usb: !xbox },
       extra: {
+        ...(xbox ? { layout: true, profile: 0 } : {}),
         seq: Math.floor(t * 250) & 0xff,
         l2Status: engaged.left ? 1 : 0,
         l2Engaged: engaged.left,
@@ -133,14 +169,20 @@ export function createMockHid(family: string, edge = false): MockHid {
       out[k] = v
     }
   return {
-    family: ds4 ? 'dualshock4' : 'dualsense',
-    label: ds4 ? 'DualShock 4 (mock)' : edge ? 'DualSense Edge (mock)' : 'DualSense (mock)',
-    caps: ds4 ? DS4_CAPS : edge ? { ...DS_CAPS, edge: true } : DS_CAPS,
-    transport: 'usb',
+    family: xbox ? 'xbox' : ds4 ? 'dualshock4' : 'dualsense',
+    label: xbox
+      ? 'Xbox Wireless Controller (mock)'
+      : ds4
+        ? 'DualShock 4 (mock)'
+        : edge
+          ? 'DualSense Edge (mock)'
+          : 'DualSense (mock)',
+    caps: xbox ? XBOX_CAPS : ds4 ? DS4_CAPS : edge ? { ...DS_CAPS, edge: true } : DS_CAPS,
+    transport: xbox ? 'bt' : 'usb',
     device: {
       opened: true,
-      vendorId: 0x054c,
-      productId: ds4 ? 0x09cc : 0x0ce6,
+      vendorId: xbox ? 0x045e : 0x054c,
+      productId: xbox ? 0x0b13 : ds4 ? 0x09cc : 0x0ce6,
       productName: 'mock',
     } as unknown as HIDDevice,
     out,
@@ -158,11 +200,18 @@ export function createMockHid(family: string, edge = false): MockHid {
       out[`trigger-${side}`] = [...effect]
       engaged = { ...engaged, [side]: effect[0] !== 0x05 }
     },
-    async info() {
-      return { firmware: '0x00010215', hardware: '0x00000001', updateVersion: '2.21' }
+    async info(): Promise<Record<string, string>> {
+      return xbox
+        ? {
+            product: 'Xbox Wireless Controller',
+            productId: '0x0b13',
+            transport: 'bluetooth',
+            layout: 'sparse',
+          }
+        : { firmware: '0x00010215', hardware: '0x00000001', updateVersion: '2.21' }
     },
     async factory() {
-      return ds4
+      return ds4 || xbox
         ? {}
         : {
             serial: 'MOCK00012345',

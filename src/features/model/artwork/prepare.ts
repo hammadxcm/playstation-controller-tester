@@ -16,6 +16,9 @@ function classify(el: Element, spec: ArtworkSpec, group: string | null): string 
   if (spec.style === 'stroke') {
     // Named elements are the outlines; unnamed ones are the glyphs drawn on them.
     if (id === 'ps') return 'm-ps'
+    if (id.startsWith('anchor-')) return 'm-anchor'
+    if (id.endsWith('-impulse')) return 'm-impulse'
+    if (id.endsWith('-glyph')) return 'm-glyph'
     if (id || group?.endsWith('-icon')) return 'm-line'
     if (style.includes('fill:#f00')) return 'm-icon-fill'
     return 'm-icon'

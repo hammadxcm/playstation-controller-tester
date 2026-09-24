@@ -70,6 +70,10 @@
 .m-trigger .m-tfill {
   opacity: var(--v);
 }
+.m-anchor {
+  fill: none;
+  stroke: none;
+}
 .m-impulse {
   opacity: 0;
   fill: none;
@@ -270,4 +274,53 @@
 }
 .model.art .m-lb-stroke {
   stroke-width: inherit;
+}
+
+/* ---- Xbox line art: grouped triggers, capped sticks, impulse rings, tinted face glyphs ---- */
+.art-stroke [data-part='l2'] > .m-line,
+.art-stroke [data-part='r2'] > .m-line {
+  fill: var(--accent);
+  fill-opacity: var(--v, 0);
+}
+.m-impulse {
+  fill: var(--accent);
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 120ms var(--ease);
+}
+.art-stroke [data-sub='cap'] > .m-line {
+  fill: color-mix(in srgb, var(--art-ink) 12%, transparent);
+}
+.art-stroke [data-part='l3'][data-on='true'] > .m-line,
+.art-stroke [data-part='r3'][data-on='true'] > .m-line {
+  fill: color-mix(in srgb, var(--accent) 55%, transparent);
+  stroke: var(--accent);
+}
+.m-glyph {
+  fill: var(--art-soft);
+  font-weight: 800;
+  transition: fill 180ms var(--ease);
+}
+.model-art #a-glyph {
+  fill: #6ccf4a;
+}
+.model-art #b-glyph {
+  fill: #f05a5a;
+}
+.model-art #x-glyph {
+  fill: #4a90e2;
+}
+.model-art #y-glyph {
+  fill: #f4c542;
+}
+.art-stroke [data-part='x:p1'],
+.art-stroke [data-part='x:p2'],
+.art-stroke [data-part='x:p3'],
+.art-stroke [data-part='x:p4'] {
+  stroke-dasharray: 5 5;
+  stroke-opacity: 0.6;
+}
+.art-stroke [data-part^='x:p'][data-on='true'] {
+  stroke-dasharray: none;
+  stroke-opacity: 1;
 }

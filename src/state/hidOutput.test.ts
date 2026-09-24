@@ -25,6 +25,8 @@ const fake = (): HidController & { calls: string[] } => {
       micLed: true,
       adaptiveTriggers: true,
       edge: false,
+      impulseTriggers: false,
+      paddles: false,
     },
     subscribe: () => () => {},
     rumble: rec('rumble'),
@@ -87,7 +89,8 @@ describe('trackOutput', () => {
     )
     await w.rumble(1, 0)
     await w.rumble(0, 0)
-    expect(seen).toEqual(['r1', 'stop'])
+    await w.rumble(0, 0, 0.5, 0)
+    expect(seen).toEqual(['r1', 'stop', 'r0'])
     off1()
     off2()
   })

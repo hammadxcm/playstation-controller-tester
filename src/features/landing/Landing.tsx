@@ -5,6 +5,7 @@ import type { Tab } from '@/features/screens'
 import { HeroArtwork } from './HeroArtwork'
 import { AddDevice } from './AddDevice'
 import { Showcase } from './Showcase'
+import { XboxSection } from './XboxSection'
 import { FeatureTour } from './FeatureTour'
 import './landing.css'
 
@@ -45,6 +46,26 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
                 {t('hero.add')}
               </a>
               <Button onClick={() => onEnter('pro')}>{t('hero.pro')}</Button>
+              <a className="btn btn-xbox" href="#xbox-section">
+                <svg className="xbox-glyph" viewBox="0 0 24 24" aria-hidden width="16" height="16">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="9.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                  />
+                  <path
+                    d="M7.5 6.5c3 2.5 5 5.5 7.5 9.5M16.5 6.5c-3 2.5-5 5.5-7.5 9.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                {t('hero.xbox')}
+              </a>
             </div>
           </div>
           <div className="hero-art">
@@ -53,6 +74,7 @@ export function Landing({ onEnter }: { onEnter: (tab: LandingTab) => void }) {
         </section>
         <AddDevice />
         <Showcase />
+        <XboxSection />
         <FeatureTour onEnter={onEnter} />
       </main>
       <footer className="landing-footer small dim">

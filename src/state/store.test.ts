@@ -20,6 +20,8 @@ const fakeHid = (label: string): HidController => ({
     micLed: true,
     adaptiveTriggers: true,
     edge: false,
+    impulseTriggers: false,
+    paddles: false,
   },
   subscribe: () => () => {},
   rumble: async () => {},
