@@ -317,12 +317,22 @@ html[data-dir='back']::view-transition-new(screen) {
   -webkit-backdrop-filter: blur(16px) saturate(1.3);
   box-shadow: 0 8px 30px rgb(0 0 0 / 0.18);
 }
+/* keep the brand on one line; on narrow screens the row wraps under it instead */
 .topbar .brand {
+  white-space: nowrap;
   font-family: var(--font-display);
   font-weight: 800;
   letter-spacing: -0.02em;
   font-size: 1.05rem;
   margin: 0 4px;
+}
+/* scrollable tab pill: fade the trailing edge below tablet width so the cut-off tab reads as "more" */
+@media (max-width: 900px) {
+  .tabs {
+    mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
+    padding-right: 28px;
+  }
 }
 .select-sm {
   padding: 5px 8px;
