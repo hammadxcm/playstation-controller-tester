@@ -4,8 +4,24 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-09-24
+
+### Added
+
+- Xbox controllers in Pro Mode: a WebHID driver for Xbox One S, Series X|S, Elite Series 2 and the Adaptive Controller over Bluetooth (over USB they speak GIP, not HID). Fields are read from the pad's report descriptor rather than fixed offsets, so the old 10-button layout, the 5.x Linux-style layout and the Elite's duplicated fields all decode. Raw 16-bit sticks and 10-bit triggers, every button incl. Share, Elite 2 paddles and active profile, the four-level battery report with charging and power source, and rumble over HID with the impulse-trigger motors, throttled to the pad's 50 ms Bluetooth cadence. Pro Mode shows left / right trigger sliders when a pad has impulse triggers and hides the Sony-only cards.
+- Xbox line art: an original top-view drawing of the Xbox Wireless Controller (Series X|S layout, LB / RB, View / Menu / Share, tinted A B X Y, dish d-pad, Elite paddles) in the same stroke style as the Sony drawings, driven by the shared rig. Sticks travel and scale, triggers fill, buttons glow, impulse rings and grip heat follow rumble, and Overview's Show values overlay works on it. Replaces the generated Xbox model on Overview, Pro Mode and the landing.
+- Landing page: an Xbox section with that drawing (impulse triggers, the Xbox button, Share and the Elite paddles light on hover) and a matrix of what the Gamepad API and Pro Mode each reach, in all nine languages. Verified at phone, iPad portrait and landscape and desktop widths.
+- Mock harness: `?mock=xbox&hid=1` injects a mock Xbox WebHID pad.
+- Hero: an "Xbox controllers" button that scrolls to the Xbox section, and README credits for the Xbox protocol references (xpadneo, Chromium, Linux hid-microsoft, SDL, the Edge trigger-rumble explainer).
+
+### Fixed
+
+- Landing top bar on phones: the hamburger button now sits at the right edge instead of next to the brand (the spacer only grew inside the app shell).
+
 ### Changed
 
+- `HidController.rumble` takes optional left and right trigger magnitudes; Sony drivers ignore them.
+- Landing copy leads with "Is your controller GTA VI ready?" in all nine languages; the tab title, meta description, Open Graph and Twitter cards, JSON-LD and the web manifest carry the same hook.
 - The site now lives at https://dualsense.fyniti.co.uk/ (GitHub Pages custom domain, served from the root path); the old github.io address redirects. Saved preferences are keyed by path, so they start fresh once.
 
 ## [1.1.0] - 2026-09-24
@@ -47,6 +63,7 @@ All notable changes to this project are documented here. The format follows [Kee
 
 - Bluetooth transport detection and output framing for DualSense and DualShock 4; player-LED brightness flag; first lightbar colour being overridden by the boot-glow reset; overlapping output reports during slider drags.
 
-[Unreleased]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/hammadxcm/playstation-controller-tester/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/hammadxcm/playstation-controller-tester/releases/tag/v1.0.0
