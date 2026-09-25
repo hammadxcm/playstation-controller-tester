@@ -7,6 +7,10 @@ updates:
     groups:
       dev:
         dependency-type: development
+    ignore:
+      # @types/node tracks the Node runtime major (22); bump it with engines and CI node-version
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:
